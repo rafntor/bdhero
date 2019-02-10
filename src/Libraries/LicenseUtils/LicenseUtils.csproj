@@ -95,6 +95,10 @@
     <None Include="works.json" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Build\Markdowner\Markdowner.csproj">
+      <Project>{664dcdf5-6f5d-4564-a810-68f688db774f}</Project>
+      <Name>Markdowner</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
       <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
       <Name>DotNetUtils</Name>
