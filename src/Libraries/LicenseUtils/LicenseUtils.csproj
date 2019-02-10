@@ -134,7 +134,6 @@
     <Content Include="Licenses\ms_winapi_custom.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <PropertyGroup>
     <PreBuildEvent>cd $(SolutionDir) &amp;&amp; $(SolutionDir)Build\Scripts\markdowner</PreBuildEvent>
   </PropertyGroup>
