@@ -14,6 +14,8 @@ archive
 *.user
 *.sln.docstates
 *.userprefs
+.vs/
+packages/
 
 # Build results
 
@@ -154,5 +156,3 @@ $RECYCLE.BIN/
 # Mac crap
 .DS_Store
 ._.DS_Store
-/src/.vs/
-/src/packages/

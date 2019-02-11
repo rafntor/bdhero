@@ -154,6 +154,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{4022
 	ProjectSection(SolutionItems) = preProject
 		Build\Scripts\clean.bat = Build\Scripts\clean.bat
 		Build\Scripts\commit.bat = Build\Scripts\commit.bat
+		Build\Scripts\FFMpegDownload.ps1 = Build\Scripts\FFMpegDownload.ps1
 		Build\Scripts\markdowner = Build\Scripts\markdowner
 		Build\Scripts\markdowner.bat = Build\Scripts\markdowner.bat
 		Build\Scripts\MkvDownload.ps1 = Build\Scripts\MkvDownload.ps1
