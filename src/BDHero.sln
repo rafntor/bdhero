@@ -150,6 +150,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UILib", "Libraries\UILib\UI
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvToolNixUtils", "Libraries\MkvToolNixUtils\MkvToolNixUtils.csproj", "{EDCC6D0F-93A7-4D53-BF13-701307EBB2E7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{40228CC1-B09D-411F-AB90-79A69A043F35}"
+	ProjectSection(SolutionItems) = preProject
+		Build\Scripts\clean.bat = Build\Scripts\clean.bat
+		Build\Scripts\commit.bat = Build\Scripts\commit.bat
+		Build\Scripts\markdowner = Build\Scripts\markdowner
+		Build\Scripts\markdowner.bat = Build\Scripts\markdowner.bat
+		Build\Scripts\MkvDownload.ps1 = Build\Scripts\MkvDownload.ps1
+		Build\Scripts\package.bat = Build\Scripts\package.bat
+		Build\Scripts\sign-ffmpeg.bat = Build\Scripts\sign-ffmpeg.bat
+		Build\Scripts\sign.bat = Build\Scripts\sign.bat
+		Build\Scripts\test.bat = Build\Scripts\test.bat
+		Build\Scripts\tools.bat = Build\Scripts\tools.bat
+		Build\Scripts\update.bat = Build\Scripts\update.bat
+		Build\Scripts\zip-src.bat = Build\Scripts\zip-src.bat
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -900,6 +916,7 @@ Global
 		{ACD66B56-A9CF-4958-8050-07DDD1AA43BF} = {94E76990-53DB-430E-B933-991130369AEE}
 		{FE47953B-CF34-4328-8416-FB4E2CD2E2CA} = {94E76990-53DB-430E-B933-991130369AEE}
 		{EDCC6D0F-93A7-4D53-BF13-701307EBB2E7} = {94E76990-53DB-430E-B933-991130369AEE}
+		{40228CC1-B09D-411F-AB90-79A69A043F35} = {49210501-785D-4DCD-8C8F-53EB07EBA150}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3D4AB2E6-1A87-4C5D-917F-8A9BDE8104D7}
