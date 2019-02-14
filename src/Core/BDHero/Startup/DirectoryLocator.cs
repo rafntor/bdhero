@@ -55,6 +55,12 @@ namespace BDHero.Startup
                 PluginConfigDir = Path.Combine(InstallDir, ConfigDirName, PluginDirName);
                 RequiredPluginDir = Path.Combine(InstallDir, PluginDirName, RequiredDirName);
                 CustomPluginDir = Path.Combine(InstallDir, PluginDirName, CustomDirName);
+                if (!Directory.Exists(CustomPluginDir)) // check if launched from debugger / project bin folder
+                {
+                    var custom_dir = Path.Combine(InstallDir, "..\\..\\..\\..\\", PluginDirName);
+                    if (Directory.Exists(custom_dir))
+                        CustomPluginDir = Path.GetFullPath(custom_dir);
+                }
                 LogDir = Path.Combine(InstallDir, LogDirName);
             }
             else

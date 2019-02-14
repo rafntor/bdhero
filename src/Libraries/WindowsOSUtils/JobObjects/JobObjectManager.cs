@@ -66,6 +66,12 @@ namespace WindowsOSUtils.JobObjects
                 var fileName = currentProcess.MainModule.FileName;
                 var arguments = new ArgumentList(args).ToString();
 
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    Logger.Debug("Running in Debugger - ignoring");
+                    return false;
+                }
+
                 if (fileName.EndsWith(".vshost.exe", StringComparison.OrdinalIgnoreCase))
                 {
                     Logger.Debug("Running in Visual Studio host process - ignoring");
