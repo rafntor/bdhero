@@ -134,7 +134,7 @@ namespace BDHero.Plugin.FFmpegMuxer
             var fileList = _inputM2TSPaths.Select(EscapeInputPath)
                                           .Select(FormatInputPath);
             File.WriteAllLines(_inputFileListPath, fileList);
-            _arguments.AddAll("-f", "concat", "-i", _inputFileListPath);
+            _arguments.AddAll("-f", "concat", "-safe", "0", "-i", _inputFileListPath);
         }
 
         private static string EscapeInputPath(string m2tsPath)
