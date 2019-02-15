@@ -13,7 +13,7 @@ namespace DotNetUtilsUnitTests
         private WndProcHook _hook;
         private bool _hooked;
 
-        [TestFixtureSetUp]
+        [OneTimeSetUp]
         public void SetUpFixture()
         {
             _form = new WndProcHookTestForm();
