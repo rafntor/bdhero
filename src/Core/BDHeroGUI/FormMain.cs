@@ -158,11 +158,9 @@ namespace BDHeroGUI
 
             playlistListView.ItemSelectionChanged += PlaylistListViewOnItemSelectionChanged;
             playlistListView.ShowAllChanged += PlaylistListViewOnShowAllChanged;
-            playlistListView.PlaylistReconfigured += PlaylistListViewOnPlaylistReconfigured;
 
             tracksPanel.PlaylistReconfigured += TracksPanelOnPlaylistReconfigured;
 
-            mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
             mediaPanel.Search = ShowMetadataSearchWindow;
 
             #endregion
@@ -1304,11 +1302,6 @@ namespace BDHeroGUI
             Scan();
         }
 
-        private void MediaPanelOnSelectedMediaChanged(object sender, EventArgs eventArgs)
-        {
-            RenameAsync();
-        }
-
         private void PlaylistListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs args)
         {
             var playlist = playlistListView.SelectedPlaylist;
@@ -1317,8 +1310,6 @@ namespace BDHeroGUI
             buttonConvert.Enabled = playlist != null;
             tracksPanel.SetPlaylist(playlist, _controller.Job.Disc.Languages.ToArray());
             chaptersPanel.Playlist = playlist;
-
-            RenameAsync();
         }
 
         private void PlaylistListViewOnShowAllChanged(object sender, EventArgs eventArgs)
@@ -1326,15 +1317,9 @@ namespace BDHeroGUI
             showAllPlaylistsToolStripMenuItem.Checked = playlistListView.ShowAll;
         }
 
-        private void PlaylistListViewOnPlaylistReconfigured(Playlist playlist)
-        {
-            RenameAsync();
-        }
-
         private void TracksPanelOnPlaylistReconfigured(Playlist playlist)
         {
             playlistListView.ReconfigurePlaylist(playlist);
-            RenameAsync();
         }
 
         #endregion
