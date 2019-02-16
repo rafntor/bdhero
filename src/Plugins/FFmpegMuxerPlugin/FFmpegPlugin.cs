@@ -18,6 +18,7 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Forms;
 using BDHero.JobQueue;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
@@ -43,7 +44,10 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         public int RunOrder { get { return 0; } }
 
-        public PluginPropertiesHandler PropertiesHandler { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler
+        {
+            get { return ShowPluginInfoForm; }
+        }
 
         public MatroskaFeatures SupportedFeatures
         {
@@ -105,6 +109,26 @@ namespace BDHero.Plugin.FFmpegMuxer
             Log(job, ffmpeg);
 
             throw new FFmpegException(_exception.Message, _exception);
+        }
+
+        string GetMkvPropEditVersion()
+        {
+            string result = "";
+            var mkvpropedit = new MkvPropEdit(_jobObjectManager, null);
+            mkvpropedit.Arguments = new ArgumentList("--version");
+            mkvpropedit.StdOut += delegate (string line) { result += line; };
+            mkvpropedit.Start(); // sync
+            return result;
+        }
+        private DialogResult ShowPluginInfoForm(Form parent)
+        {
+            using (var form = new PluginInfoForm())
+            {
+                form.FFMpegVersion = FFmpeg.ExeVersion(_jobObjectManager);
+                form.MkvPropEditVersion = GetMkvPropEditVersion();
+
+                return form.ShowDialog(parent);
+            }
         }
 
         #region Logging

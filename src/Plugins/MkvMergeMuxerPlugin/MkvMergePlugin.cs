@@ -1,4 +1,4 @@
-// Copyright 2012-2014 Andrew C. Dvorak
+﻿// Copyright 2012-2014 Andrew C. Dvorak
 //
 // This file is part of BDHero.
 //
@@ -18,6 +18,7 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Forms;
 using BDHero.JobQueue;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
@@ -43,7 +44,10 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         public int RunOrder { get { return 1; } }
 
-        public PluginPropertiesHandler PropertiesHandler { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler
+        {
+            get { return ShowPluginInfoForm; }
+        }
 
         public MatroskaFeatures SupportedFeatures
         {
@@ -106,6 +110,16 @@ namespace BDHero.Plugin.MkvMergeMuxer
 //            Log(job, mkvmerge);
 
             throw new MkvMergeException(_exception.Message, _exception);
+        }
+
+        private DialogResult ShowPluginInfoForm(Form parent)
+        {
+            using (var form = new PluginInfoForm())
+            {
+                form.MkvMergeVersion = MkvMerge.ExeVersion(_jobObjectManager);
+
+                return form.ShowDialog(parent);
+            }
         }
 
         private void OnProgressUpdated(MkvMerge mkvmerge, ProgressState progressState, CancellationToken cancellationToken)

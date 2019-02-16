@@ -65,6 +65,30 @@ namespace BDHero.Plugin.MkvMergeMuxer
 //            CleanExit = false;
         }
 
+        private MkvMerge(ArgumentList arguments, IJobObjectManager jobObjectManager)
+            : base(jobObjectManager)
+        {
+            Arguments = arguments;
+
+            var cli = new MkvMergeCLI(Arguments, null);
+
+            ExePath = cli.ExePath;
+        }
+        public static string ExeVersion(IJobObjectManager jobObjectManager)
+        {
+            string result = "";
+
+            var arguments = new ArgumentList("--version");
+
+            var mkvmerge = new MkvMerge(arguments, jobObjectManager);
+
+            mkvmerge.StdOut += delegate (string line) { result += line; };
+
+            mkvmerge.Start(); // sync
+
+            return result;
+        }
+
         private void OnExited(NonInteractiveProcessState state, int exitCode, ReleaseMedium releaseMedium, Playlist playlist, string outputMKVPath)
         {
 //            _tempFileRegistrar.DeleteTempFiles("", "", "");

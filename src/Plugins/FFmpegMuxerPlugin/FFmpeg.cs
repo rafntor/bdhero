@@ -20,6 +20,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Text;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -116,6 +117,44 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             CleanExit = false;
         }
+        private FFmpeg(ArgumentList arguments, IJobObjectManager jobObjectManager)
+            : base(jobObjectManager)
+        {
+            Arguments = arguments;
+
+            var cli = new FFmpegCLI(Arguments);
+
+            ExePath = cli.ExePath;
+        }
+        public static string ExeVersion(IJobObjectManager jobObjectManager)
+        {
+            var sb = new StringBuilder();
+
+            var arguments = new ArgumentList("-version");
+
+            var ffmpeg = new FFmpeg(arguments, jobObjectManager);
+
+            ffmpeg.StdOut += delegate (string line) { sb.AppendLine(line); };
+
+            try
+            {
+                ffmpeg.Start(); // sync
+            }
+            catch (Exception ex)
+            {
+                Logger.Error("FFmpeg.ExeVersion", ex);
+            }
+
+            var result = sb.ToString();
+
+            // we want the first 2 lines only
+            int length = result.IndexOf(Environment.NewLine);
+            length = result.IndexOf(Environment.NewLine, length + 1);
+            if (length > 0)
+                result = result.Substring(0, length);
+
+            return result;
+        }
 
         #region Process start
 
@@ -129,6 +168,9 @@ namespace BDHero.Plugin.FFmpegMuxer
         protected override void OnStart(Process process)
         {
             base.OnStart(process);
+
+            if (string.IsNullOrEmpty(_reportDumpFileDir))
+                return;
 
             var i = 0;
             while (_reportDumpFilePath == null && i++ < 10)
