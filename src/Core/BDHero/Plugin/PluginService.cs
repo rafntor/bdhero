@@ -99,6 +99,12 @@ namespace BDHero.Plugin
 
             var guid = AssemblyUtils.Guid(pluginAssembly);
 
+            foreach (var plugin in _repository.PluginsByType)
+            {
+                if (plugin.AssemblyInfo.Guid == guid)
+                    return; // avoid loading duplicated plugin.dll file
+            }
+
             var machineName = Path.GetFileNameWithoutExtension(dllPath) ?? pluginAssembly.GetName().Name ?? "";
             machineName = Regex.Replace(machineName, "Plugin$", "", RegexOptions.IgnoreCase);
             var configFileName = machineName + ".config.json";
