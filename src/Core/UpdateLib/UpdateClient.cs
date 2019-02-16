@@ -18,7 +18,7 @@ namespace UpdateLib
         #region Public properties
 
         /// <summary>
-        ///     Gets or sets the base URL for the update manifest file.  Defaults to <see cref="DefaultUpdateManifestBaseUrl"/>.
+        ///     Gets or sets the base URL for the update manifest file.  Defaults to <see href="DefaultUpdateManifestBaseUrl"/>.
         /// </summary>
         /// <example>
         ///     <code>"http://update.bdhero.org"</code>
@@ -26,7 +26,7 @@ namespace UpdateLib
         public string UpdateManifestBaseUrl { get; set; }
 
         /// <summary>
-        ///     Gets or sets the path portion of the update manifest file URL.  Defaults to <see cref="DefaultUpdateManifestFilePath"/>.
+        ///     Gets or sets the path portion of the update manifest file URL.  Defaults to <see href="DefaultUpdateManifestFilePath"/>.
         /// </summary>
         /// <example>
         ///     <code>"http://update.bdhero.org"</code>
@@ -49,7 +49,7 @@ namespace UpdateLib
         ///     </para>
         ///     <para>
         ///         <strong>NOTE:</strong> The presence of a non-<c>null</c> value does <strong>NOT</strong> indicate that
-        ///         a newer version is available; use <see cref="IsUpdateAvailable"/> for that.
+        ///         a newer version is available; use <see href="IsUpdateAvailable"/> for that.
         ///     </para>
         /// </summary>
         [CanBeNull]
@@ -66,37 +66,37 @@ namespace UpdateLib
         #region Public events
 
         /// <summary>
-        ///     Triggered <i>after</i> an update check is initiated by <see cref="CheckForUpdateAsync"/>, but <i>before</i>
+        ///     Triggered <i>after</i> an update check is initiated by <see href="CheckForUpdateAsync"/>, but <i>before</i>
         ///     any response is received from the server.
         /// </summary>
-        /// <seealso cref="CheckForUpdateAsync"/>
+        /// <seealso href="CheckForUpdateAsync"/>
         public event UpdaterV2CheckingForUpdateEventHandler Checking;
 
         /// <summary>
         ///     Triggered when a newer version of the application is available to download for the current operating system
         ///     and package type (portable vs. installed).
         /// </summary>
-        /// <seealso cref="CheckForUpdateAsync"/>
+        /// <seealso href="CheckForUpdateAsync"/>
         public event UpdaterV2UpdateFoundEventHandler UpdateFound;
 
         /// <summary>
         ///     Triggered when a newer version of the application is not available for the current operating system
         ///     and package type (portable vs. installed).
         /// </summary>
-        /// <seealso cref="CheckForUpdateAsync"/>
+        /// <seealso href="CheckForUpdateAsync"/>
         public event UpdaterV2UpdateNotFoundEventHandler UpdateNotFound;
 
         /// <summary>
-        ///     Triggered when an update check initiated by <see cref="CheckForUpdateAsync"/> completes successfully,
+        ///     Triggered when an update check initiated by <see href="CheckForUpdateAsync"/> completes successfully,
         ///     regardless of whether a new version is available or not.  Does <b>not</b> trigger if an error occurs.
         /// </summary>
-        /// <seealso cref="CheckForUpdateAsync"/>
+        /// <seealso href="CheckForUpdateAsync"/>
         public event UpdaterV2CheckedEventHandler Checked;
 
         /// <summary>
         ///     Triggered whenever an error occurs while checking for an update.
         /// </summary>
-        /// <seealso cref="CheckForUpdateAsync"/>
+        /// <seealso href="CheckForUpdateAsync"/>
         public event UpdaterV2ErrorCheckingForUpdateEventHandler Error;
 
         #endregion
@@ -104,7 +104,7 @@ namespace UpdateLib
         private readonly ManualResetEventSlim _isChecking = new ManualResetEventSlim();
 
         /// <summary>
-        ///     Constructs a new <see cref="UpdateClient"/> instance.
+        ///     Constructs a new <see href="UpdateClient"/> instance.
         /// </summary>
         public UpdateClient()
         {
@@ -123,7 +123,7 @@ namespace UpdateLib
         ///         Order of events:
         ///     </para>
         ///     <para>
-        ///         <see cref="Checking"/> => [ <see cref="UpdateFound"/> | <see cref="UpdateNotFound"/> ] => [ <see cref="Checked"/> | <see cref="Error"/> ]
+        ///         <see href="Checking"/> => [ <see href="UpdateFound"/> | <see href="UpdateNotFound"/> ] => [ <see href="Checked"/> | <see href="Error"/> ]
         ///     </para>
         /// </remarks>
         public void CheckForUpdateAsync()

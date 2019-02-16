@@ -3,7 +3,7 @@ namespace NativeAPI.Win.User
 {
     /// <summary>
     ///     Static class containing values that specify whether the window should be activated and whether the identifier of the mouse message should be discarded
-    ///     in response to a <see cref="WindowMessageType.WM_MOUSEACTIVATE"/> message.
+    ///     in response to a <see href="WindowMessageType.WM_MOUSEACTIVATE"/> message.
     /// </summary>
     public static class MouseActivate
     {

@@ -27,7 +27,7 @@ using UILib.WinForms;
 
 namespace WindowsOSUtils.Windows
 {
-    /// <seealso cref="http://stackoverflow.com/a/4616637/467582"/>
+    /// <seealso href="http://stackoverflow.com/a/4616637/467582"/>
     public class WindowMenu : IWindowMenu
     {
         #region Fields (private)

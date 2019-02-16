@@ -79,7 +79,7 @@ namespace OSUtils.Info
         /// On Unix-like systems, invokes the <c>uname()</c> function using native interop to detect the operating system type.
         /// </summary>
         /// <returns>The specific type of *Nix OS the application is running on</returns>
-        /// <seealso cref="https://github.com/jpobst/Pinta/blob/master/Pinta.Core/Managers/SystemManager.cs"/>
+        /// <seealso href="https://github.com/jpobst/Pinta/blob/master/Pinta.Core/Managers/SystemManager.cs"/>
         private static OSType GetNixOSType()
         {
             IntPtr buf = IntPtr.Zero;

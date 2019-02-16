@@ -57,7 +57,7 @@ namespace BDHero.BDROM
 
             /// <summary>
             ///     Represents a BDMV/CLIPINF/XXXXX.CLPI file that contains information about
-            ///     the corresponding <see cref="TSStreamFile" /> (BDMV/STREAM/XXXXX.M2TS file).
+            ///     the corresponding <see href="TSStreamFile" /> (BDMV/STREAM/XXXXX.M2TS file).
             /// </summary>
             /// <example>D:\BDMV\CLIPINF</example>
             [NotNull]
@@ -156,13 +156,13 @@ namespace BDHero.BDROM
             public FileInfo AnyDVDDiscInf;
 
             /// <summary>
-            ///     AACS <c>mcmf.xml</c> file containing the BD's <see cref="VIsan" />.
+            ///     AACS <c>mcmf.xml</c> file containing the BD's <see href="VIsan" />.
             /// </summary>
             [CanBeNull]
             public FileInfo MCMF;
 
             /// <summary>
-            ///     <c>bdmt_xxx.xml</c> files from the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
+            ///     <c>bdmt_xxx.xml</c> files from the <c>BDMV/META/DL</c> directory (<see href="DiscDirectories.BDMT" />).
             /// </summary>
             [NotNull]
             public FileInfo[] BDMT = new FileInfo[0];
@@ -174,14 +174,14 @@ namespace BDHero.BDROM
             public FileInfo DBox;
 
             /// <summary>
-            ///     Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
+            ///     Small (416 x 240) jacket image located in the <c>BDMV/META/DL</c> directory (<see href="DiscDirectories.BDMT" />).
             /// </summary>
             /// <example>MU_jacketpicture_D1_SML.jpg</example>
             [CanBeNull]
             public FileInfo JacketImageSmall;
 
             /// <summary>
-            ///     Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see cref="DiscDirectories.BDMT" />).
+            ///     Large (640 x 360) jacket image located in the <c>BDMV/META/DL</c> directory (<see href="DiscDirectories.BDMT" />).
             /// </summary>
             /// <example>MU_jacketpicture_D1_LRG.jpg</example>
             [CanBeNull]

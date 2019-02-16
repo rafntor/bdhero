@@ -107,25 +107,25 @@ namespace BDHero.ErrorReporting
         public string Body;
 
         /// <summary>
-        ///     Gets <see cref="System.Exception.Message"/> without removing potentially sensitive substrings
+        ///     Gets <see href="System.Exception.Message"/> without removing potentially sensitive substrings
         ///     such as file paths.
         /// </summary>
         public readonly string ExceptionMessageRaw;
 
         /// <summary>
-        ///     Gets a redacted version of <see cref="System.Exception.Message"/> that is safe to publish online
+        ///     Gets a redacted version of <see href="System.Exception.Message"/> that is safe to publish online
         ///     because potentially sensitive substrings (e.g., file paths) have been removed.
         /// </summary>
         public readonly string ExceptionMessageRedacted;
 
         /// <summary>
-        ///     Gets <see cref="System.Exception.ToString"/> without removing potentially sensitive substrings
+        ///     Gets <see href="System.Exception.ToString"/> without removing potentially sensitive substrings
         ///     such as file paths.
         /// </summary>
         public readonly string ExceptionDetailRaw;
 
         /// <summary>
-        ///     Gets a redacted version of <see cref="System.Exception.ToString"/> that is safe to publish online
+        ///     Gets a redacted version of <see href="System.Exception.ToString"/> that is safe to publish online
         ///     because potentially sensitive substrings (e.g., file paths) have been removed.
         /// </summary>
         public readonly string ExceptionDetailRedacted;

@@ -54,7 +54,7 @@ namespace TextEditor.WPF
         ///     Attempts to retrieve the Windows form that the given WPF element is hosted in.
         /// </summary>
         /// <typeparam name="T">
-        ///     Any type that extends the WPF <see cref="Visual"/> class.
+        ///     Any type that extends the WPF <see href="Visual"/> class.
         /// </typeparam>
         /// <param name="elem">
         ///     A WPF visual element.
@@ -62,7 +62,7 @@ namespace TextEditor.WPF
         /// <returns>
         ///     The Windows form host, or <c>null</c> if <paramref name="elem"/> is not hosted in a Windows form.
         /// </returns>
-        /// <seealso cref="http://social.msdn.microsoft.com/Forums/vstudio/en-US/b0a5bfcd-db94-425d-9c56-07233441d055/how-to-get-elementhost-given-a-wpf-control?forum=wpf#92811a22-c67b-4937-8817-40d7512940b5"/>
+        /// <seealso href="http://social.msdn.microsoft.com/Forums/vstudio/en-US/b0a5bfcd-db94-425d-9c56-07233441d055/how-to-get-elementhost-given-a-wpf-control?forum=wpf#92811a22-c67b-4937-8817-40d7512940b5"/>
         [CanBeNull]
         public static Form FindForm<T>(this T elem)
             where T : Visual

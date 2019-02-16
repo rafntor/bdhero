@@ -24,7 +24,7 @@ using System.Threading;
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="String"/>s.
+    /// Extension methods for <see href="String"/>s.
     /// </summary>
     public static class StringExtensions
     {

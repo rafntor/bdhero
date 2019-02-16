@@ -19,7 +19,7 @@
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Commands for <see cref="WindowAPI.ShowWindow"/> and <see cref="WindowAPI.ShowWindowAsync"/>.
+    ///     Commands for <see href="WindowAPI.ShowWindow"/> and <see href="WindowAPI.ShowWindowAsync"/>.
     /// </summary>
     public enum ShowWindowCommand
     {
@@ -72,19 +72,19 @@ namespace NativeAPI.Win.User
         SW_SHOWMINIMIZED = 2,
 
         /// <summary>
-        ///     Displays the window as a minimized window. This value is similar to <see cref="SW_SHOWMINIMIZED"/>,
+        ///     Displays the window as a minimized window. This value is similar to <see href="SW_SHOWMINIMIZED"/>,
         ///     except the window is not activated.
         /// </summary>
         SW_SHOWMINNOACTIVE = 7,
 
         /// <summary>
-        ///     Displays the window in its current size and position. This value is similar to <see cref="SW_SHOW"/>,
+        ///     Displays the window in its current size and position. This value is similar to <see href="SW_SHOW"/>,
         ///     except that the window is not activated.
         /// </summary>
         SW_SHOWNA = 8,
 
         /// <summary>
-        ///     Displays a window in its most recent size and position. This value is similar to <see cref="SW_SHOWNORMAL"/>,
+        ///     Displays a window in its most recent size and position. This value is similar to <see href="SW_SHOWNORMAL"/>,
         ///     except that the window is not activated.
         /// </summary>
         SW_SHOWNOACTIVATE = 4,

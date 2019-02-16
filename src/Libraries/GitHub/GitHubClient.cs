@@ -21,7 +21,7 @@ namespace GitHub
         private readonly string _oauthToken;
 
         /// <summary>
-        ///     Constructs a new <see cref="GitHubClient"/> instance with the given parameters.
+        ///     Constructs a new <see href="GitHubClient"/> instance with the given parameters.
         /// </summary>
         /// <param name="repo">
         ///     User login and repository name separated by a slash (e.g., <c>"user/repo"</c>).
@@ -38,13 +38,13 @@ namespace GitHub
         #region Public API
 
         /// <summary>
-        ///     Searches existing issues for the given <paramref name="exception"/> and returns a list of results.
+        ///     Searches existing issues for the given <paramref name="searchStr"/> and returns a list of results.
         /// </summary>
         /// <param name="searchStr">
         ///     Text to search for.
         /// </param>
         /// <returns>
-        ///     A list of search results that match the given <paramref name="exception"/>.
+        ///     A list of search results that match the given <paramref name="searchStr"/>.
         /// </returns>
         /// <exception cref="WebException">
         ///     Thrown if no response is received.
@@ -93,7 +93,7 @@ namespace GitHub
         ///     The comment's body in Markdown format.
         /// </param>
         /// <returns>
-        ///     A list of search results that match the given <paramref name="exception"/>.
+        ///     A list of search results that match the given <paramref name="issue"/>.
         /// </returns>
         /// <exception cref="WebException">
         ///     Thrown if no response is received.
@@ -164,7 +164,7 @@ namespace GitHub
         }
 
         /// <exception cref="WebException">
-        ///     Thrown if <paramref name="httpResponse"/> is <c>null</c> or <see cref="WebResponse.GetResponseStream"/> returns <c>null</c>.
+        ///     Thrown if <paramref name="httpResponse"/> is <c>null</c> or <see href="WebResponse.GetResponseStream"/> returns <c>null</c>.
         /// </exception>
         private static TResponse GetResponse<TResponse>(WebResponse httpResponse)
         {

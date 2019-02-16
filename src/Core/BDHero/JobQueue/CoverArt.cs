@@ -57,7 +57,7 @@ namespace BDHero.JobQueue
         public bool IsSelected { get; set; }
 
         /// <summary>
-        /// Retrieves the image for the cover art by making an HTTP GET request for the <see cref="Uri"/>.
+        /// Retrieves the image for the cover art by making an HTTP GET request for the <see href="Uri"/>.
         /// </summary>
         /// <remarks>
         /// <strong>NOTE:</strong> The first time this property is accessed it will BLOCK until the HTTP request completes or throws an exception.

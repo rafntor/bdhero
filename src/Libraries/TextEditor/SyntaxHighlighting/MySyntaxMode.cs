@@ -27,7 +27,7 @@ namespace TextEditor.SyntaxHighlighting
         public readonly string[] Extensions;
 
         /// <summary>
-        ///     Constructs a new <see cref="MySyntaxMode"/> instance with the given parameters.
+        ///     Constructs a new <see href="MySyntaxMode"/> instance with the given parameters.
         /// </summary>
         /// <param name="fileName">
         ///     Name of the <c>.XSHD</c> file.  <b>NOTE:</b> This does not have to be a real file name -- it can be anything.
@@ -46,7 +46,7 @@ namespace TextEditor.SyntaxHighlighting
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="MySyntaxMode"/> instance with the given parameters.
+        ///     Constructs a new <see href="MySyntaxMode"/> instance with the given parameters.
         /// </summary>
         /// <param name="fileName">
         ///     Name of the <c>.XSHD</c> file.  <b>NOTE:</b> This does not have to be a real file name -- it can be anything.

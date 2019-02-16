@@ -55,7 +55,7 @@ namespace BDHeroGUI.Forms
         /// <summary>
         ///     Reduce flickering.
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/89125/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/89125/467582"/>
         protected override CreateParams CreateParams
         {
             get

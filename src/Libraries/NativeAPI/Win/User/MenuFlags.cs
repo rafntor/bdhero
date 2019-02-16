@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Values for the <c>uFlags</c> argument of various <see cref="SystemMenuAPI"/> API functions.
+    ///     Values for the <c>uFlags</c> argument of various <see href="SystemMenuAPI"/> API functions.
     /// </summary>
     [Flags]
     public enum MenuFlags : uint
@@ -105,8 +105,8 @@ namespace NativeAPI.Win.User
 
         /// <summary>
         ///     Indicates that the <c>uPosition</c> parameter gives the identifier of the menu item.
-        ///     The <see cref="MF_BYCOMMAND"/> flag is the default if neither the <see cref="MF_BYCOMMAND"/> nor
-        ///     <see cref="MF_BYPOSITION"/> flag is specified.
+        ///     The <see href="MF_BYCOMMAND"/> flag is the default if neither the <see href="MF_BYCOMMAND"/> nor
+        ///     <see href="MF_BYPOSITION"/> flag is specified.
         /// </summary>
         MF_BYCOMMAND = 0x00000000,
 

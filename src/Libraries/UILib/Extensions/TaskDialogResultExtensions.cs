@@ -21,12 +21,12 @@ using Microsoft.WindowsAPICodePack.Dialogs;
 namespace UILib.Extensions
 {
     /// <summary>
-    ///     Extension methods for the <see cref="TaskDialogResult"/> enum.
+    ///     Extension methods for the <see href="TaskDialogResult"/> enum.
     /// </summary>
     public static class TaskDialogResultExtensions
     {
         /// <summary>
-        ///     Converts a <see cref="TaskDialogResult"/> value to its equivalent <see cref="DialogResult"/> value.
+        ///     Converts a <see href="TaskDialogResult"/> value to its equivalent <see href="DialogResult"/> value.
         /// </summary>
         /// <param name="result"></param>
         /// <returns></returns>

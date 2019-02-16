@@ -23,14 +23,14 @@ using Newtonsoft.Json;
 namespace LicenseUtils
 {
     /// <summary>
-    ///     Collection of <see cref="Work"/>s distributed with BDHero.
+    ///     Collection of <see href="Work"/>s distributed with BDHero.
     /// </summary>
     [UsedImplicitly]
     public class Works
     {
         /// <summary>
-        ///     Gets the concatenation of <see cref="Derivatives"/>, <see cref="Originals"/>, <see cref="Snippets"/>,
-        ///     <see cref="Packages"/>, <see cref="Libraries"/>, and <see cref="Binaries"/>.
+        ///     Gets the concatenation of <see href="Derivatives"/>, <see href="Originals"/>, <see href="Snippets"/>,
+        ///     <see href="Packages"/>, <see href="Libraries"/>, and <see href="Binaries"/>.
         /// </summary>
         [JsonIgnore]
         public Work[] All
@@ -49,7 +49,7 @@ namespace LicenseUtils
         }
 
         /// <summary>
-        ///     Works derived from <see cref="Originals"/>.
+        ///     Works derived from <see href="Originals"/>.
         /// </summary>
         /// <example>
         ///     BDHero.

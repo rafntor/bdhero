@@ -8,7 +8,7 @@ namespace TextEditor.WPF
 {
     internal static class KeyboardHelper
     {
-        /// <seealso cref="http://stackoverflow.com/a/1646568/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/1646568/467582"/>
         public static void RaiseKeyEvent(FrameworkElement target, KeyEventArgs e)
         {
             var keyboardDevice = Keyboard.PrimaryDevice;

@@ -21,7 +21,7 @@ using System.Windows.Forms;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     <see cref="LinkLabel"/> subclass for hyperlinks to a website URL.
+    ///     <see href="LinkLabel"/> subclass for hyperlinks to a website URL.
     ///     Provides a tooltip with the link's URL and a context menu to launch the site
     ///     in the user's browser or copy the URL to the clipboard.
     /// </summary>
@@ -46,7 +46,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="HyperlinkLabel"/> instance.
+        ///     Constructs a new <see href="HyperlinkLabel"/> instance.
         /// </summary>
         public EmailLabel()
         {

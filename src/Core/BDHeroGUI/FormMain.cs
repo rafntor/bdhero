@@ -511,7 +511,7 @@ namespace BDHeroGUI
         #region Assembly cache priming
 
         /// <summary>
-        ///     The <see cref="AboutBox"/> takes several seconds to initialize the first time
+        ///     The <see href="AboutBox"/> takes several seconds to initialize the first time
         ///     it is constructed, so preemptively instantiate it in a
         ///     background thread to speed up loading when the user actually opens it.
         /// </summary>
@@ -838,7 +838,7 @@ namespace BDHeroGUI
         /// <remarks>
         /// If the user presses "Scan" and "Cancel" in succession too quickly, it can goof up the state of the controller
         /// and/or plugins because the cancel event may get received <i>after</i> the subsequent "Scan" event,
-        /// which causes <see cref="ProgressProvider"/> to throw an exception when its <see cref="ProgressProvider.Reset"/>
+        /// which causes <see href="ProgressProvider"/> to throw an exception when its <see href="ProgressProvider.Reset"/>
         /// method is called.  To prevent this from happening, we must enforce a one second delay between actions performed
         /// on the controller.
         /// </remarks>

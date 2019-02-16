@@ -26,7 +26,7 @@
         public readonly int EndColumn;
 
         /// <summary>
-        ///     Constructs a new <see cref="Selection"/> instance with the same start and end position.
+        ///     Constructs a new <see href="Selection"/> instance with the same start and end position.
         /// </summary>
         /// <param name="startLine"></param>
         /// <param name="startColumn"></param>
@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="Selection"/> instance with the given start and end positions.
+        ///     Constructs a new <see href="Selection"/> instance with the given start and end positions.
         /// </summary>
         /// <param name="startLine"></param>
         /// <param name="startColumn"></param>

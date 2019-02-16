@@ -69,7 +69,7 @@ namespace BDHero.Plugin.FFmpegMuxer
         ///     If <c>false</c>, repeated log output will not be compressed to the first line and the
         ///     "Last message repeated n times" line will be omitted.
         /// </param>
-        /// <seealso cref="http://ffmpeg.org/ffmpeg.html#Generic-options"/>
+        /// <seealso href="http://ffmpeg.org/ffmpeg.html#Generic-options"/>
         public FFmpegCLI SetLogLevel(FFmpegLogLevel logLevel, bool compressRepeatedLogMessages = true)
         {
             var level = logLevel.GetAttributeProperty<ArgumentAttribute, string>(attribute => attribute.Name);
@@ -93,9 +93,9 @@ namespace BDHero.Plugin.FFmpegMuxer
         ///         av_interleaved_write_frame(): Invalid argument
         ///     </code>
         /// </summary>
-        /// <seealso cref="https://github.com/bdhero/bdhero/issues/30" />
-        /// <seealso cref="http://stackoverflow.com/a/6044365/467582" />
-        /// <seealso cref="https://www.ffmpeg.org/ffmpeg-formats.html#Format-Options" />
+        /// <seealso href="https://github.com/bdhero/bdhero/issues/30" />
+        /// <seealso href="http://stackoverflow.com/a/6044365/467582" />
+        /// <seealso href="https://www.ffmpeg.org/ffmpeg-formats.html#Format-Options" />
         public FFmpegCLI GenPTS()
         {
             _arguments.AddAll("-fflags", "+genpts");
@@ -127,8 +127,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         ///     and passes the path to the text file in to the FFmpeg CLI.  Avoids the 8191 character limit
         ///     imposed by cmd.exe in Windows XP and newer.  Works in FFmpeg 1.1+.
         /// </summary>
-        /// <seealso cref="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
-        /// <seealso cref="http://support.microsoft.com/kb/830473"/>
+        /// <seealso href="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
+        /// <seealso href="http://support.microsoft.com/kb/830473"/>
         private void SetInputFilesV2()
         {
             var fileList = _inputM2TSPaths.Select(EscapeInputPath)
@@ -157,8 +157,8 @@ namespace BDHero.Plugin.FFmpegMuxer
         ///     FFmpeg CLI.  Simple and easy to use, but complex Blu-ray playlists with many .m2ts files may cause an
         ///     error if the command length exceeds 8191 characters in Windows XP or newer.  Works in FFmpeg 1.0+.
         /// </summary>
-        /// <seealso cref="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
-        /// <seealso cref="http://support.microsoft.com/kb/830473"/>
+        /// <seealso href="https://its.ffmpeg.org/wiki/How%20to%20concatenate%20(join,%20merge)%20media%20files#samecodec"/>
+        /// <seealso href="http://support.microsoft.com/kb/830473"/>
         private void SetInputFilesV1()
         {
             var inputFiles = GetInputFiles(_inputM2TSPaths);

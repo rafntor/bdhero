@@ -29,7 +29,7 @@ namespace UpdateLib
         public Version Version { get; set; }
 
         /// <summary>
-        /// ISO 8601 date format (e.g. <c>2008-04-12T12:53Z</c>).  See <see cref="IsoDateTimeConverter"/>.
+        /// ISO 8601 date format (e.g. <c>2008-04-12T12:53Z</c>).  See <see href="IsoDateTimeConverter"/>.
         /// </summary>
         [JsonConverter(typeof(IsoDateTimeConverter))]
         public DateTime Date { get; set; }

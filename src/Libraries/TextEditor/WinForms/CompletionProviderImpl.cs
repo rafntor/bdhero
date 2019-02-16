@@ -12,14 +12,14 @@ using ICSharpCode.TextEditor.Gui.CompletionWindow;
 namespace TextEditor.WinForms
 {
     /// <summary>
-    ///     Provides code completion for <see cref="TextEditorImpl"/>.
+    ///     Provides code completion for <see href="TextEditorImpl"/>.
     /// </summary>
     public class CompletionProviderImpl : ICompletionDataProvider
     {
         private readonly ImageList _imageList;
 
         /// <summary>
-        ///     Constructs a new <see cref="CompletionProviderImpl"/> instance with the given parameters.
+        ///     Constructs a new <see href="CompletionProviderImpl"/> instance with the given parameters.
         /// </summary>
         /// <param name="imageList">
         ///     List of icon images to display along side the code completion entries.

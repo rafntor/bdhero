@@ -24,7 +24,7 @@ namespace NativeAPI.Win.User
     /// <summary>
     ///     Window message type enum.
     /// </summary>
-    /// <seealso cref="http://wiki.winehq.org/List_Of_Windows_Messages"/>
+    /// <seealso href="http://wiki.winehq.org/List_Of_Windows_Messages"/>
     public enum WindowMessageType : uint
     {
         /// <summary>
@@ -68,15 +68,15 @@ namespace NativeAPI.Win.User
         /// </summary>
         /// <param name="wParam">
         ///     The low-order word specifies whether the window is being activated or deactivated.
-        ///     This parameter can be one of the <see cref="WindowActivate"/> values. The high-order word specifies
+        ///     This parameter can be one of the <see href="WindowActivate"/> values. The high-order word specifies
         ///     the minimized state of the window being activated or deactivated.
         ///     A nonzero value indicates the window is minimized.
         /// </param>
         /// <param name="lParam">
         ///     A handle to the window being activated or deactivated, depending on the value of the <paramref name="wParam"/> parameter.
-        ///     If the low-order word of wParam is <see cref="WindowActivate.WA_INACTIVE"/>,
+        ///     If the low-order word of wParam is <see href="WindowActivate.WA_INACTIVE"/>,
         ///     <c>lParam</c> is the handle to the window being activated.
-        ///     If the low-order word of wParam is <see cref="WindowActivate.WA_ACTIVE"/> or <see cref="WindowActivate.WA_CLICKACTIVE"/>,
+        ///     If the low-order word of wParam is <see href="WindowActivate.WA_ACTIVE"/> or <see href="WindowActivate.WA_CLICKACTIVE"/>,
         ///     <c>lParam</c> is the handle to the window being deactivated.
         ///     This handle can be <c>null</c>.
         /// </param>
@@ -86,7 +86,7 @@ namespace NativeAPI.Win.User
         /// <remarks>
         ///     If the window is being activated and is not minimized, the <c>DefWindowProc</c> function sets the
         ///     keyboard focus to the window. If the window is activated by a mouse click, it also receives a
-        ///     <see cref="WM_MOUSEACTIVATE"/> message.
+        ///     <see href="WM_MOUSEACTIVATE"/> message.
         /// </remarks>
         WM_ACTIVATE = 0x0006,
 
@@ -156,14 +156,14 @@ namespace NativeAPI.Win.User
         ///     <para>
         ///         Note: <c>RedrawWindow</c> with the specified flags is used instead of <c>InvalidateRect</c> because the former
         ///         is necessary for some controls that have nonclient area on their own, or have window styles that
-        ///         cause them to be given a nonclient area (such as <see cref="WindowStyles.WS_THICKFRAME"/>,
-        ///         <see cref="WindowStyles.WS_BORDER"/>, or <see cref="ExtendedWindowStyles.WS_EX_CLIENTEDGE"/>).
+        ///         cause them to be given a nonclient area (such as <see href="WindowStyles.WS_THICKFRAME"/>,
+        ///         <see href="WindowStyles.WS_BORDER"/>, or <see href="ExtendedWindowStyles.WS_EX_CLIENTEDGE"/>).
         ///         If the control does not have a nonclient area, <c>RedrawWindow</c> with these flags will do only as much
         ///         invalidation as <c>InvalidateRect</c> would.
         ///     </para>
         ///     <para>
         ///         If the application sends the <c>WM_SETREDRAW</c> message to a hidden window, the window becomes visible
-        ///         (that is, the operating system adds the <see cref="WindowStyles.WS_VISIBLE"/> style to the window).
+        ///         (that is, the operating system adds the <see href="WindowStyles.WS_VISIBLE"/> style to the window).
         ///     </para>
         /// </remarks>
         WM_SETREDRAW = 0x000b,
@@ -186,7 +186,7 @@ namespace NativeAPI.Win.User
         ///         The high-order word of <paramref name="lParam"/> is zero when the window enters menu mode.
         ///     </para>
         ///     <para>
-        ///         The <c>DefWindowProc</c> function passes the <see cref="WM_SETCURSOR"/> message to a parent window before processing.
+        ///         The <c>DefWindowProc</c> function passes the <see href="WM_SETCURSOR"/> message to a parent window before processing.
         ///         If the parent window returns <c>TRUE</c>, further processing is halted. Passing the message to a window's
         ///         parent window gives the parent window control over the cursor's setting in a child window.
         ///         The <c>DefWindowProc</c> function also uses this message to set the cursor to an arrow if it is not in
@@ -213,8 +213,8 @@ namespace NativeAPI.Win.User
         /// <param name="lParam">
         ///     <para>
         ///         The low-order word specifies the hit-test value returned by the <c>DefWindowProc</c> function
-        ///         as a result of processing the <see cref="WM_NCHITTEST"/> message.
-        ///         For a list of hit-test values, see <see cref="WM_NCHITTEST"/>.
+        ///         as a result of processing the <see href="WM_NCHITTEST"/> message.
+        ///         For a list of hit-test values, see <see href="WM_NCHITTEST"/>.
         ///     </para>
         ///     <para>
         ///         The high-order word specifies the identifier of the mouse message generated when the user pressed
@@ -223,13 +223,13 @@ namespace NativeAPI.Win.User
         /// </param>
         /// <returns>
         ///     The return value specifies whether the window should be activated and whether the identifier of the
-        ///     mouse message should be discarded. It must be one of the <see cref="MouseActivate"/> values.
+        ///     mouse message should be discarded. It must be one of the <see href="MouseActivate"/> values.
         /// </returns>
         /// <remarks>
         ///     The <c>DefWindowProc</c> function passes the message to a child window's parent window before
         ///     any processing occurs. The parent window determines whether to activate the child window.
-        ///     If it activates the child window, the parent window should return <see cref="MouseActivate.MA_NOACTIVATE"/> or
-        ///     <see cref="MouseActivate.MA_NOACTIVATEANDEAT"/> to prevent the system from processing the message further.
+        ///     If it activates the child window, the parent window should return <see href="MouseActivate.MA_NOACTIVATE"/> or
+        ///     <see href="MouseActivate.MA_NOACTIVATEANDEAT"/> to prevent the system from processing the message further.
         /// </remarks>
         WM_MOUSEACTIVATE = 0x0021,
 
@@ -242,14 +242,14 @@ namespace NativeAPI.Win.User
         /// <param name="wParam">
         ///     The virtual key, pressed by the user, that prompted Windows to issue this notification.
         ///     The handler must selectively handle these keys. For instance, the handler might accept and process
-        ///     <see cref="VirtualKey.VK_RETURN"/> but delegate <see cref="VirtualKey.VK_TAB"/> to the owner window.
-        ///     For a list of values, see <see cref="VirtualKey"/>.
+        ///     <see href="VirtualKey.VK_RETURN"/> but delegate <see href="VirtualKey.VK_TAB"/> to the owner window.
+        ///     For a list of values, see <see href="VirtualKey"/>.
         /// </param>
         /// <param name="lParam">
-        ///     A pointer to a <see cref="System.Windows.Forms.Message"/> structure (or <c>null</c> if the system is performing a query).
+        ///     A pointer to a <see href="System.Windows.Forms.Message"/> structure (or <c>null</c> if the system is performing a query).
         /// </param>
         /// <returns>
-        ///     The return value is one or more of the <see cref="DialogCode"/> values, indicating which type of input the application processes.
+        ///     The return value is one or more of the <see href="DialogCode"/> values, indicating which type of input the application processes.
         /// </returns>
         /// <remarks>
         ///     <para>
@@ -268,7 +268,7 @@ namespace NativeAPI.Win.User
         ///     A nonsystem key is a key that is pressed when the ALT key is not pressed.
         /// </summary>
         /// <param name="wParam">
-        ///     The virtual-key code of the nonsystem key. See <see cref="VirtualKey"/>.
+        ///     The virtual-key code of the nonsystem key. See <see href="VirtualKey"/>.
         /// </param>
         /// <param name="lParam">
         ///     <para>
@@ -293,14 +293,14 @@ namespace NativeAPI.Win.User
         /// <remarks>
         ///     <para>
         ///         If the <c>F10</c> key is pressed, the <c>DefWindowProc</c> function sets an internal flag.
-        ///         When <c>DefWindowProc</c> receives the <see cref="WM_KEYUP"/> message, the function checks whether the internal flag
-        ///         is set and, if so, sends a <see cref="WM_SYSCOMMAND"/> message to the top-level window.
-        ///         The <see cref="WM_SYSCOMMAND"/> parameter of the message is set to <c>SC_KEYMENU</c>.
+        ///         When <c>DefWindowProc</c> receives the <see href="WM_KEYUP"/> message, the function checks whether the internal flag
+        ///         is set and, if so, sends a <see href="WM_SYSCOMMAND"/> message to the top-level window.
+        ///         The <see href="WM_SYSCOMMAND"/> parameter of the message is set to <c>SC_KEYMENU</c>.
         ///     </para>
         ///     <para>
-        ///         Because of the autorepeat feature, more than one <see cref="WM_KEYDOWN"/> message may be posted
-        ///         before a <see cref="WM_KEYUP"/> message is posted. The previous key state (bit 30) can be used to determine
-        ///         whether the <see cref="WM_KEYDOWN"/> message indicates the first down transition or a repeated down transition.
+        ///         Because of the autorepeat feature, more than one <see href="WM_KEYDOWN"/> message may be posted
+        ///         before a <see href="WM_KEYUP"/> message is posted. The previous key state (bit 30) can be used to determine
+        ///         whether the <see href="WM_KEYDOWN"/> message indicates the first down transition or a repeated down transition.
         ///     </para>
         ///     <para>
         ///         For enhanced 101- and 102-key keyboards, extended keys are the right <c>ALT</c> and <c>CTRL</c> keys
@@ -319,7 +319,7 @@ namespace NativeAPI.Win.User
         ///     as the system or control menu) or when the user chooses the maximize button, minimize button,
         ///     restore button, or close button.
         /// </summary>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx"/>
+        /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms646360(v=vs.85).aspx"/>
         WM_SYSCOMMAND = 0x0112,
 
         /// <summary>

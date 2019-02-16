@@ -27,7 +27,7 @@ namespace ProcessUtils
     /// <summary>
     /// Represents a child console (CLI) process that runs without any user interaction on the UI thread.
     /// The process's stdout and stderr streams are captured and passed to the
-    /// <see cref="StdOut"/> and <see cref="StdErr"/> event handlers, respectively.
+    /// <see href="StdOut"/> and <see href="StdErr"/> event handlers, respectively.
     /// Allows for pausing (suspending) and resuming the process, as well as receiving a notification
     /// when the process exits along with its exit code.
     /// </summary>
@@ -158,7 +158,7 @@ namespace ProcessUtils
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new <see cref="NonInteractiveProcess"/> object that uses the given
+        ///     Constructs a new <see href="NonInteractiveProcess"/> object that uses the given
         ///     <paramref name="jobObjectManager"/> to ensure that child processes are terminated
         ///     if the parent process exits prematurely.
         /// </summary>
@@ -408,7 +408,7 @@ namespace ProcessUtils
         }
 
         /// <summary>
-        /// Invoked synchronously by <see cref="Start()"/> after waiting for the process to exit.
+        /// Invoked synchronously by <see href="Start()"/> after waiting for the process to exit.
         /// </summary>
         private void ProcessExitedSync()
         {
@@ -430,7 +430,7 @@ namespace ProcessUtils
         }
 
         /// <summary>
-        /// Invoked asynchronously by the <see cref="Process.Exited"/> event.
+        /// Invoked asynchronously by the <see href="Process.Exited"/> event.
         /// </summary>
         private void ProcessExitedAsync(object sender, EventArgs eventArgs)
         {
@@ -532,7 +532,7 @@ namespace ProcessUtils
     }
 
     /// <summary>
-    /// Describes the state of a <see cref="NonInteractiveProcess"/>.
+    /// Describes the state of a <see href="NonInteractiveProcess"/>.
     /// States are mutually exclusive; a NonInteractiveProcess can only have one state at a time.
     /// </summary>
     public enum NonInteractiveProcessState
@@ -553,7 +553,7 @@ namespace ProcessUtils
         Paused,
 
         /// <summary>
-        /// Process was killed manually by calling <see cref="NonInteractiveProcess.Kill()"/>.
+        /// Process was killed manually by calling <see href="NonInteractiveProcess.Kill()"/>.
         /// </summary>
         Killed,
 

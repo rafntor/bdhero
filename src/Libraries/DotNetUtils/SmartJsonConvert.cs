@@ -26,7 +26,7 @@ using Newtonsoft.Json.Serialization;
 namespace DotNetUtils
 {
     /// <summary>
-    ///     Wrapper for <see cref="JsonConvert"/> that provides automatic snake_case property naming.
+    ///     Wrapper for <see href="JsonConvert"/> that provides automatic snake_case property naming.
     /// </summary>
     public static class SmartJsonConvert
     {
@@ -72,10 +72,10 @@ namespace DotNetUtils
     }
 
     /// <summary>
-    ///     Example for a custom ContractResolver that honors <see cref="JsonPropertyAttribute"/> (shouldn't this be default?).
+    ///     Example for a custom ContractResolver that honors <see href="JsonPropertyAttribute"/> (shouldn't this be default?).
     /// </summary>
-    /// <seealso cref="http://stackoverflow.com/questions/12749046/camelcase-only-if-propertyname-not-explicitly-set-in-json-net"/>
-    /// <seealso cref="http://stackoverflow.com/a/8877076/467582"/>
+    /// <seealso href="http://stackoverflow.com/questions/12749046/camelcase-only-if-propertyname-not-explicitly-set-in-json-net"/>
+    /// <seealso href="http://stackoverflow.com/a/8877076/467582"/>
     internal class SnakeCaseContractResolver : DefaultContractResolver
     {
         private static readonly Regex PascalCaseRegex = new Regex(@"([a-z]|[A-Z]+)([A-Z](?!\d))");

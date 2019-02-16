@@ -5,7 +5,7 @@ namespace NativeAPI
     ///     Constants defined in <c>Winerror.h</c>.
     ///     Includes the most common <c>HRESULT</c> values.
     /// </summary>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/aa378137(v=vs.85).aspx"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/aa378137(v=vs.85).aspx"/>
     internal class WinErrorConstants
     {
         /// <summary>

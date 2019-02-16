@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace DotNetUtils.Extensions
 {
-    /// <see cref="http://stackoverflow.com/a/2984664/467582"/>
+    /// <see href="http://stackoverflow.com/a/2984664/467582"/>
     public static class CollectionExtensions
     {
         #region Joining

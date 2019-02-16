@@ -5,7 +5,7 @@ using System.Reflection;
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    ///     Extension methods for <see cref="MemberInfo"/> objects.
+    ///     Extension methods for <see href="MemberInfo"/> objects.
     /// </summary>
     public static class MemberInfoExtensions
     {

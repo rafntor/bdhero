@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Values for the <c>fMask</c> argument of various <see cref="SystemMenuAPI"/> API functions.
+    ///     Values for the <c>fMask</c> argument of various <see href="SystemMenuAPI"/> API functions.
     /// </summary>
     [Flags]
     public enum MenuItemInfoMember : uint
@@ -67,8 +67,8 @@ namespace NativeAPI.Win.User
         MIIM_SUBMENU = 0x00000004,
 
         /// <summary>
-        ///     Retrieves or sets the <c>fType</c> and <c>dwTypeData</c> members. <see cref="MIIM_TYPE"/> is replaced
-        ///     by <see cref="MIIM_BITMAP"/>, <see cref="MIIM_FTYPE"/>, and <see cref="MIIM_STRING"/>.
+        ///     Retrieves or sets the <c>fType</c> and <c>dwTypeData</c> members. <see href="MIIM_TYPE"/> is replaced
+        ///     by <see href="MIIM_BITMAP"/>, <see href="MIIM_FTYPE"/>, and <see href="MIIM_STRING"/>.
         /// </summary>
         MIIM_TYPE = 0x00000010,
     }

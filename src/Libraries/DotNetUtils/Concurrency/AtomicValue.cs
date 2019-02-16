@@ -26,7 +26,7 @@ namespace DotNetUtils.Concurrency
     /// <typeparam name="T"></typeparam>
     /// <remarks>
     /// This class manages access to a resource, allowing multiple threads for reading or exclusive access for writing.
-    /// A write operation will block (up to <see cref="MaxWait"/>) until all prior read operations have finished.
+    /// A write operation will block (up to <see href="MaxWait"/>) until all prior read operations have finished.
     /// Similarly, read operations will block until a write operation has finished.
     /// </remarks>
     public class AtomicValue<T>
@@ -34,7 +34,7 @@ namespace DotNetUtils.Concurrency
         /// <summary>
         /// Gets or sets the maximum amount of time to wait for a read or write lock before aborting the operation.
         /// The default is 1 second.  To abort immediately if a read/write lock is not available,
-        /// set to <c>0</c>.  To wait indefinitely for a lock, set to <c>-1</c> milliseconds (<see cref="Timeout.Infinite"/>).
+        /// set to <c>0</c>.  To wait indefinitely for a lock, set to <c>-1</c> milliseconds (<see href="Timeout.Infinite"/>).
         /// </summary>
         public TimeSpan MaxWait = TimeSpan.FromSeconds(1);
 
@@ -43,7 +43,7 @@ namespace DotNetUtils.Concurrency
         private T _value;
 
         /// <summary>
-        /// Constructs a new <see cref="AtomicValue{T}"/> object and initializes <see cref="Value"/>
+        /// Constructs a new <see href="AtomicValue{T}"/> object and initializes <see href="Value"/>
         /// to the default value for type <typeparamref name="T"/>.
         /// </summary>
         public AtomicValue()
@@ -51,9 +51,9 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        /// Constructs a new <see cref="AtomicValue{T}"/> object with the given <paramref name="initialValue"/>.
+        /// Constructs a new <see href="AtomicValue{T}"/> object with the given <paramref name="initialValue"/>.
         /// </summary>
-        /// <param name="initialValue">Initial value of <see cref="Value"/>.</param>
+        /// <param name="initialValue">Initial value of <see href="Value"/>.</param>
         public AtomicValue(T initialValue)
         {
             _value = initialValue;
@@ -83,7 +83,7 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        /// Gets or sets the value atomically.  Waits for at most <see cref="MaxWait"/> before giving up.
+        /// Gets or sets the value atomically.  Waits for at most <see href="MaxWait"/> before giving up.
         /// </summary>
         public T Value
         {
@@ -123,11 +123,11 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        /// Implicitly converts the given <see cref="AtomicValue{T}"/> object to its wrapped inner value.
+        /// Implicitly converts the given <see href="AtomicValue{T}"/> object to its wrapped inner value.
         /// </summary>
         /// <param name="atomicValue"></param>
         /// <returns>
-        ///     <see cref="Value"/>.
+        ///     <see href="Value"/>.
         /// </returns>
         public static implicit operator T(AtomicValue<T> atomicValue)
         {

@@ -27,7 +27,7 @@
         ///         Windows Forms font size = WPF font size * 72.0 / 96.0
         ///     </code>
         /// </remarks>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/ms751565(v=vs.100).aspx"/>
+        /// <seealso href="http://msdn.microsoft.com/en-us/library/ms751565(v=vs.100).aspx"/>
         public static double GetWinFormsFontSize(double wpfFontSize)
         {
             return wpfFontSize * Ratio;
@@ -53,7 +53,7 @@
         ///         Windows Forms font size = WPF font size * 72.0 / 96.0
         ///     </code>
         /// </remarks>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/ms751565(v=vs.100).aspx"/>
+        /// <seealso href="http://msdn.microsoft.com/en-us/library/ms751565(v=vs.100).aspx"/>
         public static double GetWpfFontSize(double winFormsFontSize)
         {
             return winFormsFontSize / Ratio;

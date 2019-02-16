@@ -15,14 +15,14 @@ namespace DotNetUtils.Exceptions
         public bool IsReportable = true;
 
         /// <summary>
-        ///     Constructs a new instance of the <see cref="ReportableException"/> class.
+        ///     Constructs a new instance of the <see href="ReportableException"/> class.
         /// </summary>
         public ReportableException()
         {
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ReportableException"/> class with a specified error message
+        ///     Initializes a new instance of the <see href="ReportableException"/> class with a specified error message
         ///     <paramref name="message"/>.
         /// </summary>
         /// <param name="message">
@@ -34,7 +34,7 @@ namespace DotNetUtils.Exceptions
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="ReportableException"/> class with a specified error message
+        ///     Initializes a new instance of the <see href="ReportableException"/> class with a specified error message
         ///     and a reference to the inner exception that is the cause of this exception.
         /// </summary>
         /// <param name="message">

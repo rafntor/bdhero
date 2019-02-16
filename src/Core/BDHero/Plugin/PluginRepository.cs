@@ -23,7 +23,7 @@ using DotNetUtils.Annotations;
 
 namespace BDHero.Plugin
 {
-    /// <see cref="http://www.codeproject.com/Articles/6334/Plug-ins-in-C"/>
+    /// <see href="http://www.codeproject.com/Articles/6334/Plug-ins-in-C"/>
     [UsedImplicitly]
     public class PluginRepository : IPluginRepository
     {

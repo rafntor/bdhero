@@ -23,7 +23,7 @@ using DotNetUtils.Concurrency;
 namespace OSUtils.Net
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports all OSes,
+    ///     Concrete implementation of the <see href="INetworkStatusMonitor"/> interface that supports all OSes,
     ///     though is likely slower and less accurate than <c>Windows7NetworkStatusMonitor</c>.
     /// </summary>
     [UsedImplicitly]

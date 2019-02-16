@@ -38,11 +38,11 @@ namespace BDHero.Plugin
         void ReportProgress(IPlugin plugin, double percentComplete, string shortStatus, string longStatus = null);
 
         /// <summary>
-        ///     Gets the <see cref="ProgressProvider"/> for the specified <paramref name="plugin"/>.
+        ///     Gets the <see href="ProgressProvider"/> for the specified <paramref name="plugin"/>.
         /// </summary>
-        /// <param name="plugin">The plugin whose <see cref="ProgressProvider"/> is required.</param>
+        /// <param name="plugin">The plugin whose <see href="ProgressProvider"/> is required.</param>
         /// <returns>
-        ///     The <see cref="ProgressProvider"/> for <paramref name="plugin"/>.
+        ///     The <see href="ProgressProvider"/> for <paramref name="plugin"/>.
         /// </returns>
         ProgressProvider GetProgressProvider(IPlugin plugin);
     }

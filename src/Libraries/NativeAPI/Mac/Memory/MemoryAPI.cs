@@ -87,7 +87,7 @@ namespace NativeAPI.Mac.Memory
         /// </summary>
         const int HW_MEMSIZE = 24;
 
-        /// <seealso cref="http://www.opensource.apple.com/source/xnu/xnu-1456.1.26/osfmk/mach/kern_return.h"/>
+        /// <seealso href="http://www.opensource.apple.com/source/xnu/xnu-1456.1.26/osfmk/mach/kern_return.h"/>
         const int KERN_SUCCESS = 0;
 
         /// <summary>
@@ -135,8 +135,8 @@ namespace NativeAPI.Mac.Memory
         ///         size_t  newlen;  // size of new value
         ///     </code>
         /// </remarks>
-        /// <seealso cref="http://www.freebsd.org/cgi/man.cgi?sysctl(3)"/>
-        /// <seealso cref="http://man7.org/linux/man-pages/man2/sysctl.2.html"/>
+        /// <seealso href="http://www.freebsd.org/cgi/man.cgi?sysctl(3)"/>
+        /// <seealso href="http://man7.org/linux/man-pages/man2/sysctl.2.html"/>
         [DllImport("libc", SetLastError = true)]
         static extern int sysctl(
             [In, Out] int[] name,       // int mib[] = { CTL_HW, HW_MEMSIZE }
@@ -168,8 +168,8 @@ namespace NativeAPI.Mac.Memory
         /// <remarks>
         ///     The <c>host_statistics</c> function returns scheduling and virtual memory statistics concerning the host as specified by flavor.
         /// </remarks>
-        /// <seealso cref="http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/host_statistics.html"/>
-        /// <seealso cref="http://www.gnu.org/software/hurd/gnumach-doc/Message-Format.html"/>
+        /// <seealso href="http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/host_statistics.html"/>
+        /// <seealso href="http://www.gnu.org/software/hurd/gnumach-doc/Message-Format.html"/>
         [DllImport("libc", SetLastError = true)]
         static extern int host_statistics(
             [In] uint host_priv,
@@ -188,7 +188,7 @@ namespace NativeAPI.Mac.Memory
         ///     The <c>mach_host_self</c> function returns send rights to the task's host self port.
         ///     By default, this is the name port for the current host but can be a different value if so set.
         /// </remarks>
-        /// <seealso cref="http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/mach_host_self.html"/>
+        /// <seealso href="http://web.mit.edu/darwin/src/modules/xnu/osfmk/man/mach_host_self.html"/>
         [DllImport("libc")]
         static extern uint mach_host_self();
 

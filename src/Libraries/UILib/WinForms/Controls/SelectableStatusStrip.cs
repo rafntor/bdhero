@@ -8,7 +8,7 @@ using UILib.Extensions;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     More robust <kbd>TAB</kbd> key support for the <see cref="StatusStrip"/> class.
+    ///     More robust <kbd>TAB</kbd> key support for the <see href="StatusStrip"/> class.
     ///     Allows child controls to be focused and iterated over using the <kbd>TAB</kbd> key.
     /// </summary>
     public class SelectableStatusStrip : StatusStrip
@@ -21,8 +21,8 @@ namespace UILib.WinForms.Controls
         /// </summary>
         /// <remarks>
         ///     <para>
-        ///         <b>NOTE:</b> This property <i>only</i> applies to child <see cref="ToolStripControlHost"/> items;
-        ///         other item types (e.g., <see cref="ToolStripSplitButton"/>) are not supported due to limitations
+        ///         <b>NOTE:</b> This property <i>only</i> applies to child <see href="ToolStripControlHost"/> items;
+        ///         other item types (e.g., <see href="ToolStripSplitButton"/>) are not supported due to limitations
         ///         in the .NET framework.
         ///     </para>
         ///     <para>
@@ -46,7 +46,7 @@ namespace UILib.WinForms.Controls
         private readonly bool _initialized;
 
         /// <summary>
-        ///     Constructs a new <see cref="SelectableStatusStrip"/> instance.
+        ///     Constructs a new <see href="SelectableStatusStrip"/> instance.
         /// </summary>
         public SelectableStatusStrip()
         {
@@ -218,7 +218,7 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         ///     Executes the specified delegate on the thread that owns the control's underlying window handle.
-        ///     Allows the caller to pass a lambda expression; the base <see cref="Control.Invoke(System.Delegate)"/>
+        ///     Allows the caller to pass a lambda expression; the base <see href="Control.Invoke(System.Delegate)"/>
         ///     method requires an explicit delegate.
         /// </summary>
         /// <param name="action">

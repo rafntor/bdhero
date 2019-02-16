@@ -26,7 +26,7 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         /// <summary>
         /// The absolute position (index) of the track in the output MKV, starting at 0.
-        /// If <see cref="IsSupported"/> is <c>false</c>, <see cref="OutputIndex"/> will be <c>-1</c>.
+        /// If <see href="IsSupported"/> is <c>false</c>, <see href="OutputIndex"/> will be <c>-1</c>.
         /// </summary>
         public int OutputIndex { get; set; }
 

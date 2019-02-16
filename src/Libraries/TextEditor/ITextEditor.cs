@@ -35,17 +35,17 @@ namespace TextEditor
         string Text { get; set; }
 
         /// <summary>
-        ///     Triggered whenever the value of the <see cref="Text"/> property changes.
+        ///     Triggered whenever the value of the <see href="Text"/> property changes.
         /// </summary>
         event EventHandler TextChanged;
 
         /// <summary>
-        ///     WPF font size.  Use the <see cref="FontSizeConverter"/> class to convert between Windows Forms and WPF font sizes.
+        ///     WPF font size.  Use the <see href="FontSizeConverter"/> class to convert between Windows Forms and WPF font sizes.
         /// </summary>
         double FontSize { get; set; }
 
         /// <summary>
-        ///     Triggered whenever the value of the <see cref="FontSize"/> property changes.
+        ///     Triggered whenever the value of the <see href="FontSize"/> property changes.
         /// </summary>
         event EventHandler FontSizeChanged;
 
@@ -55,7 +55,7 @@ namespace TextEditor
         bool Multiline { get; set; }
 
         /// <summary>
-        ///     Triggered whenever the value of the <see cref="Multiline"/> property changes.
+        ///     Triggered whenever the value of the <see href="Multiline"/> property changes.
         /// </summary>
         event EventHandler MultilineChanged;
 
@@ -66,17 +66,17 @@ namespace TextEditor
         bool ReadOnly { get; set; }
 
         /// <summary>
-        ///     Triggered whenever the value of the <see cref="ReadOnly"/> property changes.
+        ///     Triggered whenever the value of the <see href="ReadOnly"/> property changes.
         /// </summary>
         event EventHandler ReadOnlyChanged;
 
         /// <summary>
-        ///     Gets the number of horizontal pixels to hide when <see cref="Multiline"/> is <c>false</c>.
+        ///     Gets the number of horizontal pixels to hide when <see href="Multiline"/> is <c>false</c>.
         /// </summary>
         int HorizontalScrollBarHeightAllowance { get; }
 
         /// <summary>
-        ///     Gets the number of vertical pixels to hide when <see cref="Multiline"/> is <c>false</c>.
+        ///     Gets the number of vertical pixels to hide when <see href="Multiline"/> is <c>false</c>.
         /// </summary>
         int VerticalScrollBarWidthAllowance { get; }
 
@@ -116,7 +116,7 @@ namespace TextEditor
 
         /// <summary>
         ///     Loads syntax highlighting definitions from the given <paramref name="provider"/> and makes them
-        ///     available for future use via <see cref="SetSyntax"/> and <see cref="SetSyntaxFromExtension"/>.
+        ///     available for future use via <see href="SetSyntax"/> and <see href="SetSyntaxFromExtension"/>.
         /// </summary>
         /// <param name="provider"></param>
         void LoadSyntaxDefinitions(ISyntaxModeProvider provider);
@@ -183,12 +183,12 @@ namespace TextEditor
         bool CanRedo { get; }
 
         /// <summary>
-        ///     Undoes the previous edit.  This method may still be invoked programmatically even if <see cref="CanUndo"/> is <c>false</c>.
+        ///     Undoes the previous edit.  This method may still be invoked programmatically even if <see href="CanUndo"/> is <c>false</c>.
         /// </summary>
         void Undo();
 
         /// <summary>
-        ///     Redoes the previous edit.  This method may still be invoked programmatically even if <see cref="CanRedo"/> is <c>false</c>.
+        ///     Redoes the previous edit.  This method may still be invoked programmatically even if <see href="CanRedo"/> is <c>false</c>.
         /// </summary>
         void Redo();
 
@@ -207,7 +207,7 @@ namespace TextEditor
         bool CanClear { get; }
 
         /// <summary>
-        ///     Clears the contents of the editor, setting <see cref="Text"/> to <see cref="String.Empty"/>.
+        ///     Clears the contents of the editor, setting <see href="Text"/> to <see href="String.Empty"/>.
         /// </summary>
         void Clear();
 
@@ -262,8 +262,8 @@ namespace TextEditor
         #region Informational
 
         /// <summary>
-        ///     Gets whether the user has modified the text contents of the editor since the last time <see cref="Text"/>
-        ///     was set programmatically or <see cref="Load(System.IO.Stream)"/> or <see cref="Load(string)"/> was called.
+        ///     Gets whether the user has modified the text contents of the editor since the last time <see href="Text"/>
+        ///     was set programmatically or <see href="Load(System.IO.Stream)"/> or <see href="Load(string)"/> was called.
         /// </summary>
         bool IsModified { get; }
 

@@ -27,7 +27,7 @@ namespace BDInfo
 {
     /// <summary>
     /// Represents a BDMV/CLIPINF/XXXXX.CLPI file that contains information about
-    /// the corresponding <see cref="TSStreamFile"/> (BDMV/STREAM/XXXXX.M2TS file).
+    /// the corresponding <see href="TSStreamFile"/> (BDMV/STREAM/XXXXX.M2TS file).
     /// </summary>
     public class TSStreamClipFile
     {

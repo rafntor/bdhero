@@ -2,7 +2,7 @@
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Static class containing the symbolic names and hexadecimal values of dialog codes used by <see cref="WindowMessageType.WM_GETDLGCODE"/>.
+    ///     Static class containing the symbolic names and hexadecimal values of dialog codes used by <see href="WindowMessageType.WM_GETDLGCODE"/>.
     /// </summary>
     public static class DialogCode
     {
@@ -17,16 +17,16 @@ namespace NativeAPI.Win.User
         public const int DLGC_WANTTAB = 0x0002;
 
         /// <summary>
-        ///     All keyboard input.  Alias for <see cref="DLGC_WANTMESSAGE"/>.
+        ///     All keyboard input.  Alias for <see href="DLGC_WANTMESSAGE"/>.
         /// </summary>
-        /// <seealso cref="http://blogs.msdn.com/b/oldnewthing/archive/2007/06/26/3532603.aspx"/>
+        /// <seealso href="http://blogs.msdn.com/b/oldnewthing/archive/2007/06/26/3532603.aspx"/>
         public const int DLGC_WANTALLKEYS = 0x0004;
 
         /// <summary>
-        ///     All keyboard input (the application passes this message in the <see cref="System.Windows.Forms.Message"/> structure to the control).
-        ///     Alias for <see cref="DLGC_WANTALLKEYS"/>.
+        ///     All keyboard input (the application passes this message in the <see href="System.Windows.Forms.Message"/> structure to the control).
+        ///     Alias for <see href="DLGC_WANTALLKEYS"/>.
         /// </summary>
-        /// <seealso cref="http://blogs.msdn.com/b/oldnewthing/archive/2007/06/26/3532603.aspx"/>
+        /// <seealso href="http://blogs.msdn.com/b/oldnewthing/archive/2007/06/26/3532603.aspx"/>
         public const int DLGC_WANTMESSAGE = 0x0004;
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace NativeAPI.Win.User
         public const int DLGC_RADIOBUTTON = 0x0040;
 
         /// <summary>
-        ///     <see cref="WindowMessageType.WM_CHAR"/> messages.
+        ///     <see href="WindowMessageType.WM_CHAR"/> messages.
         /// </summary>
         public const int DLGC_WANTCHARS = 0x0080;
 

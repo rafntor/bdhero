@@ -64,7 +64,7 @@ namespace NativeAPI.Win.User
         IDC_NO = 32648,
 
         /// <summary>
-        ///     Obsolete for applications marked version 4.0 or later. Use <see cref="IDC_SIZEALL"/>.
+        ///     Obsolete for applications marked version 4.0 or later. Use <see href="IDC_SIZEALL"/>.
         /// </summary>
         IDC_SIZE = 32640,
 

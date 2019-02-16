@@ -32,7 +32,7 @@ namespace NativeAPI
 
         /// <summary>
         ///     Invokes the specified <paramref name="pinvokeExpr"/> containing a P/Invoke call
-        ///     and throws a <see cref="Win32Exception"/> if <paramref name="successCond"/> returns <c>false</c>.
+        ///     and throws a <see href="Win32Exception"/> if <paramref name="successCond"/> returns <c>false</c>.
         /// </summary>
         /// <typeparam name="T">Datatype returned by the P/Invoke call.</typeparam>
         /// <param name="pinvokeExpr">Expression containing a P/Invoke call.</param>
@@ -55,9 +55,9 @@ namespace NativeAPI
 
         /// <summary>
         ///     Invokes the specified <paramref name="pinvokeExpr"/> containing a P/Invoke call
-        ///     and throws a <see cref="Win32Exception"/> if it returns <c>false</c>.
+        ///     and throws a <see href="Win32Exception"/> if it returns <c>false</c>.
         /// </summary>
-        /// <param name="pinvokeExpr">Expression containing a P/Invoke call that returns a <see cref="bool"/>.</param>
+        /// <param name="pinvokeExpr">Expression containing a P/Invoke call that returns a <see href="bool"/>.</param>
         /// <returns>The return value of the P/Invoke call contained within <paramref name="pinvokeExpr"/>.</returns>
         /// <exception cref="Win32Exception">
         ///     Thrown if P/Invoke contained in the given <paramref name="pinvokeExpr"/> fails.
@@ -69,9 +69,9 @@ namespace NativeAPI
 
         /// <summary>
         ///     Invokes the specified <paramref name="pinvokeExpr"/> containing a P/Invoke call
-        ///     and throws a <see cref="Win32Exception"/> if it returns <see cref="IntPtr.Zero"/>.
+        ///     and throws a <see href="Win32Exception"/> if it returns <see href="IntPtr.Zero"/>.
         /// </summary>
-        /// <param name="pinvokeExpr">Expression containing a P/Invoke call that returns an <see cref="IntPtr"/>.</param>
+        /// <param name="pinvokeExpr">Expression containing a P/Invoke call that returns an <see href="IntPtr"/>.</param>
         /// <returns>The return value of the P/Invoke call contained within <paramref name="pinvokeExpr"/>.</returns>
         /// <exception cref="Win32Exception">
         ///     Thrown if P/Invoke contained in the given <paramref name="pinvokeExpr"/> fails.
@@ -83,8 +83,8 @@ namespace NativeAPI
 
         /// <summary>
         ///     Gets the error code returned by the last unmanaged function that was called using platform invoke
-        ///     that has the <see cref="DllImportAttribute.SetLastError"/> flag set and throws a
-        ///     <see cref="Win32Exception"/> containing the error code.
+        ///     that has the <see href="DllImportAttribute.SetLastError"/> flag set and throws a
+        ///     <see href="Win32Exception"/> containing the error code.
         /// </summary>
         /// <param name="apiSignature">String containing the API signature of the last P/Invoke call that failed.</param>
         /// <exception cref="Win32Exception">Always thrown.</exception>
@@ -101,7 +101,7 @@ namespace NativeAPI
         }
 
         /// <summary>
-        ///     Convenience wrapper around <see cref="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
+        ///     Convenience wrapper around <see href="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
         ///     Marshals data from an unmanaged block of memory to a newly allocated managed object of the specified type.
         /// </summary>
         /// <typeparam name="T">
@@ -120,7 +120,7 @@ namespace NativeAPI
         }
 
         /// <summary>
-        ///     Convenience wrapper around <see cref="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
+        ///     Convenience wrapper around <see href="Marshal.PtrToStructure(System.IntPtr,System.Type)"/>.
         ///     Marshals data from an unmanaged block of memory to a newly allocated managed object of the specified type.
         /// </summary>
         /// <typeparam name="T">

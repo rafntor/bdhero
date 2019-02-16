@@ -43,7 +43,7 @@ namespace UILib.WinForms.Dialogs.FS
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="FolderBrowserDialog3"/> instance.
+        ///     Constructs a new <see href="FolderBrowserDialog3"/> instance.
         /// </summary>
         /// <exception cref="TypeInitializationException">
         ///     Thrown if the operating system is not Windows Vista or newer

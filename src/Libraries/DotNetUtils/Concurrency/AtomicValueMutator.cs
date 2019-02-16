@@ -18,7 +18,7 @@
 namespace DotNetUtils.Concurrency
 {
     /// <summary>
-    ///     Mutates the value of an <see cref="AtomicValue{T}"/> object by inspecting its current value
+    ///     Mutates the value of an <see href="AtomicValue{T}"/> object by inspecting its current value
     ///     and returning a new value based upon it.
     /// </summary>
     /// <param name="currentValue"></param>

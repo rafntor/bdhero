@@ -24,7 +24,7 @@ using NativeAPI.Win.User;
 namespace NativeAPI.Win.Device
 {
     /// <summary>
-    ///     Struct for parameters of the <see cref="WindowMessageType.WM_DEVICECHANGE"/> message.
+    ///     Struct for parameters of the <see href="WindowMessageType.WM_DEVICECHANGE"/> message.
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
     public struct DEV_BROADCAST_VOLUME

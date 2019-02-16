@@ -25,7 +25,7 @@ using WebBrowserUtils;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     Turns a <see cref="Control"/> into a hyperlink by changing its cursor to a hand, launching the system's
+    ///     Turns a <see href="Control"/> into a hyperlink by changing its cursor to a hand, launching the system's
     ///     default Web browser when the user clicks on the control, and adding a context menu that includes options
     ///     to open the link or copy the URL to the clipboard.
     /// </summary>
@@ -60,7 +60,7 @@ namespace UILib.WinForms.Controls
         private readonly ToolTip _toolTip = new ToolTip();
 
         /// <summary>
-        ///     Constructs a new <see cref="Hyperlink"/> object with the given parameters.
+        ///     Constructs a new <see href="Hyperlink"/> object with the given parameters.
         /// </summary>
         /// <param name="control"></param>
         /// <param name="url"></param>

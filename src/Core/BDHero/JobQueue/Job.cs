@@ -84,7 +84,7 @@ namespace BDHero.JobQueue
         public TVShow SelectedTVShow { get { return TVShows.FirstOrDefault(show => show.IsSelected); } }
 
         /// <summary>
-        /// Gets the selected <see cref="Movie"/> or <see cref="TVShow"/>.
+        /// Gets the selected <see href="Movie"/> or <see href="TVShow"/>.
         /// </summary>
         [JsonIgnore]
         public ReleaseMedium SelectedReleaseMedium

@@ -34,7 +34,7 @@ namespace OSUtils.Net
 
         /// <summary>
         ///     Asynchronously tests whether the system is connected to the Internet
-        ///     and notifies observers via the <see cref="NetworkStatusChanged"/> event.
+        ///     and notifies observers via the <see href="NetworkStatusChanged"/> event.
         /// </summary>
         void TestConnectionAsync();
     }

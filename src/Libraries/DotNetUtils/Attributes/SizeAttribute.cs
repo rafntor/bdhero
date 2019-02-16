@@ -15,7 +15,7 @@ namespace DotNetUtils.Attributes
         public Size Size { get; set; }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="SizeAttribute"/> class with the specified
+        ///     Initializes a new instance of the <see href="SizeAttribute"/> class with the specified
         ///     <paramref name="width"/> and <paramref name="height"/>.
         /// </summary>
         /// <param name="width">Width represented by the enum member (typically in pixels).</param>

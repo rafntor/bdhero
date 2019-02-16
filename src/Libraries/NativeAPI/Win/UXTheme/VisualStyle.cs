@@ -4,8 +4,8 @@ namespace NativeAPI.Win.UXTheme
     /// <summary>
     ///     VisualStyle Style Guide symbols from <c>vsstyle.h</c>.
     /// </summary>
-    /// <seealso cref="http://www.ookii.org/misc/vsstyle.h"/>
-    /// <seealso cref="https://code.google.com/p/miranda/source/browse/trunk/miranda/include/msapi/vssym32.h?r=11670"/>
+    /// <seealso href="http://www.ookii.org/misc/vsstyle.h"/>
+    /// <seealso href="https://code.google.com/p/miranda/source/browse/trunk/miranda/include/msapi/vssym32.h?r=11670"/>
     internal static class VisualStyle
     {
         #region Theme classes
@@ -13,7 +13,7 @@ namespace NativeAPI.Win.UXTheme
         /// <summary>
         ///     Theme class (i.e., type).
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/6539701/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/6539701/467582"/>
         public static class CLASS
         {
             public const string BUTTON = "BUTTON";

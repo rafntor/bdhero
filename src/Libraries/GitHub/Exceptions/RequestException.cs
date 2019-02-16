@@ -18,7 +18,7 @@ namespace GitHub.Exceptions
         public ErrorResponse ErrorResponse { get; private set; }
 
         /// <summary>
-        ///     Constructs a new <see cref="RequestException"/> instance with the given parameters.
+        ///     Constructs a new <see href="RequestException"/> instance with the given parameters.
         /// </summary>
         /// <param name="innerException">
         ///     The inner exception that caused this <c>RequestException</c>.
@@ -34,7 +34,7 @@ namespace GitHub.Exceptions
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="RequestException"/> instance with the given parameters.
+        ///     Constructs a new <see href="RequestException"/> instance with the given parameters.
         /// </summary>
         /// <param name="message">
         ///     Custom error message.

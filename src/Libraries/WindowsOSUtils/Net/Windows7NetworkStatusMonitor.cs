@@ -24,8 +24,8 @@ using OSUtils.Net;
 namespace WindowsOSUtils.Net
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.
-    ///     Faster and more accurate than <see cref="GenericNetworkStatusMonitor"/>.
+    ///     Concrete implementation of the <see href="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.
+    ///     Faster and more accurate than <see href="GenericNetworkStatusMonitor"/>.
     /// </summary>
     [UsedImplicitly]
     public class Windows7NetworkStatusMonitor : INetworkStatusMonitor
@@ -66,7 +66,7 @@ namespace WindowsOSUtils.Net
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="Windows7NetworkStatusMonitor"/> object.
+        ///     Constructs a new <see href="Windows7NetworkStatusMonitor"/> object.
         /// </summary>
         public Windows7NetworkStatusMonitor()
         {

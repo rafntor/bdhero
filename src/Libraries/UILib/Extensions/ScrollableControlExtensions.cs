@@ -21,7 +21,7 @@ using System.Windows.Forms;
 namespace UILib.Extensions
 {
     /// <summary>
-    ///     Extension methods for <see cref="ScrollableControl"/> objects.
+    ///     Extension methods for <see href="ScrollableControl"/> objects.
     /// </summary>
     public static class ScrollableControlExtensions
     {

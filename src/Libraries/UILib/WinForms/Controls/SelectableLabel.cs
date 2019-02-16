@@ -24,7 +24,7 @@ using UILib.Extensions;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     Emulates a <see cref="Label"/> control that allows its text to be selected with a mouse or keyboard.
+    ///     Emulates a <see href="Label"/> control that allows its text to be selected with a mouse or keyboard.
     /// </summary>
     public class SelectableLabel : TextBox
     {
@@ -47,7 +47,7 @@ namespace UILib.WinForms.Controls
         private bool _autoSize;
 
         /// <summary>
-        ///     Constructs a new <see cref="SelectableLabel"/> control.
+        ///     Constructs a new <see href="SelectableLabel"/> control.
         /// </summary>
         public SelectableLabel()
         {

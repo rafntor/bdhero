@@ -24,14 +24,14 @@ using NativeAPI.Win.Kernel;
 namespace ProcessUtils
 {
     /// <summary>
-    /// Adds suspend and resume functionality to the <see cref="Process"/> class.
+    /// Adds suspend and resume functionality to the <see href="Process"/> class.
     /// </summary>
     public static class ProcessExtensions
     {
         /// <summary>
         /// Suspends the process by iterating over its threads and suspending each thread.
         /// </summary>
-        /// <see cref="http://stackoverflow.com/questions/71257/suspend-process-in-c-sharp"/>
+        /// <see href="http://stackoverflow.com/questions/71257/suspend-process-in-c-sharp"/>
         public static void Suspend(this Process process)
         {
             if (process.HasExited || process.ProcessName == String.Empty)
@@ -46,7 +46,7 @@ namespace ProcessUtils
         /// <summary>
         /// Resumes the process by iterating over its threads and resuming each thread.
         /// </summary>
-        /// <see cref="http://stackoverflow.com/questions/71257/suspend-process-in-c-sharp"/>
+        /// <see href="http://stackoverflow.com/questions/71257/suspend-process-in-c-sharp"/>
         public static void Resume(this Process process)
         {
             if (process.HasExited || process.ProcessName == String.Empty)

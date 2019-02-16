@@ -52,7 +52,7 @@ namespace DotNetUtils.Net
         public event BeforeRequestEventHandler BeforeRequest;
 
         /// <summary>
-        /// Execution context (a.k.a. thread) to invoke <see cref="ProgressChanged"/> notifications on.
+        /// Execution context (a.k.a. thread) to invoke <see href="ProgressChanged"/> notifications on.
         /// Defaults to the current thread's context if none is specified.
         /// </summary>
         public TaskScheduler CallbackThread;
@@ -60,7 +60,7 @@ namespace DotNetUtils.Net
         public CancellationToken CancellationToken;
 
         /// <summary>
-        /// Invoked on the <c>TaskScheduler</c> specified by <see cref="CallbackThread"/> whenever the state or progress of the download changes.
+        /// Invoked on the <c>TaskScheduler</c> specified by <see href="CallbackThread"/> whenever the state or progress of the download changes.
         /// </summary>
         public event FileDownloadProgressChangedHandler ProgressChanged;
 
@@ -72,7 +72,7 @@ namespace DotNetUtils.Net
 
         /// <summary>
         /// Retrieves the value of the HTTP <c>Content-Length</c> response header
-        /// by performing an HTTP <c>HEAD</c> request for <see cref="Uri"/>.
+        /// by performing an HTTP <c>HEAD</c> request for <see href="Uri"/>.
         /// </summary>
         /// <returns>Size of the download in bytes</returns>
         public long GetContentLength()

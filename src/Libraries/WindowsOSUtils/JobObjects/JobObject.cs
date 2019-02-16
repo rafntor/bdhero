@@ -36,7 +36,7 @@ namespace WindowsOSUtils.JobObjects
     ///     enforcing limits such as working set size and process priority or terminating
     ///     all processes associated with a job.
     /// </remarks>
-    /// <see cref="http://skolima.blogspot.com/2012/09/handling-native-api-in-managed.html" />
+    /// <see href="http://skolima.blogspot.com/2012/09/handling-native-api-in-managed.html" />
     public sealed class JobObject : IJobObject
     {
         private readonly IntPtr _jobObjectHandle;
@@ -62,12 +62,12 @@ namespace WindowsOSUtils.JobObjects
         ///     Frees managed and unmanaged resources.
         /// </summary>
         /// <param name="freeManagedObjectsAlso">
-        ///     Free managed resources.  Should only be set to <c>true</c> when called from <see cref="Dispose"/>.
+        ///     Free managed resources.  Should only be set to <c>true</c> when called from <see href="Dispose"/>.
         /// </param>
         /// <exception cref="Win32Exception">
         ///     Thrown if the handle to the Job Object could not be released.
         /// </exception>
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         private void Dispose(bool freeManagedObjectsAlso)
         {
             // Free unmanaged resources
@@ -89,7 +89,7 @@ namespace WindowsOSUtils.JobObjects
         /// <exception cref="Win32Exception">
         ///     Thrown if the handle to the Job Object could not be released.
         /// </exception>
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         public void Dispose()
         {
             Dispose(true); // I am calling you from Dispose, it's safe

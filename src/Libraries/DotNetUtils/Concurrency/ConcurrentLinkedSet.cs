@@ -32,7 +32,7 @@ namespace DotNetUtils.Concurrency
         /// <summary>
         /// Gets or sets the maximum amount of time to wait for a read or write lock before aborting the operation.
         /// The default is 5 seconds.  To abort immediately if a read/write lock is not available,
-        /// set to <c>0</c>.  To wait indefinitely for a lock, set to <c>-1</c> milliseconds (<see cref="Timeout.Infinite"/>).
+        /// set to <c>0</c>.  To wait indefinitely for a lock, set to <c>-1</c> milliseconds (<see href="Timeout.Infinite"/>).
         /// </summary>
         public TimeSpan MaxWait = TimeSpan.FromSeconds(5);
 

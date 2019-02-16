@@ -33,7 +33,7 @@ namespace DotNetUtils.Concurrency
     }
 
     /// <summary>
-    ///     Default implementation of the <see cref="IPromise{TResult}"/> interface.
+    ///     Default implementation of the <see href="IPromise{TResult}"/> interface.
     /// </summary>
     public class Promise<TResult> : IPromise<TResult>
     {
@@ -101,7 +101,7 @@ namespace DotNetUtils.Concurrency
         #region Constructors
 
         /// <summary>
-        ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
+        ///     Constructs a new <see href="Promise{TResult}"/> instance that invokes callback event handlers on
         ///     the <b>current thread</b>.
         /// </summary>
         public Promise()
@@ -110,7 +110,7 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="Promise{TResult}"/> instance that invokes callback event handlers on
+        ///     Constructs a new <see href="Promise{TResult}"/> instance that invokes callback event handlers on
         ///     the given <paramref name="synchronizingObject"/>'s owner thread.
         /// </summary>
         /// <param name="synchronizingObject">
@@ -554,8 +554,8 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        ///     Called immediately prior to <see cref="DispatchCompletionEvents"/>.
-        ///     Subclasses may override this method to set the value of <see cref="Result"/> before any completion events
+        ///     Called immediately prior to <see href="DispatchCompletionEvents"/>.
+        ///     Subclasses may override this method to set the value of <see href="Result"/> before any completion events
         ///     are invoked.
         /// </summary>
         protected virtual void BeforeDispatchCompletionEvents()

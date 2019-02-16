@@ -20,7 +20,7 @@ using DotNetUtils.FS;
 namespace DotNetUtils.Net
 {
     /// <summary>
-    /// Represents the current progess state of a <see cref="FileDownloader"/>.
+    /// Represents the current progess state of a <see href="FileDownloader"/>.
     /// </summary>
     public class FileDownloadProgress
     {
@@ -65,7 +65,7 @@ namespace DotNetUtils.Net
         public readonly bool IsComplete;
 
         /// <summary>
-        /// Initializes a new <c>FileDownloadProgress</c> object in the <see cref="FileDownloadState.Ready"/> state
+        /// Initializes a new <c>FileDownloadProgress</c> object in the <see href="FileDownloadState.Ready"/> state
         /// with all other values initialized to zero (<c>0</c>).
         /// </summary>
         public FileDownloadProgress() : this(FileDownloadState.Ready, 0, 0, 0)

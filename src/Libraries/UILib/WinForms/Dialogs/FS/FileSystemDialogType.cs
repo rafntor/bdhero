@@ -18,22 +18,22 @@
 namespace UILib.WinForms.Dialogs.FS
 {
     /// <summary>
-    ///     Enum containing the available <see cref="IFileSystemDialog"/> implementations.
+    ///     Enum containing the available <see href="IFileSystemDialog"/> implementations.
     /// </summary>
     public enum FileSystemDialogType
     {
         /// <summary>
-        ///     Open a file using the <see cref="OpenFileDialog2"/> class.
+        ///     Open a file using the <see href="OpenFileDialog2"/> class.
         /// </summary>
         OpenFile,
 
         /// <summary>
-        ///     Save a file using the <see cref="SaveFileDialog2"/> class.
+        ///     Save a file using the <see href="SaveFileDialog2"/> class.
         /// </summary>
         SaveFile,
 
         /// <summary>
-        ///     Open a folder using the <see cref="FolderBrowserDialog2"/> or <see cref="FolderBrowserDialog3"/> class
+        ///     Open a folder using the <see href="FolderBrowserDialog2"/> or <see href="FolderBrowserDialog3"/> class
         ///     (depending on the operating system).
         /// </summary>
         OpenDirectory

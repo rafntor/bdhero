@@ -25,8 +25,8 @@ using UILib.Extensions;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    /// A more sensible extension of the standard <see cref="ProgressBar"/> class that adds
-    /// a getter/setter for <see cref="ProgressBar.Value"/> that accepts a <c>double</c>
+    /// A more sensible extension of the standard <see href="ProgressBar"/> class that adds
+    /// a getter/setter for <see href="ProgressBar.Value"/> that accepts a <c>double</c>
     /// in the range 0.0 to 100.0.  It also supports custom colors to denote state.
     /// </summary>
     public class ProgressBar2 : ProgressBar
@@ -141,7 +141,7 @@ namespace UILib.WinForms.Controls
             base.OnPaintBackground(e);
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/7490884/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/7490884/467582"/>
         protected override void OnPaint(PaintEventArgs e)
         {
             if (!UseCustomColors)

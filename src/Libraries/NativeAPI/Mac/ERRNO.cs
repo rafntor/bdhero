@@ -4,7 +4,7 @@ namespace NativeAPI.Mac
     /// <summary>
     ///     Standard system error codes defined in <c>/usr/include/sys/errno.h</c>.
     /// </summary>
-    /// <seealso cref="http://www.freebsd.org/cgi/man.cgi?sysctl(3)"/>
+    /// <seealso href="http://www.freebsd.org/cgi/man.cgi?sysctl(3)"/>
     public enum ERRNO
     {
         /// <summary>

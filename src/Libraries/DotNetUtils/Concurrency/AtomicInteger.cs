@@ -18,7 +18,7 @@
 namespace DotNetUtils.Concurrency
 {
     /// <summary>
-    ///     Provides atomic incrementing and decrementing of integer values to <see cref="AtomicValue{T}"/>.
+    ///     Provides atomic incrementing and decrementing of integer values to <see href="AtomicValue{T}"/>.
     /// </summary>
     public class AtomicInteger : AtomicValue<int>
     {

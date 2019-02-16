@@ -23,7 +23,7 @@ namespace DotNetUtils.Extensions
         ///     The string is not in the correct format.
         /// </exception>
         /// <exception cref="OverflowException">
-        ///     The string represents a number that is less than <see cref="int.MinValue"/> or greater than <see cref="int.MaxValue"/>.
+        ///     The string represents a number that is less than <see href="int.MinValue"/> or greater than <see href="int.MaxValue"/>.
         /// </exception>
         public static int ParseIntInvariant(this string str)
         {
@@ -43,7 +43,7 @@ namespace DotNetUtils.Extensions
         ///     The string is not in the correct format.
         /// </exception>
         /// <exception cref="OverflowException">
-        ///     The string represents a number that is less than <see cref="long.MinValue"/> or greater than <see cref="long.MaxValue"/>.
+        ///     The string represents a number that is less than <see href="long.MinValue"/> or greater than <see href="long.MaxValue"/>.
         /// </exception>
         public static long ParseLongInvariant(this string str)
         {
@@ -63,7 +63,7 @@ namespace DotNetUtils.Extensions
         ///     The string is not in the correct format.
         /// </exception>
         /// <exception cref="OverflowException">
-        ///     The string represents a number that is less than <see cref="UInt64.MinValue"/> or greater than <see cref="UInt64.MaxValue"/>.
+        ///     The string represents a number that is less than <see href="UInt64.MinValue"/> or greater than <see href="UInt64.MaxValue"/>.
         /// </exception>
         public static UInt64 ParseUInt64Invariant(this string str)
         {
@@ -83,7 +83,7 @@ namespace DotNetUtils.Extensions
         ///     The string is not in the correct format.
         /// </exception>
         /// <exception cref="OverflowException">
-        ///     The string represents a number that is less than <see cref="float.MinValue"/> or greater than <see cref="float.MaxValue"/>.
+        ///     The string represents a number that is less than <see href="float.MinValue"/> or greater than <see href="float.MaxValue"/>.
         /// </exception>
         public static float ParseFloatInvariant(this string str)
         {
@@ -103,7 +103,7 @@ namespace DotNetUtils.Extensions
         ///     The string is not in the correct format.
         /// </exception>
         /// <exception cref="OverflowException">
-        ///     The string represents a number that is less than <see cref="double.MinValue"/> or greater than <see cref="double.MaxValue"/>.
+        ///     The string represents a number that is less than <see href="double.MinValue"/> or greater than <see href="double.MaxValue"/>.
         /// </exception>
         public static double ParseDoubleInvariant(this string str)
         {
@@ -118,7 +118,7 @@ namespace DotNetUtils.Extensions
         ///     When this method returns, contains a double-precision floating-point number equivalent to the numeric value
         ///     or symbol contained in the string, if the conversion succeeded, or zero if the conversion failed.
         ///     The conversion fails if the the string is <c>null</c>, is not in a compliant format, or represents
-        ///     a number less than <see cref="double.MinValue"/> or greater than <see cref="double.MaxValue"/>.
+        ///     a number less than <see href="double.MinValue"/> or greater than <see href="double.MaxValue"/>.
         ///     This parameter is passed uninitialized. 
         /// </param>
         /// <returns>

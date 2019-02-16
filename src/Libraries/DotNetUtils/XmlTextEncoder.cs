@@ -8,13 +8,13 @@ namespace DotNetUtils
     /// <summary>
     ///     Encodes data so that it can be safely embedded as text in XML documents.
     /// </summary>
-    /// <seealso cref="https://github.com/mkropat/.NET-Snippets/blob/master/XmlTextEncoder.cs" />
-    /// <seealso cref="http://stackoverflow.com/a/732135/467582" />
-    /// <seealso cref="http://en.wikipedia.org/wiki/UTF-16/UCS-2" />
-    /// <seealso cref="http://www.w3.org/TR/xml11/#sec-predefined-ent" />
-    /// <seealso cref="http://www.w3.org/TR/xml11/#charsets" />
-    /// <seealso cref="http://www.w3.org/TR/xml11/#sec-references" />
-    /// <seealso cref="http://www.w3.org/TR/xml11/#sec-cdata-sect" />
+    /// <seealso href="https://github.com/mkropat/.NET-Snippets/blob/master/XmlTextEncoder.cs" />
+    /// <seealso href="http://stackoverflow.com/a/732135/467582" />
+    /// <seealso href="http://en.wikipedia.org/wiki/UTF-16/UCS-2" />
+    /// <seealso href="http://www.w3.org/TR/xml11/#sec-predefined-ent" />
+    /// <seealso href="http://www.w3.org/TR/xml11/#charsets" />
+    /// <seealso href="http://www.w3.org/TR/xml11/#sec-references" />
+    /// <seealso href="http://www.w3.org/TR/xml11/#sec-cdata-sect" />
     public class XmlTextEncoder : TextReader
     {
         private static readonly Dictionary<char, string> Entities =

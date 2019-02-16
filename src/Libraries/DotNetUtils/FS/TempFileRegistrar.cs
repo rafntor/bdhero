@@ -29,7 +29,7 @@ using DotNetUtils.Extensions;
 namespace DotNetUtils.FS
 {
     /// <summary>
-    ///     Concrete implementation of the <seealso cref="ITempFileRegistrar"/> interface.
+    ///     Concrete implementation of the <seealso href="ITempFileRegistrar"/> interface.
     ///     <pre>
     ///         %TEMP%/{ProductName}/{EntryAssemblyPathSHA1Hash[0,7]}/{Process.ID}/{CallingAssembly.Name}/{subdirectoryNames[0]}/{subdirectoryNames[1]}/{...}
     ///     </pre>
@@ -61,9 +61,9 @@ namespace DotNetUtils.FS
         ///     Frees managed and unmanaged resources.
         /// </summary>
         /// <param name="freeManagedObjectsAlso">
-        ///     Free managed resources.  Should only be set to <c>true</c> when called from <see cref="Dispose"/>.
+        ///     Free managed resources.  Should only be set to <c>true</c> when called from <see href="Dispose"/>.
         /// </param>
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         private void Dispose(bool freeManagedObjectsAlso)
         {
             // Free unmanaged resources
@@ -80,7 +80,7 @@ namespace DotNetUtils.FS
             }
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         public void Dispose()
         {
             Dispose(true); // I am calling you from Dispose, it's safe

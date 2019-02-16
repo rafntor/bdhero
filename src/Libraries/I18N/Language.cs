@@ -39,7 +39,7 @@ namespace I18N
         #region Static properties (public)
 
         /// <summary>
-        /// Gets a readonly collection (in no particular order) of all known Blu-ray <see cref="Language"/>s.
+        /// Gets a readonly collection (in no particular order) of all known Blu-ray <see href="Language"/>s.
         /// </summary>
         public static ICollection<Language> AllLanguages
         {
@@ -88,7 +88,7 @@ namespace I18N
         public string Name { get; private set; }
 
         /// <summary>
-        /// Gets a string containing the <see cref="ISO_639_2"/> and <see cref="Name"/> of the language,
+        /// Gets a string containing the <see href="ISO_639_2"/> and <see href="Name"/> of the language,
         /// suitable for displaying in UIs.
         /// </summary>
         public string UIDisplayName

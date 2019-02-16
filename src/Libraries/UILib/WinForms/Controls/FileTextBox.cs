@@ -25,7 +25,7 @@ using UILib.WinForms.Dialogs.FS;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    /// Simple wrapper control that contains a <see cref="System.Windows.Forms.TextBox"/> and a "Browse" <see cref="Button"/>
+    /// Simple wrapper control that contains a <see href="System.Windows.Forms.TextBox"/> and a "Browse" <see href="Button"/>
     /// to let users select files or folders from standard system dialogs.
     /// </summary>
     public partial class FileTextBox : UserControl
@@ -98,7 +98,7 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         /// Gets or sets whether the "New folder" button will be visible in the dialog.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenDirectory"/>.
+        /// Only applies when <see href="DialogType"/> is set to <see href="FileSystemDialogType.OpenDirectory"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -107,7 +107,7 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         /// Gets or sets whether the user can select multiple files or directories.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenFile"/> or <see cref="FileSystemDialogType.OpenDirectory"/>.
+        /// Only applies when <see href="DialogType"/> is set to <see href="FileSystemDialogType.OpenFile"/> or <see href="FileSystemDialogType.OpenDirectory"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -116,7 +116,7 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         /// Gets or sets whether the user should be prompted to overwrite an existing file.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.SaveFile"/>.
+        /// Only applies when <see href="DialogType"/> is set to <see href="FileSystemDialogType.SaveFile"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -130,8 +130,8 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         /// Gets or sets whether the "Browse" file dialog should allow the user to open/save files with any file extension (*.*),
-        /// even if the extension is not in the list of <see cref="FileTypes"/>.
-        /// Only applies when <see cref="DialogType"/> is set to <see cref="FileSystemDialogType.OpenFile"/> or <see cref="FileSystemDialogType.SaveFile"/>.
+        /// even if the extension is not in the list of <see href="FileTypes"/>.
+        /// Only applies when <see href="DialogType"/> is set to <see href="FileSystemDialogType.OpenFile"/> or <see href="FileSystemDialogType.SaveFile"/>.
         /// </summary>
         [Browsable(true)]
         [EditorBrowsable(EditorBrowsableState.Always)]
@@ -155,7 +155,7 @@ namespace UILib.WinForms.Controls
         public new event EventHandler TextChanged;
 
         /// <summary>
-        /// Triggered when the <see cref="SelectedPath"/> changes after the user selects a new path
+        /// Triggered when the <see href="SelectedPath"/> changes after the user selects a new path
         /// from the dialog box and presses "Select" (or "Save").
         /// </summary>
         [Browsable(true)]
@@ -202,7 +202,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        /// Highlights the TextBox by changing its <see cref="BorderStyle"/>.
+        /// Highlights the TextBox by changing its <see href="BorderStyle"/>.
         /// </summary>
         public void Highlight()
         {
@@ -210,7 +210,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        /// Removes highlighting from the TextBox by reverting its <see cref="BorderStyle"/> back to its original value.
+        /// Removes highlighting from the TextBox by reverting its <see href="BorderStyle"/> back to its original value.
         /// </summary>
         public void UnHighlight()
         {
@@ -218,7 +218,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        /// Displays the file/folder dialog specified by <see cref="DialogType"/>.
+        /// Displays the file/folder dialog specified by <see href="DialogType"/>.
         /// </summary>
         public void Browse()
         {

@@ -126,7 +126,7 @@ namespace DotNetUtils
         /// </summary>
         /// <typeparam name="T">
         ///     Type of the assembly attribute to get.
-        ///     E.G., <see cref="AssemblyTitleAttribute" />, <see cref="AssemblyDescriptionAttribute" />.
+        ///     E.G., <see href="AssemblyTitleAttribute" />, <see href="AssemblyDescriptionAttribute" />.
         /// </typeparam>
         /// <returns>
         ///     The first assembly attribute of type <typeparamref name="T" /> in the entry assembly, or <c>null</c>
@@ -148,11 +148,11 @@ namespace DotNetUtils
         /// </summary>
         /// <typeparam name="T">
         ///     Type of the assembly attribute to get.
-        ///     E.G., <see cref="AssemblyTitleAttribute" />, <see cref="AssemblyDescriptionAttribute" />.
+        ///     E.G., <see href="AssemblyTitleAttribute" />, <see href="AssemblyDescriptionAttribute" />.
         /// </typeparam>
         /// <param name="expr">
         ///     An expression that takes the first entry assembly attribute of type <typeparamref name="T" />
-        ///     and returns a <see cref="String"/> containing its value.  The argument passed to
+        ///     and returns a <see href="String"/> containing its value.  The argument passed to
         ///     <paramref name="expr"/> will <b>never</b> be null.
         /// </param>
         /// <returns>

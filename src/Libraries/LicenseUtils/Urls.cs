@@ -21,7 +21,7 @@ using DotNetUtils.Annotations;
 namespace LicenseUtils
 {
     /// <summary>
-    ///     Common URLs for a <see cref="Work"/>.
+    ///     Common URLs for a <see href="Work"/>.
     /// </summary>
     [UsedImplicitly]
     public class Urls

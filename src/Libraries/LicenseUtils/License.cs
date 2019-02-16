@@ -30,7 +30,7 @@ namespace LicenseUtils
     {
         /// <summary>
         ///     The machine-readable name of the license.  Appending <c>".md"</c> to this value will produce the
-        ///     filename needed to load the contents of <see cref="Text"/>.
+        ///     filename needed to load the contents of <see href="Text"/>.
         /// </summary>
         /// <example>
         ///     <c>"cc_sa_2.5"</c>
@@ -47,7 +47,7 @@ namespace LicenseUtils
         public string Name;
 
         /// <summary>
-        ///     Abbreviation of <see cref="Name"/>, if applicable.
+        ///     Abbreviation of <see href="Name"/>, if applicable.
         /// </summary>
         /// <example>
         ///     <c>"GPL"</c>
@@ -85,13 +85,13 @@ namespace LicenseUtils
         public bool IsCustom;
 
         /// <summary>
-        ///     The full HTML markup of the license agreement.  This is the formatted equivalent of <see cref="Text"/>.
+        ///     The full HTML markup of the license agreement.  This is the formatted equivalent of <see href="Text"/>.
         /// </summary>
         [JsonIgnore]
         public string Html;
 
         /// <summary>
-        ///     The plain text contents of the license agreement.  This is the unformatted equivalent of <see cref="Html"/>.
+        ///     The plain text contents of the license agreement.  This is the unformatted equivalent of <see href="Html"/>.
         /// </summary>
         [JsonIgnore]
         public string Text;

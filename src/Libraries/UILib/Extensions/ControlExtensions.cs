@@ -26,7 +26,7 @@ using NativeAPI.Win.User;
 namespace UILib.Extensions
 {
     /// <summary>
-    /// Extension methods for classes derived from the <see cref="Control"/> base class.
+    /// Extension methods for classes derived from the <see href="Control"/> base class.
     /// </summary>
     public static class ControlExtensions
     {
@@ -95,7 +95,7 @@ namespace UILib.Extensions
         /// </summary>
         /// <param name="control"></param>
         /// <returns></returns>
-        /// <seealso cref="http://stackoverflow.com/a/2735242/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/2735242/467582"/>
         public static IEnumerable<Control> Descendants(this Control control)
         {
             return Descendants<Control>(control);
@@ -108,7 +108,7 @@ namespace UILib.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="control"></param>
         /// <returns></returns>
-        /// <seealso cref="http://stackoverflow.com/a/2735242/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/2735242/467582"/>
         public static IEnumerable<T> Descendants<T>(this Control control) where T : class
         {
             foreach (Control child in control.Controls)
@@ -198,9 +198,9 @@ namespace UILib.Extensions
         /// <param name="doubleBuffered">
         /// If <c>true</c>, the control is first drawn to a buffer rather than directly to the screen,
         /// which can reduce flicker.  If you set this property to <c>true</c>, you should also set
-        /// the <see cref="ControlStyles.AllPaintingInWmPaint"/> flag to true.
+        /// the <see href="ControlStyles.AllPaintingInWmPaint"/> flag to true.
         /// </param>
-        /// <seealso cref="http://stackoverflow.com/a/77233/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/77233/467582"/>
         public static void SetDoubleBuffered(this Control control, bool doubleBuffered)
         {
             PropertyInfo prop =
@@ -225,7 +225,7 @@ namespace UILib.Extensions
         /// <param name="control"></param>
         /// <param name="userPaint">
         /// If <c>true</c>, the control paints itself rather than the operating system doing so.
-        /// If <c>false</c>, the <see cref="Control.Paint"/> event is not raised.
+        /// If <c>false</c>, the <see href="Control.Paint"/> event is not raised.
         /// </param>
         public static void SetUserPaint(this Control control, bool userPaint)
         {
@@ -280,7 +280,7 @@ namespace UILib.Extensions
         /// Prevents controls from repainting.
         /// </summary>
         /// <param name="parent"></param>
-        /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/487757/467582"/>
         public static void SuspendDrawing(this Control parent)
         {
             WindowAPI.SendMessage(parent.Handle, WindowMessageType.WM_SETREDRAW, false, IntPtr.Zero);
@@ -290,7 +290,7 @@ namespace UILib.Extensions
         /// Allows controls to repaint.
         /// </summary>
         /// <param name="parent"></param>
-        /// <seealso cref="http://stackoverflow.com/a/487757/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/487757/467582"/>
         public static void ResumeDrawing(this Control parent)
         {
             WindowAPI.SendMessage(parent.Handle, WindowMessageType.WM_SETREDRAW, true, IntPtr.Zero);

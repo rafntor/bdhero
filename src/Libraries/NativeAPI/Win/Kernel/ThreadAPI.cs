@@ -55,7 +55,7 @@ namespace NativeAPI.Win.Kernel
         ///         granted access to the thread object only to the extent it was specified in the <paramref name="dwDesiredAccess"/> parameter.
         ///     </para>
         ///     <para>
-        ///         When you are finished with the handle, be sure to close it by using the <see cref="CloseHandle"/> function.
+        ///         When you are finished with the handle, be sure to close it by using the <see href="CloseHandle"/> function.
         ///     </para>
         /// </remarks>
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -63,7 +63,7 @@ namespace NativeAPI.Win.Kernel
 
         /// <summary>
         ///     Suspends the specified thread.
-        ///     A 64-bit application can suspend a WOW64 thread using the <see cref="Wow64SuspendThread"/> function.
+        ///     A 64-bit application can suspend a WOW64 thread using the <see href="Wow64SuspendThread"/> function.
         /// </summary>
         /// <param name="hThread">
         ///     <para>
@@ -84,7 +84,7 @@ namespace NativeAPI.Win.Kernel
         ///     </para>
         ///     <para>
         ///         This function is primarily designed for use by debuggers. It is not intended to be used for thread
-        ///         synchronization. Calling <see cref="SuspendThread"/> on a thread that owns a synchronization object, such as a
+        ///         synchronization. Calling <see href="SuspendThread"/> on a thread that owns a synchronization object, such as a
         ///         mutex or critical section, can lead to a deadlock if the calling thread tries to obtain a
         ///         synchronization object owned by a suspended thread. To avoid this situation, a thread within an
         ///         application that is not a debugger should signal the other thread to suspend itself. The target
@@ -93,11 +93,11 @@ namespace NativeAPI.Win.Kernel
         ///     <para>
         ///         Each thread has a suspend count (with a maximum value of MAXIMUM_SUSPEND_COUNT). If the suspend
         ///         count is greater than zero, the thread is suspended; otherwise, the thread is not suspended and
-        ///         is eligible for execution. Calling <see cref="SuspendThread"/> causes the target thread's suspend count to be
+        ///         is eligible for execution. Calling <see href="SuspendThread"/> causes the target thread's suspend count to be
         ///         incremented. Attempting to increment past the maximum suspend count causes an error without incrementing the count.
         ///     </para>
         ///     <para>
-        ///         The <see cref="ResumeThread"/> function decrements the suspend count of a suspended thread.
+        ///         The <see href="ResumeThread"/> function decrements the suspend count of a suspended thread.
         ///     </para>
         /// </remarks>
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -125,7 +125,7 @@ namespace NativeAPI.Win.Kernel
         ///     </para>
         ///     <para>
         ///         This function is primarily designed for use by debuggers. It is not intended to be used for
-        ///         thread synchronization. Calling <see cref="Wow64SuspendThread"/> on a thread that owns a synchronization object,
+        ///         thread synchronization. Calling <see href="Wow64SuspendThread"/> on a thread that owns a synchronization object,
         ///         such as a mutex or critical section, can lead to a deadlock if the calling thread tries to obtain
         ///         a synchronization object owned by a suspended thread. To avoid this situation, a thread within
         ///         an application that is not a debugger should signal the other thread to suspend itself.
@@ -134,17 +134,17 @@ namespace NativeAPI.Win.Kernel
         ///     <para>
         ///         Each thread has a suspend count (with a maximum value of MAXIMUM_SUSPEND_COUNT). If the
         ///         suspend count is greater than zero, the thread is suspended; otherwise, the thread is not
-        ///         suspended and is eligible for execution. Calling <see cref="Wow64SuspendThread"/> causes the target thread's
+        ///         suspended and is eligible for execution. Calling <see href="Wow64SuspendThread"/> causes the target thread's
         ///         suspend count to be incremented. Attempting to increment past the maximum suspend count causes
         ///         an error without incrementing the count.
         ///     </para>
         ///     <para>
-        ///         The <see cref="ResumeThread"/> function decrements the suspend count of a suspended thread.
+        ///         The <see href="ResumeThread"/> function decrements the suspend count of a suspended thread.
         ///     </para>
         ///     <para>
         ///         This function is intended for 64-bit applications. It is not supported on 32-bit Windows;
         ///         such calls fail and set the last error code to ERROR_INVALID_FUNCTION. A 32-bit application
-        ///         can call this function on a WOW64 thread; the result is the same as calling the <see cref="SuspendThread"/> function.
+        ///         can call this function on a WOW64 thread; the result is the same as calling the <see href="SuspendThread"/> function.
         ///     </para>
         /// </remarks>
         [DllImport("kernel32.dll", SetLastError = true)]
@@ -171,7 +171,7 @@ namespace NativeAPI.Win.Kernel
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         The <see cref="ResumeThread"/> function checks the suspend count of the subject thread. If the suspend count is zero,
+        ///         The <see href="ResumeThread"/> function checks the suspend count of the subject thread. If the suspend count is zero,
         ///         the thread is not currently suspended. Otherwise, the subject thread's suspend count is decremented.
         ///         If the resulting value is zero, then the execution of the subject thread is resumed.
         ///     </para>
@@ -182,7 +182,7 @@ namespace NativeAPI.Win.Kernel
         ///     </para>
         ///     <para>
         ///         Note that while reporting debug events, all threads within the reporting process are frozen.
-        ///         Debuggers are expected to use the <see cref="SuspendThread"/> and <see cref="ResumeThread"/> functions to limit the set of
+        ///         Debuggers are expected to use the <see href="SuspendThread"/> and <see href="ResumeThread"/> functions to limit the set of
         ///         threads that can execute within a process. By suspending all threads in a process except for the
         ///         one reporting a debug event, it is possible to "single step" a single thread. The other threads
         ///         are not released by a continue operation if they are suspended.

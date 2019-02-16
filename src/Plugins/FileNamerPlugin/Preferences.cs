@@ -181,17 +181,17 @@ namespace BDHero.Plugin.FileNamer
         public new string FileName = @"s{season}e{episode} - {episodetitle} [{res}]";
 
         /// <summary>
-        /// Format string for <see cref="int.ToString(string)"/>.
+        /// Format string for <see href="int.ToString(string)"/>.
         /// </summary>
         public string SeasonNumberFormat = "D2";
 
         /// <summary>
-        /// Format string for <see cref="int.ToString(string)"/>.
+        /// Format string for <see href="int.ToString(string)"/>.
         /// </summary>
         public string EpisodeNumberFormat = "D2";
 
         /// <summary>
-        /// Format string for <see cref="DateTime.ToString(string)"/>.
+        /// Format string for <see href="DateTime.ToString(string)"/>.
         /// </summary>
         public string ReleaseDateFormat = "yyyy-MM-dd";
 

@@ -39,7 +39,7 @@
         Info,
 
         /// <summary>
-        ///     Same as <see cref="Info"/>, except more verbose.
+        ///     Same as <see href="Info"/>, except more verbose.
         /// </summary>
         [Argument("verbose")]
         Verbose,

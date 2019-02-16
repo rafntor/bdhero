@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Values for <see cref="MENUITEMINFO.fState"/>.
+    ///     Values for <see href="MENUITEMINFO.fState"/>.
     /// </summary>
     [Flags]
     public enum MenuItemState : uint
@@ -37,7 +37,7 @@ namespace NativeAPI.Win.User
         MFS_DEFAULT = 0x00001000,
 
         /// <summary>
-        ///     Disables the menu item and grays it so that it cannot be selected. This is equivalent to <see cref="MFS_GRAYED"/>.
+        ///     Disables the menu item and grays it so that it cannot be selected. This is equivalent to <see href="MFS_GRAYED"/>.
         /// </summary>
         MFS_DISABLED = 0x00000003,
 
@@ -47,7 +47,7 @@ namespace NativeAPI.Win.User
         MFS_ENABLED = 0x00000000,
 
         /// <summary>
-        ///     Disables the menu item and grays it so that it cannot be selected. This is equivalent to <see cref="MFS_DISABLED"/>.
+        ///     Disables the menu item and grays it so that it cannot be selected. This is equivalent to <see href="MFS_DISABLED"/>.
         /// </summary>
         MFS_GRAYED = 0x00000003,
 

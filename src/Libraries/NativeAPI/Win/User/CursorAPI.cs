@@ -27,7 +27,7 @@ namespace NativeAPI.Win.User
     {
         /// <summary>
         ///     Loads the specified cursor resource from the executable (.EXE) file associated with an application instance.
-        ///     <strong>Note</strong>: This function has been superseded by the <see cref="LoadImage"/> function.
+        ///     <strong>Note</strong>: This function has been superseded by the <see href="LoadImage"/> function.
         /// </summary>
         /// <param name="hInstance">
         ///     A handle to an instance of the module whose executable file contains the cursor to be loaded.
@@ -36,7 +36,7 @@ namespace NativeAPI.Win.User
         ///     The name of the cursor resource to be loaded. Alternatively, this parameter can consist of the
         ///     resource identifier in the low-order word and zero in the high-order word.
         ///     To use one of the predefined cursors, the application must set the <paramref name="hInstance"/> parameter
-        ///     to <c>NULL</c> and the <paramref name="lpCursorName"/> parameter to one of the <see cref="CursorType"/> values.
+        ///     to <c>NULL</c> and the <paramref name="lpCursorName"/> parameter to one of the <see href="CursorType"/> values.
         /// </param>
         /// <returns>
         ///     <para>
@@ -66,8 +66,8 @@ namespace NativeAPI.Win.User
         ///     Sets the cursor shape.
         /// </summary>
         /// <param name="hCursor">
-        ///     A handle to the cursor. The cursor must have been created by the <see cref="CreateCursor"/> function or
-        ///     loaded by the <see cref="LoadCursor"/> or <see cref="LoadImage"/> function. If this parameter is
+        ///     A handle to the cursor. The cursor must have been created by the <see href="CreateCursor"/> function or
+        ///     loaded by the <see href="LoadCursor"/> or <see href="LoadImage"/> function. If this parameter is
         ///     <c>NULL</c>, the cursor is removed from the screen.
         /// </param>
         /// <returns>
@@ -95,7 +95,7 @@ namespace NativeAPI.Win.User
         ///     </para>
         ///     <para>
         ///         The cursor is not shown on the screen if the internal cursor display count is less than zero.
-        ///         This occurs if the application uses the <see cref="ShowCursor"/> function to hide the cursor more times than to show the cursor.
+        ///         This occurs if the application uses the <see href="ShowCursor"/> function to hide the cursor more times than to show the cursor.
         ///     </para>
         /// </remarks>
         [DllImport("user32.dll", SetLastError = true)]

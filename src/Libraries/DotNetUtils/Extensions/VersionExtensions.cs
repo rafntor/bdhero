@@ -20,7 +20,7 @@ using System;
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="Version"/> objects.
+    /// Extension methods for <see href="Version"/> objects.
     /// </summary>
     public static class VersionExtensions
     {
@@ -38,7 +38,7 @@ namespace DotNetUtils.Extensions
         /// <example><code>new Version(0, 8, 0, 1).GetId() ==   80001</code></example>
         /// <param name="version"></param>
         /// <returns>The value of <paramref name="version"/> as a signed <c>Int32</c></returns>
-        /// <seealso cref="http://installbuilder.bitrock.com/docs/installbuilder-userguide/ar01s23.html">BitRock InstallBuilder update.xml file</seealso>
+        /// <seealso href="http://installbuilder.bitrock.com/docs/installbuilder-userguide/ar01s23.html">BitRock InstallBuilder update.xml file</seealso>
         public static int GetId(this Version version)
         {
             var v = version;

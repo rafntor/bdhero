@@ -37,7 +37,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
         }
 
         /// <summary>
-        /// Guards against a bug in BDInfo where a non-existent stream clip (00121.m2ts) gets created with a <c>null</c> <see cref="TSStreamClip.StreamFile"/>
+        /// Guards against a bug in BDInfo where a non-existent stream clip (00121.m2ts) gets created with a <c>null</c> <see href="TSStreamClip.StreamFile"/>
         /// when scanning CASINO_ROYAL.
         /// </summary>
         private static bool StreamFileExists(TSStreamClip tsStreamClip)

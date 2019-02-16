@@ -25,7 +25,7 @@ using ProcessUtils;
 
 namespace BDHero.Plugin.MkvMergeMuxer
 {
-    /// <see cref="http://stackoverflow.com/a/11867784/467582"/>
+    /// <see href="http://stackoverflow.com/a/11867784/467582"/>
     /// TODO: Switch to BackgroundProcessWorker
 // ReSharper disable LocalizableElement
 // ReSharper disable RedundantNameQualifier

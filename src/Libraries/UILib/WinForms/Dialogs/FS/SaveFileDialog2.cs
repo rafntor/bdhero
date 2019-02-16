@@ -31,7 +31,7 @@ namespace UILib.WinForms.Dialogs.FS
         private FileType[] _fileTypes;
 
         /// <summary>
-        ///     Constructs a new <see cref="SaveFileDialog2"/> instance.
+        ///     Constructs a new <see href="SaveFileDialog2"/> instance.
         /// </summary>
         public SaveFileDialog2()
         {

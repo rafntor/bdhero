@@ -4,7 +4,7 @@ using System.Windows.Forms;
 namespace UILib.WinForms
 {
     /// <summary>
-    ///     Invoked whenever the hooked control's <see cref="Control.WndProc"/> method is called.
+    ///     Invoked whenever the hooked control's <see href="Control.WndProc"/> method is called.
     /// </summary>
     /// <param name="m">
     ///     Native window message.

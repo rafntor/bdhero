@@ -26,7 +26,7 @@ namespace NativeAPI.Win.User
     /// <summary>
     ///     Extended window styles.
     /// </summary>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ff700543(v=vs.85).aspx"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/ff700543(v=vs.85).aspx"/>
     [Flags]
     public enum ExtendedWindowStyles : uint
     {

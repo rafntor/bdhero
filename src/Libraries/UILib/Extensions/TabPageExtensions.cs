@@ -20,7 +20,7 @@ using System.Windows.Forms;
 namespace UILib.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="TabPage"/> controls.
+    /// Extension methods for <see href="TabPage"/> controls.
     /// </summary>
     public static class TabPageExtensions
     {

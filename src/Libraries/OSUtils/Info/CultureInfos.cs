@@ -7,19 +7,19 @@ namespace OSUtils.Info
     public class CultureInfos
     {
         /// <summary>
-        /// Gets the <see cref="CultureInfo"/> that represents the culture installed with the operating system.
+        /// Gets the <see href="CultureInfo"/> that represents the culture installed with the operating system.
         /// </summary>
         [UsedImplicitly]
         public readonly CultureInfo InstalledUICulture;
 
         /// <summary>
-        /// Gets the <see cref="CultureInfo"/> that represents the culture used by the current thread.
+        /// Gets the <see href="CultureInfo"/> that represents the culture used by the current thread.
         /// </summary>
         [UsedImplicitly]
         public readonly CultureInfo CurrentCulture;
 
         /// <summary>
-        /// Gets the <see cref="CultureInfo"/> that represents the current culture used by the Resource Manager
+        /// Gets the <see href="CultureInfo"/> that represents the current culture used by the Resource Manager
         /// to look up culture-specific resources at run time.
         /// </summary>
         [UsedImplicitly]

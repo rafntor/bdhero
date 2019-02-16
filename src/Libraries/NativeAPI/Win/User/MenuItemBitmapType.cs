@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Values for <see cref="MENUITEMINFO.hbmpItem"/>.
+    ///     Values for <see href="MENUITEMINFO.hbmpItem"/>.
     /// </summary>
     public enum MenuItemBitmapType : uint
     {
@@ -29,7 +29,7 @@ namespace NativeAPI.Win.User
         ///     A bitmap that is drawn by the window that owns the menu. The application must process the
         ///     <c>WM_MEASUREITEM</c> and <c>WM_DRAWITEM</c> messages.
         /// </summary>
-        /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647578(v=vs.85).aspx"/>
+        /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647578(v=vs.85).aspx"/>
         HBMMENU_CALLBACK = uint.MaxValue, // -1
 
         /// <summary>

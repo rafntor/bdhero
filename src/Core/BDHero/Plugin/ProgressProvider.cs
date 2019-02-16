@@ -70,7 +70,7 @@ namespace BDHero.Plugin
         }
 
         /// <summary>
-        /// DO NOT MODIFY DIRECTLY!  Used internally by <see cref="PercentComplete"/>.
+        /// DO NOT MODIFY DIRECTLY!  Used internally by <see href="PercentComplete"/>.
         /// </summary>
         private double _percentComplete;
 
@@ -114,7 +114,7 @@ namespace BDHero.Plugin
         #region Public events
 
         /// <summary>
-        /// Invoked approximately once every second and whenever the <see cref="State"/> or <see cref="PercentComplete"/> changes.
+        /// Invoked approximately once every second and whenever the <see href="State"/> or <see href="PercentComplete"/> changes.
         /// </summary>
         public event ProgressUpdateHandler Updated;
 
@@ -163,14 +163,14 @@ namespace BDHero.Plugin
         private readonly object _lock = new object();
 
         /// <summary>
-        /// Last time the <see cref="_timer"/> interval elapsed.  Used to calculate <see cref="RunTime"/>.
+        /// Last time the <see href="_timer"/> interval elapsed.  Used to calculate <see href="RunTime"/>.
         /// </summary>
         private DateTime _lastTick;
 
         private TimeSpan _lastEstimate;
 
         /// <summary>
-        /// The value of <see cref="_lastTick"/> the last time <see cref="CalculateTimeRemaining"/> was called.
+        /// The value of <see href="_lastTick"/> the last time <see href="CalculateTimeRemaining"/> was called.
         /// </summary>
         private DateTime _lastCalculationTick;
 
@@ -185,7 +185,7 @@ namespace BDHero.Plugin
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
-        /// The last time <see cref="Updated"/> event handlers were notified of a progress update.
+        /// The last time <see href="Updated"/> event handlers were notified of a progress update.
         /// </summary>
         private DateTime _lastNotified;
 
@@ -283,7 +283,7 @@ namespace BDHero.Plugin
         #region Timer methods
 
         /// <summary>
-        /// Called by <see cref="_timer"/> whenever its interval elapses.
+        /// Called by <see href="_timer"/> whenever its interval elapses.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="elapsedEventArgs"></param>
@@ -734,7 +734,7 @@ namespace BDHero.Plugin
         #endregion
 
         /// <summary>
-        /// Called by <see cref="IPluginHost"/> whenever an <see cref="IPlugin"/> reports a progress update.
+        /// Called by <see href="IPluginHost"/> whenever an <see href="IPlugin"/> reports a progress update.
         /// </summary>
         /// <param name="percentComplete">0.0 to 100.0</param>
         /// <param name="shortStatus">Short description of what the plugin is currently doing</param>
@@ -769,8 +769,8 @@ namespace BDHero.Plugin
     public delegate void ProgressUpdateHandler(ProgressProvider progressProvider);
 
     /// <summary>
-    /// Describes the state of a <see cref="ProgressProvider"/>.
-    /// States are mutually exclusive; a <see cref="ProgressProvider"/> can only have one state at a time.
+    /// Describes the state of a <see href="ProgressProvider"/>.
+    /// States are mutually exclusive; a <see href="ProgressProvider"/> can only have one state at a time.
     /// </summary>
     public enum ProgressProviderState
     {

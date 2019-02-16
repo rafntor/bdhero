@@ -5,7 +5,7 @@ namespace NativeAPI.Win.User
     ///     Static class containing the symbolic constant names, hexadecimal values, and mouse or keyboard equivalents
     ///     for the virtual-key codes used by the system. The codes are listed in numeric order.
     /// </summary>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx"/>
     public static class VirtualKey
     {
         /// <summary>

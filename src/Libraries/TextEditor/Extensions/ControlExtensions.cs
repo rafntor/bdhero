@@ -10,7 +10,7 @@ namespace TextEditor.Extensions
         ///     Selects (focuses/activates) the next control forward or back in the tab order.
         /// </summary>
         /// <param name="startControl">
-        ///     The <see cref="Control"/> to start the search with. 
+        ///     The <see href="Control"/> to start the search with. 
         /// </param>
         /// <param name="forward">
         ///     <c>true</c> to search forward in the tab order; <c>false</c> to search backward. 
@@ -34,7 +34,7 @@ namespace TextEditor.Extensions
         ///     Gets the next control forward or back in the tab order.
         /// </summary>
         /// <param name="startControl">
-        ///     The <see cref="Control"/> to start the search with. 
+        ///     The <see href="Control"/> to start the search with. 
         /// </param>
         /// <param name="forward">
         ///     <c>true</c> to search forward in the tab order; <c>false</c> to search backward. 

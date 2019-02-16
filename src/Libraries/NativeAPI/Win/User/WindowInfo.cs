@@ -47,13 +47,13 @@ namespace NativeAPI.Win.User
         public RECT rcClient;
 
         /// <summary>
-        ///     The window styles. For a table of window styles, see <see cref="WindowStyles"/>.
+        ///     The window styles. For a table of window styles, see <see href="WindowStyles"/>.
         /// </summary>
         [MarshalAs(UnmanagedType.U4)]
         public WindowStyles dwStyle;
 
         /// <summary>
-        ///     The extended window styles. For a table of extended window styles, see <see cref="ExtendedWindowStyles"/>.
+        ///     The extended window styles. For a table of extended window styles, see <see href="ExtendedWindowStyles"/>.
         /// </summary>
         [MarshalAs(UnmanagedType.U4)]
         public ExtendedWindowStyles dwExStyle;
@@ -84,7 +84,7 @@ namespace NativeAPI.Win.User
         public ushort wCreatorVersion;
 
         /// <summary>
-        ///     Allows automatic initialization of <see cref="cbSize"/> with <c>new WINDOWINFO(null/true/false)</c>.
+        ///     Allows automatic initialization of <see href="cbSize"/> with <c>new WINDOWINFO(null/true/false)</c>.
         /// </summary>
         /// <param name="dummy">
         ///     Dummy parameter.  Pass anything you want - the value is ignored.  This parameter is only present

@@ -26,10 +26,10 @@ using OSUtils.JobObjects;
 namespace WindowsOSUtils.JobObjects
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="IJobObjectManager"/> interface
+    ///     Concrete implementation of the <see href="IJobObjectManager"/> interface
     ///     that accesses the Windows Job Objects API.
     /// </summary>
-    /// <seealso cref="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
+    /// <seealso href="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
     [UsedImplicitly]
     public class JobObjectManager : IJobObjectManager
     {
@@ -146,8 +146,8 @@ namespace WindowsOSUtils.JobObjects
         ///     Job Object that is automatically created when an application runs on a newer
         ///     version of Windows than it was marked as compatible with in its application manifest.
         /// </remarks>
-        /// <seealso cref="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx" />
-        /// <seealso cref="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx" />
+        /// <seealso href="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx" />
+        /// <seealso href="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx" />
         [CanBeNull]
         private static Process CreateProcessInSeparateJob(ProcessStartInfo startInfo)
         {

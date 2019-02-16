@@ -3,14 +3,14 @@
 namespace DotNetUtils.Concurrency
 {
     /// <summary>
-    ///     Promise that returns a <see cref="IPromise{TResult}.Result"/> of type <see cref="bool"/> indicating
-    ///     whether all of the <see cref="IPromise{TResult}.Work"/> event handlers completed successfully
+    ///     Promise that returns a <see href="IPromise{TResult}.Result"/> of type <see href="bool"/> indicating
+    ///     whether all of the <see href="IPromise{TResult}.Work"/> event handlers completed successfully
     ///     (that is, without being canceled or throwing an exception) or not.
     /// </summary>
     public class SimplePromise : Promise<bool>
     {
         /// <summary>
-        ///     Constructs a new <see cref="SimplePromise"/> instance that invokes callback event handlers on
+        ///     Constructs a new <see href="SimplePromise"/> instance that invokes callback event handlers on
         ///     the <b>current thread</b>.
         /// </summary>
         public SimplePromise()
@@ -19,7 +19,7 @@ namespace DotNetUtils.Concurrency
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="SimplePromise"/> instance that invokes callback event handlers on
+        ///     Constructs a new <see href="SimplePromise"/> instance that invokes callback event handlers on
         ///     the given <paramref name="synchronizingObject"/>'s owner thread.
         /// </summary>
         /// <param name="synchronizingObject">

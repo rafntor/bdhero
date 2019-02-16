@@ -24,7 +24,7 @@ using UILib.Extensions;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     A more sensible replacement for the default .NET <see cref="ListView"/> class.
+    ///     A more sensible replacement for the default .NET <see href="ListView"/> class.
     ///     Provides default sorting, column re-ordering, full row select, grid lines, tooltips,
     ///     defaults to detail view, disables multi-select, and displays row selection when the control loses focus.
     ///     Implements double buffering for smooth redrawing and auto-resizes columns when the control is resized.
@@ -34,7 +34,7 @@ namespace UILib.WinForms.Controls
         private readonly ListViewColumnSorter _columnSorter = new ListViewColumnSorter();
 
         /// <summary>
-        ///     Constructs a new <see cref="ListView2"/> instance.
+        ///     Constructs a new <see href="ListView2"/> instance.
         /// </summary>
         public ListView2()
         {
@@ -81,7 +81,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        ///     Gets the first column on the left based on <see cref="ColumnHeader.DisplayIndex" />.
+        ///     Gets the first column on the left based on <see href="ColumnHeader.DisplayIndex" />.
         /// </summary>
         public ColumnHeader FirstDisplayedColumn
         {
@@ -96,7 +96,7 @@ namespace UILib.WinForms.Controls
         }
 
         /// <summary>
-        ///     Gets the last column on the right based on <see cref="ColumnHeader.DisplayIndex" />.
+        ///     Gets the last column on the right based on <see href="ColumnHeader.DisplayIndex" />.
         /// </summary>
         public ColumnHeader LastDisplayedColumn
         {

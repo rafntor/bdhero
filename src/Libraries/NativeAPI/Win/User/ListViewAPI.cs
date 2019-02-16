@@ -39,7 +39,7 @@ namespace NativeAPI.Win.User
     /// <summary>
     ///     Wrapper for all native method calls on ListView controls
     /// </summary>
-    /// <seealso cref="http://opensourcejavaphp.net/csharp/ListView/NativeMethods.cs.html" />
+    /// <seealso href="http://opensourcejavaphp.net/csharp/ListView/NativeMethods.cs.html" />
     public static class ListViewAPI
     {
         #region Constants

@@ -32,7 +32,7 @@ namespace UILib.WinForms
 
     /// <summary>
     ///     Enables drag support for Windows Forms controls that contain a list of files.
-    ///     Controls that have an <see cref="ExternalDragProvider"/> become drag sources, meaning a user can drag
+    ///     Controls that have an <see href="ExternalDragProvider"/> become drag sources, meaning a user can drag
     ///     the control into other applications and drop the file itself (if supported by the target drop application)
     ///     or a path to the file.
     /// </summary>
@@ -67,7 +67,7 @@ namespace UILib.WinForms
         private Point _startPos;
 
         /// <summary>
-        ///     Constructs a new <see cref="ExternalDragProvider"/> instance that adds file drag functionality to the
+        ///     Constructs a new <see href="ExternalDragProvider"/> instance that adds file drag functionality to the
         ///     given control.
         /// </summary>
         /// <param name="dragSource">Windows Forms control that contains a list of files.</param>

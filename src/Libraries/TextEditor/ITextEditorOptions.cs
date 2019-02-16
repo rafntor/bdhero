@@ -1,7 +1,7 @@
 ﻿namespace TextEditor
 {
     /// <summary>
-    ///     Defines user-configurable options that customize the appearance and behavior of an <see cref="ITextEditor"/>.
+    ///     Defines user-configurable options that customize the appearance and behavior of an <see href="ITextEditor"/>.
     /// </summary>
     public interface ITextEditorOptions
     {
@@ -17,12 +17,12 @@
         #region Column ruler
 
         /// <summary>
-        ///     Gets or sets whether a ruler is displayed in the editor at the position specified by <see cref="ColumnRulerPosition"/>.
+        ///     Gets or sets whether a ruler is displayed in the editor at the position specified by <see href="ColumnRulerPosition"/>.
         /// </summary>
         bool ShowColumnRuler { get; set; }
 
         /// <summary>
-        ///     Gets or sets the column index at which a ruler will be displayed in the editor when <see cref="ShowColumnRuler"/> is <c>true</c>.
+        ///     Gets or sets the column index at which a ruler will be displayed in the editor when <see href="ShowColumnRuler"/> is <c>true</c>.
         /// </summary>
         int ColumnRulerPosition { get; set; }
 
@@ -38,7 +38,7 @@
 
         /// <summary>
         ///     Gets or sets the indentation size of tab characters, as well as the number of spaces that will be inserted
-        ///     when the user presses the <kbd>Tab</kbd> key and <see cref="ConvertTabsToSpaces"/> is <c>true</c>.
+        ///     when the user presses the <kbd>Tab</kbd> key and <see href="ConvertTabsToSpaces"/> is <c>true</c>.
         /// </summary>
         int IndentationSize { get; set; }
 
@@ -62,7 +62,7 @@
         bool ShowTabs { get; set; }
 
         /// <summary>
-        ///     Gets or sets <see cref="ShowSpaces"/> and <see cref="ShowTabs"/> simultaneously.
+        ///     Gets or sets <see href="ShowSpaces"/> and <see href="ShowTabs"/> simultaneously.
         /// </summary>
         bool ShowWhiteSpace { get; set; }
 
@@ -81,7 +81,7 @@
         bool WordWrap { get; set; }
 
         /// <summary>
-        ///     Gets or sets the size of the word wrap indent in pixels when <see cref="WordWrap"/> is <c>true</c>.
+        ///     Gets or sets the size of the word wrap indent in pixels when <see href="WordWrap"/> is <c>true</c>.
         /// </summary>
         double WordWrapIndent { get; set; }
 

@@ -58,8 +58,8 @@ namespace WindowsOSUtils.WMI
         /// <summary>
         /// Frees managed and unmanaged resources.
         /// </summary>
-        /// <param name="freeManagedObjectsAlso">Free managed resources.  Should only be set to <c>true</c> when called from <see cref="Dispose"/>.</param>
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <param name="freeManagedObjectsAlso">Free managed resources.  Should only be set to <c>true</c> when called from <see href="Dispose"/>.</param>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         protected void Dispose(bool freeManagedObjectsAlso)
         {
             // Free unmanaged resources
@@ -77,7 +77,7 @@ namespace WindowsOSUtils.WMI
             }
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/538238/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/538238/467582"/>
         public void Dispose()
         {
             Dispose(true); // I am calling you from Dispose, it's safe

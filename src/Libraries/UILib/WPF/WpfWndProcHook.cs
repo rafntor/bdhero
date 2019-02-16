@@ -8,10 +8,10 @@ using System.Windows.Interop;
 namespace UILib.WPF
 {
     /// <summary>
-    ///     Hooks into the <c>WindowProc</c> message handler to allow classes outside of a <see cref="FrameworkElement"/>
+    ///     Hooks into the <c>WindowProc</c> message handler to allow classes outside of a <see href="FrameworkElement"/>
     ///     to receive, handle, and suppress native window messages.
     /// </summary>
-    /// <seealso cref="http://stackoverflow.com/a/836713/467582"/>
+    /// <seealso href="http://stackoverflow.com/a/836713/467582"/>
     public class WpfWndProcHook
     {
         private readonly FrameworkElement _elem;
@@ -57,7 +57,7 @@ namespace UILib.WPF
         public event WpfWndProcEventHandler WndProcMessage;
 
         /// <summary>
-        ///     Constructs a new <see cref="WpfWndProcHook"/> instance that listens for window messages
+        ///     Constructs a new <see href="WpfWndProcHook"/> instance that listens for window messages
         ///     sent to the given <paramref name="elem"/>.
         /// </summary>
         /// <param name="elem">

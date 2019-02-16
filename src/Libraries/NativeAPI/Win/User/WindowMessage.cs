@@ -24,7 +24,7 @@ using System.Windows.Forms;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Wraps a <see cref="Message"/> object to provide more useful functionality.
+    ///     Wraps a <see href="Message"/> object to provide more useful functionality.
     /// </summary>
     public sealed class WindowMessage
     {
@@ -120,7 +120,7 @@ namespace NativeAPI.Win.User
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new <see cref="WindowMessage"/> instance that wraps the given <paramref name="nativeMessage"/>.
+        ///     Constructs a new <see href="WindowMessage"/> instance that wraps the given <paramref name="nativeMessage"/>.
         /// </summary>
         /// <param name="nativeMessage">
         ///     Native window message.
@@ -207,13 +207,13 @@ namespace NativeAPI.Win.User
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="WParam"/> field of this window message matches the specified <paramref name="wParam"/>.
+        ///     Determines whether the <see href="WParam"/> field of this window message matches the specified <paramref name="wParam"/>.
         /// </summary>
         /// <param name="wParam">
-        ///     <see cref="User.WParam"/> value to check for equality.
+        ///     <see href="User.WParam"/> value to check for equality.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the <see cref="WParam"/> field of this window message matches the specified <paramref name="wParam"/>; otherwise <c>false</c>.
+        ///     <c>true</c> if the <see href="WParam"/> field of this window message matches the specified <paramref name="wParam"/>; otherwise <c>false</c>.
         /// </returns>
         public bool Is(WParam wParam)
         {
@@ -221,13 +221,13 @@ namespace NativeAPI.Win.User
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="WParam"/> field of this window message matches at least one of the specified <paramref name="wParams"/>.
+        ///     Determines whether the <see href="WParam"/> field of this window message matches at least one of the specified <paramref name="wParams"/>.
         /// </summary>
         /// <param name="wParams">
-        ///     <see cref="User.WParam"/> values to check for equality.
+        ///     <see href="User.WParam"/> values to check for equality.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the <see cref="WParam"/> field of this window message matches at least one of the specified <paramref name="wParams"/>; otherwise <c>false</c>.
+        ///     <c>true</c> if the <see href="WParam"/> field of this window message matches at least one of the specified <paramref name="wParams"/>; otherwise <c>false</c>.
         /// </returns>
         public bool IsOneOf(params WParam[] wParams)
         {
@@ -236,13 +236,13 @@ namespace NativeAPI.Win.User
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="LParam"/> field of this window message matches the specified <paramref name="lParam"/>.
+        ///     Determines whether the <see href="LParam"/> field of this window message matches the specified <paramref name="lParam"/>.
         /// </summary>
         /// <param name="lParam">
-        ///     <see cref="User.LParam"/> value to check for equality.
+        ///     <see href="User.LParam"/> value to check for equality.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the <see cref="LParam"/> field of this window message matches the specified <paramref name="lParam"/>; otherwise <c>false</c>.
+        ///     <c>true</c> if the <see href="LParam"/> field of this window message matches the specified <paramref name="lParam"/>; otherwise <c>false</c>.
         /// </returns>
         public bool Is(LParam lParam)
         {
@@ -250,13 +250,13 @@ namespace NativeAPI.Win.User
         }
 
         /// <summary>
-        ///     Determines whether the <see cref="LParam"/> field of this window message matches at least one of the specified <paramref name="lParams"/>.
+        ///     Determines whether the <see href="LParam"/> field of this window message matches at least one of the specified <paramref name="lParams"/>.
         /// </summary>
         /// <param name="lParams">
-        ///     <see cref="User.LParam"/> values to check for equality.
+        ///     <see href="User.LParam"/> values to check for equality.
         /// </param>
         /// <returns>
-        ///     <c>true</c> if the <see cref="LParam"/> field of this window message matches at least one of the specified <paramref name="lParams"/>; otherwise <c>false</c>.
+        ///     <c>true</c> if the <see href="LParam"/> field of this window message matches at least one of the specified <paramref name="lParams"/>; otherwise <c>false</c>.
         /// </returns>
         public bool IsOneOf(params LParam[] lParams)
         {
@@ -307,13 +307,13 @@ namespace NativeAPI.Win.User
         #region Implicit conversion operators (public)
 
         /// <summary>
-        ///     Implicitly converts a native <see cref="Message"/> structure to a <see cref="WindowMessage"/> wrapper object.
+        ///     Implicitly converts a native <see href="Message"/> structure to a <see href="WindowMessage"/> wrapper object.
         /// </summary>
         /// <param name="message">
         ///     Native window message structure.
         /// </param>
         /// <returns>
-        ///     A <see cref="WindowMessage"/> object that wraps the given <paramref name="message"/>.
+        ///     A <see href="WindowMessage"/> object that wraps the given <paramref name="message"/>.
         /// </returns>
         public static implicit operator WindowMessage(Message message)
         {
@@ -321,13 +321,13 @@ namespace NativeAPI.Win.User
         }
 
         /// <summary>
-        ///     Implicitly converts a <see cref="WindowMessage"/> wrapper object to a native <see cref="Message"/> structure.
+        ///     Implicitly converts a <see href="WindowMessage"/> wrapper object to a native <see href="Message"/> structure.
         /// </summary>
         /// <param name="windowMessage">
         ///     Window message wrapper object.
         /// </param>
         /// <returns>
-        ///     The native <see cref="Message"/> structure wrapped by <paramref name="windowMessage"/>.
+        ///     The native <see href="Message"/> structure wrapped by <paramref name="windowMessage"/>.
         /// </returns>
         public static implicit operator Message(WindowMessage windowMessage)
         {

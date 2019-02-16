@@ -30,8 +30,8 @@ namespace NativeAPI.Win.User
         ///     A handle to the window whose information is to be retrieved.
         /// </param>
         /// <param name="pwi">
-        ///     A pointer to a <see cref="WINDOWINFO"/> structure to receive the information.
-        ///     Note that you must set the <see cref="WINDOWINFO.cbSize"/> member to <c>sizeof(WINDOWINFO)</c>
+        ///     A pointer to a <see href="WINDOWINFO"/> structure to receive the information.
+        ///     Note that you must set the <see href="WINDOWINFO.cbSize"/> member to <c>sizeof(WINDOWINFO)</c>
         ///     <strong><em>before</em></strong> calling this function.
         /// </param>
         /// <returns>
@@ -56,7 +56,7 @@ namespace NativeAPI.Win.User
         ///     <c>ShowWindow</c>, if the program that launched the application provides a <c>STARTUPINFO</c> structure.
         ///     Otherwise, the first time <c>ShowWindow</c> is called, the value should be the value obtained by the <c>WinMain</c>
         ///     function in its <paramref name="nCmdShow"/> parameter. In subsequent calls, this parameter can be one of
-        ///     the <see cref="ShowWindowCommand"/> values.
+        ///     the <see href="ShowWindowCommand"/> values.
         /// </param>
         /// <returns>
         ///     If the operation was successfully started, the return value is nonzero.
@@ -77,7 +77,7 @@ namespace NativeAPI.Win.User
         ///     A handle to the window.
         /// </param>
         /// <param name="nCmdShow">
-        ///     Controls how the window is to be shown. For a list of possible values, see the description of the <see cref="ShowWindow"/> function.
+        ///     Controls how the window is to be shown. For a list of possible values, see the description of the <see href="ShowWindow"/> function.
         /// </param>
         /// <returns>
         ///     If the operation was successfully started, the return value is nonzero.

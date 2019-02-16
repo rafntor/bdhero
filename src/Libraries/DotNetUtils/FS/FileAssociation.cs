@@ -33,19 +33,19 @@ namespace DotNetUtils.FS
     public class FileAssociation
     {
         /// <summary>
-        ///     Gets the relative or absolute path to the file that <see cref="ExePath"/> is associated with and
-        ///     to which this <see cref="FileAssociation"/> object belongs.
+        ///     Gets the relative or absolute path to the file that <see href="ExePath"/> is associated with and
+        ///     to which this <see href="FileAssociation"/> object belongs.
         /// </summary>
         public readonly string FilePath;
 
         /// <summary>
-        ///     Full, absolute path to the executable associated with <see cref="FilePath"/>.
+        ///     Full, absolute path to the executable associated with <see href="FilePath"/>.
         /// </summary>
         [CanBeNull]
         public readonly string ExePath;
 
         /// <summary>
-        ///     Human-friendly name of the application associated with <see cref="FilePath"/>.
+        ///     Human-friendly name of the application associated with <see href="FilePath"/>.
         /// </summary>
         /// <example>
         ///     <c>"BDHero GUI"</c>
@@ -54,13 +54,13 @@ namespace DotNetUtils.FS
         public readonly string AppName;
 
         /// <summary>
-        ///     Human-friendly name of the product suite that contains the program associated with <see cref="FilePath"/>.
+        ///     Human-friendly name of the product suite that contains the program associated with <see href="FilePath"/>.
         /// </summary>
         [CanBeNull]
         public readonly string ProductName;
 
         /// <summary>
-        ///     Gets whether <see cref="FilePath"/> has a default program associated with it or not.
+        ///     Gets whether <see href="FilePath"/> has a default program associated with it or not.
         /// </summary>
         public bool HasAssociation
         {
@@ -68,7 +68,7 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        ///     Gets whether <see cref="FilePath"/> can be opened via <see cref="Process.Start(string)"/>.
+        ///     Gets whether <see href="FilePath"/> can be opened via <see href="Process.Start(string)"/>.
         /// </summary>
         public bool CanBeOpened
         {
@@ -81,7 +81,7 @@ namespace DotNetUtils.FS
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new <see cref="FileAssociation"/> object containing information about the default program
+        ///     Constructs a new <see href="FileAssociation"/> object containing information about the default program
         ///     associated with the given <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath">
@@ -205,7 +205,7 @@ namespace DotNetUtils.FS
         /// <remarks>
         ///     Starting in Windows 8, file types that don't have an explicit program association
         ///     are implicitly associated with <c>C:\Windows\System32\OpenWith.exe</c>.
-        ///     Use <see cref="HasExplicitAssociation"/> to check if the file has an explicit association.
+        ///     Use <see href="HasExplicitAssociation"/> to check if the file has an explicit association.
         /// </remarks>
         [CanBeNull]
         public static string GetDefaultProgram([CanBeNull] string filePath)

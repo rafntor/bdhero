@@ -7,7 +7,7 @@ namespace UILib.WPF
     public static class WpfKeyboardUtils
     {
         /// <summary>
-        ///     Converts a WPF <see cref="Key"/> to a <see cref="char"/>.
+        ///     Converts a WPF <see href="Key"/> to a <see href="char"/>.
         /// </summary>
         /// <param name="key">
         ///     A WPF <c>Key</c> value.
@@ -15,7 +15,7 @@ namespace UILib.WPF
         /// <returns>
         ///     The <c>char</c> value of <paramref name="key"/>.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/5826175/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/5826175/467582"/>
         public static char GetCharFromKey(Key key)
         {
             char ch = ' ';

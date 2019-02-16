@@ -18,7 +18,7 @@
 namespace DotNetUtils.Net
 {
     /// <summary>
-    /// Represents the current state of a <see cref="FileDownloader"/>.
+    /// Represents the current state of a <see href="FileDownloader"/>.
     /// </summary>
     public enum FileDownloadState
     {

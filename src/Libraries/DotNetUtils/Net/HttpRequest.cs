@@ -57,19 +57,19 @@ namespace DotNetUtils.Net
         ///     Applies to requests sent with the following methods:
         ///     <list type=">">
         ///         <item>
-        ///             <see cref="Get(string,System.Collections.Generic.List{string})" />
+        ///             <see href="Get(string,System.Collections.Generic.List{string})" />
         ///         </item>
         ///         <item>
-        ///             <see cref="Get(System.Net.HttpWebRequest)" />
+        ///             <see href="Get(System.Net.HttpWebRequest)" />
         ///         </item>
         ///         <item>
-        ///             <see cref="Put" />
+        ///             <see href="Put" />
         ///         </item>
         ///         <item>
-        ///             <see cref="Post" />
+        ///             <see href="Post" />
         ///         </item>
         ///         <item>
-        ///             <see cref="GetImage" />
+        ///             <see href="GetImage" />
         ///         </item>
         ///     </list>
         /// </summary>
@@ -133,13 +133,13 @@ namespace DotNetUtils.Net
         }
 
         /// <summary>
-        ///     Builds and configures an <see cref="HttpWebRequest"/> object with the given parameters.
+        ///     Builds and configures an <see href="HttpWebRequest"/> object with the given parameters.
         /// </summary>
         /// <param name="method">HTTP verb to use for the request.</param>
         /// <param name="uri">Address of a local or remote HTTP server.</param>
         /// <param name="cache">Determines whether the request should be cached.</param>
         /// <param name="headers">HTTP request headers to send to the server.</param>
-        /// <returns>A fully configured <see cref="HttpWebRequest"/> object.</returns>
+        /// <returns>A fully configured <see href="HttpWebRequest"/> object.</returns>
         public static HttpWebRequest BuildRequest(HttpRequestMethod method, string uri, bool cache = false, List<string> headers = null)
         {
             LogBuildRequest(method, uri, cache, headers);

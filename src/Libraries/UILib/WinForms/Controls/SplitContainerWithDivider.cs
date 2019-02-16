@@ -35,8 +35,8 @@ namespace UILib.WinForms.Controls
         /// <summary>
         /// Fixes grab handle flickering, but causes border flickering and doesn't repaint while the user is dragging the grab handle.
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/89125/467582"/>
-        /// <seealso cref="http://social.msdn.microsoft.com/Forums/windows/en-US/aaed00ce-4bc9-424e-8c05-c30213171c2c/flickerfree-painting"/>
+        /// <seealso href="http://stackoverflow.com/a/89125/467582"/>
+        /// <seealso href="http://social.msdn.microsoft.com/Forums/windows/en-US/aaed00ce-4bc9-424e-8c05-c30213171c2c/flickerfree-painting"/>
         protected override CreateParams CreateParams
         {
             get
@@ -51,7 +51,7 @@ namespace UILib.WinForms.Controls
             }
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/4405758/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/4405758/467582"/>
         private static void PaintGrabHandle(object sender, PaintEventArgs e)
         {
             var control = (SplitContainer)sender;

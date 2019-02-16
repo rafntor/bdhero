@@ -21,12 +21,12 @@ using System.Windows.Forms;
 namespace UILib.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="ListViewItem"/> controls.
+    /// Extension methods for <see href="ListViewItem"/> controls.
     /// </summary>
     public static class ListViewItemExtensions
     {
         /// <summary>
-        /// Sets or appends the specified text to this ListViewItem's <see cref="ListViewItem.ToolTipText"/> property.
+        /// Sets or appends the specified text to this ListViewItem's <see href="ListViewItem.ToolTipText"/> property.
         /// </summary>
         /// <param name="item"></param>
         /// <param name="text"></param>

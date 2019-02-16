@@ -42,7 +42,7 @@ namespace DotNetUtils.FS
         public string Description;
 
         /// <summary>
-        ///     Returns a string that can be assigned to <see cref="FileDialog.Filter"/>.
+        ///     Returns a string that can be assigned to <see href="FileDialog.Filter"/>.
         /// </summary>
         /// <returns></returns>
         public override string ToString()

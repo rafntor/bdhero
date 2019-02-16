@@ -152,7 +152,7 @@ namespace BDInfo
 
     /// <summary>
     /// Represents a BDMV/STREAM/XXXXX.M2TS file that contains the physical stream data
-    /// described by the corresponding <see cref="TSStreamClipFile"/> (BDMV/CLIPINF/XXXXX.CLPI file).
+    /// described by the corresponding <see href="TSStreamClipFile"/> (BDMV/CLIPINF/XXXXX.CLPI file).
     /// </summary>
     public class TSStreamFile
     {

@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.CommonControls
 {
     /// <summary>
-    ///     Flags that specify a <see cref="HDITEM"/>'s format.
+    ///     Flags that specify a <see href="HDITEM"/>'s format.
     /// </summary>
     [Flags]
     public enum HeaderItemFormat

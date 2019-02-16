@@ -125,10 +125,10 @@ namespace BDHeroGUI.Components
         #region Initialization
 
         /// <summary>
-        /// Initializes the <see cref="BDHeroGUI.Components.DiscMenu"/> for use.
+        /// Initializes the <see href="BDHeroGUI.Components.DiscMenu"/> for use.
         /// </summary>
         /// <param name="form">
-        /// Windows Forms control (typically a <see cref="Form"/>) to listen for <see cref="Form.WndProc"/> events on.
+        /// Windows Forms control (typically a <see href="Form"/>) to listen for <see href="Form.WndProc"/> events on.
         /// </param>
         /// <param name="detector">
         /// Drive detector.
@@ -341,7 +341,7 @@ namespace BDHeroGUI.Components
             private readonly DriveInfo _selectedDrive;
 
             /// <summary>
-            /// Constructs a new <see cref="MenuSelectionState"/> object and captures the selection state
+            /// Constructs a new <see href="MenuSelectionState"/> object and captures the selection state
             /// (i.e., which menu item is selected, if any) from the given menu items.
             /// </summary>
             /// <param name="oldMenuItems">Items present in the dropdown menu <b>before</b> being repopulated.</param>

@@ -40,7 +40,7 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         /// <summary>
         /// Gets or sets the path to the source Matroska file that will be modified by MkvPropEdit.
-        /// The setter automatically adds the source path to the list of <see cref="NonInteractiveProcess.Arguments"/>;
+        /// The setter automatically adds the source path to the list of <see href="NonInteractiveProcess.Arguments"/>;
         /// you should not add it manually.
         /// </summary>
         public string SourceFilePath

@@ -27,7 +27,7 @@ using NativeAPI.Win.User;
 namespace WindowsOSUtils.DriveDetector
 {
     /// <summary>
-    ///     A Windows-specific implementation of the <see cref="IDriveDetector"/> interface.
+    ///     A Windows-specific implementation of the <see href="IDriveDetector"/> interface.
     /// </summary>
     /// <remarks>
     ///     Based on the CodeProject article "<a href="http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program">Detecting USB Drive Removal in a C# Program</a>".

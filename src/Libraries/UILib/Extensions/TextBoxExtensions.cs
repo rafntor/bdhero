@@ -23,12 +23,12 @@ using System.Windows.Forms;
 namespace UILib.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="TextBox"/> controls.
+    /// Extension methods for <see href="TextBox"/> controls.
     /// </summary>
     public static class TextBoxExtensions
     {
         /// <summary>
-        /// Highlights the TextBox by changing its <see cref="TextBox.BorderStyle"/>.
+        /// Highlights the TextBox by changing its <see href="TextBox.BorderStyle"/>.
         /// </summary>
         /// <param name="textBox"></param>
         public static void Highlight(this TextBox textBox)
@@ -37,7 +37,7 @@ namespace UILib.Extensions
         }
 
         /// <summary>
-        /// Removes highlighting from the TextBox by reverting its <see cref="TextBox.BorderStyle"/> back to its original value.
+        /// Removes highlighting from the TextBox by reverting its <see href="TextBox.BorderStyle"/> back to its original value.
         /// </summary>
         /// <param name="textBox"></param>
         public static void UnHighlight(this TextBox textBox)

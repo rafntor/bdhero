@@ -29,11 +29,11 @@ namespace NativeAPI.Win.ShellLightWeight
         ///     Searches for and retrieves a file or protocol association-related string from the registry.
         /// </summary>
         /// <param name="flags">
-        ///     The flags that can be used to control the search. It can be any combination of <see cref="AssocF"/> values,
+        ///     The flags that can be used to control the search. It can be any combination of <see href="AssocF"/> values,
         ///     except that only one <c>ASSOCF_INIT</c> value can be included.
         /// </param>
         /// <param name="str">
-        ///     The <see cref="AssocStr"/> value that specifies the type of string that is to be returned.
+        ///     The <see href="AssocStr"/> value that specifies the type of string that is to be returned.
         /// </param>
         /// <param name="pszAssoc">
         ///     A pointer to a null-terminated string that is used to determine the root key. The following four types of strings can be used:

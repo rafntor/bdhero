@@ -34,13 +34,13 @@ namespace DotNetUtils.Concurrency
         TimeSpan Interval { get; set; }
 
         /// <summary>
-        /// Gets the last exception that was thrown by a <see cref="DoWorkPromiseHandler{TResult}"/> registered via <see cref="Work"/>.
+        /// Gets the last exception that was thrown by a <see href="DoWorkPromiseHandler{TResult}"/> registered via <see href="Work"/>.
         /// </summary>
         [CanBeNull]
         Exception LastException { get; }
 
         /// <summary>
-        /// Gets whether cancellation has been requested via <see cref="Cancel"/>.
+        /// Gets whether cancellation has been requested via <see href="Cancel"/>.
         /// </summary>
         bool IsCancellationRequested { get; }
 
@@ -66,7 +66,7 @@ namespace DotNetUtils.Concurrency
         /// Registers the specified <paramref name="handler"/> to be notified just before 
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>UI</strong> thread.</remarks>
         IPromise<TResult> Before(BeforePromiseHandler<TResult> handler);
 
@@ -75,16 +75,16 @@ namespace DotNetUtils.Concurrency
         /// of work.
         /// </summary>
         /// <param name="handler">Event handler to run in a background thread.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>background</strong> thread.</remarks>
         IPromise<TResult> Work(DoWorkPromiseHandler<TResult> handler);
 
         /// <summary>
         /// Registers the specified <paramref name="handler"/> to be notified when cancellation is requested
-        /// via <see cref="Cancel"/>.
+        /// via <see href="Cancel"/>.
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks>
         /// Depending on what the background thread is doing, there may be a significant delay
         /// between when cancellation is <em>requested</em> and when the thread <em>actually exits</em>.
@@ -94,10 +94,10 @@ namespace DotNetUtils.Concurrency
 
         /// <summary>
         /// Registers the specified <paramref name="handler"/> to be notified when the background thread
-        /// exits due to being canceled via <see cref="Cancel"/>.
+        /// exits due to being canceled via <see href="Cancel"/>.
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks>
         /// Depending on what the background thread is doing, there may be a significant delay
         /// between when cancellation is <em>requested</em> and when the thread <em>actually exits</em>.
@@ -110,7 +110,7 @@ namespace DotNetUtils.Concurrency
         /// completes successfully without throwing any exceptions or being canceled.
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>UI</strong> thread.</remarks>
         IPromise<TResult> Done(SuccessPromiseHandler<TResult> handler);
 
@@ -119,18 +119,18 @@ namespace DotNetUtils.Concurrency
         /// terminates abnormally due to an exception being thrown.
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>UI</strong> thread.</remarks>
-        /// <seealso cref="LastException"/>
+        /// <seealso href="LastException"/>
         IPromise<TResult> Fail(FailurePromiseHandler<TResult> handler);
 
         /// <summary>
         /// Registers the specified <paramref name="handler"/> to be notified when the background thread
         /// finishes running, regardless of why it finished.  It is always invoked <em>after</em>
-        /// <see cref="Canceled"/>, <see cref="Done"/>, and <see cref="Fail"/> events.
+        /// <see href="Canceled"/>, <see href="Done"/>, and <see href="Fail"/> events.
         /// </summary>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>UI</strong> thread.</remarks>
         IPromise<TResult> Always(AlwaysPromiseHandler<TResult> handler);
 
@@ -142,20 +142,20 @@ namespace DotNetUtils.Concurrency
         /// Datatype to listen for.  Only progress updates with this datatype will invoke the specified <paramref name="handler"/>.
         /// </typeparam>
         /// <param name="handler">Event handler to register.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         /// <remarks><paramref name="handler"/> will run in the <strong>UI</strong> thread.</remarks>
         IPromise<TResult> Progress<TState>(ProgressPromiseHandler<TResult, TState> handler) where TState : class;
 
         /// <summary>
-        /// Report background thread progress.  Invoked by a <see cref="DoWorkPromiseHandler{TResult}"/>.
+        /// Report background thread progress.  Invoked by a <see href="DoWorkPromiseHandler{TResult}"/>.
         /// </summary>
         /// <typeparam name="TState">Datatype of <paramref name="state"/>.</typeparam>
         /// <param name="state">The current state of the background thread's progress.</param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         IPromise<TResult> Progress<TState>(TState state) where TState : class;
 
         /// <summary>
-        /// Initiates execution of the <see cref="Work"/> handlers in a background thread.
+        /// Initiates execution of the <see href="Work"/> handlers in a background thread.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown if this method is called more than once.</exception>
         IPromise<TResult> Start();
@@ -166,7 +166,7 @@ namespace DotNetUtils.Concurrency
         /// <remarks>
         /// This method merely <em>requests</em> that the background thread cancel execution; it does not (and cannot)
         /// forcefully abort the background thread.
-        /// <see cref="DoWorkPromiseHandler{TResult}"/>s should frequently check the value of <see cref="IsCancellationRequested"/>
+        /// <see href="DoWorkPromiseHandler{TResult}"/>s should frequently check the value of <see href="IsCancellationRequested"/>
         /// to know when to stop execution.
         /// </remarks>
         IPromise<TResult> Cancel();
@@ -175,13 +175,13 @@ namespace DotNetUtils.Concurrency
         /// Cancels this promise when the given <paramref name="token"/> is cancelled.
         /// </summary>
         /// <param name="token"></param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         IPromise<TResult> CancelWith(CancellationToken token);
 
         /// <summary>
         /// Blocks the current thread indefinitely until this promise to completes.
         /// </summary>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         IPromise<TResult> Wait();
 
         /// <summary>
@@ -189,9 +189,9 @@ namespace DotNetUtils.Concurrency
         /// <paramref name="millisecondsTimeout"/> elapses.
         /// </summary>
         /// <param name="millisecondsTimeout">
-        /// The number of milliseconds to wait, or <see cref="Timeout.Infinite"/><c>(-1)</c> to wait indefinitely.
+        /// The number of milliseconds to wait, or <see href="Timeout.Infinite"/><c>(-1)</c> to wait indefinitely.
         /// </param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         IPromise<TResult> Wait(int millisecondsTimeout);
 
         /// <summary>
@@ -199,10 +199,10 @@ namespace DotNetUtils.Concurrency
         /// <paramref name="timeout"/> elapses.
         /// </summary>
         /// <param name="timeout">
-        /// A <see cref="TimeSpan"/> that represents the number of milliseconds to wait,
-        /// or a <see cref="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely.
+        /// A <see href="TimeSpan"/> that represents the number of milliseconds to wait,
+        /// or a <see href="TimeSpan"/> that represents <c>-1</c> milliseconds to wait indefinitely.
         /// </param>
-        /// <returns>Reference to this <see cref="IPromise{TResult}"/> object.</returns>
+        /// <returns>Reference to this <see href="IPromise{TResult}"/> object.</returns>
         IPromise<TResult> Wait(TimeSpan timeout);
     }
 }

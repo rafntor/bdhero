@@ -51,7 +51,7 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        ///     Creates an <see cref="Image" /> object without locking the source file.
+        ///     Creates an <see href="Image" /> object without locking the source file.
         /// </summary>
         /// <param name="path">
         ///     Path to the image file.
@@ -61,16 +61,16 @@ namespace DotNetUtils.FS
         /// </returns>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
-        /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
+        /// <seealso href="http://stackoverflow.com/a/1105330/467582" />
         public static Image ImageFromFile(string path)
         {
             EnsureValidChars(path);
             return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
         }
 
-        /// <seealso cref="http://stackoverflow.com/a/398512/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/398512/467582"/>
         public static string Tail(string path, string tokenSeparator, Int64 numberOfTokens, Encoding encoding)
         {
             EnsureValidChars(path);
@@ -120,7 +120,7 @@ namespace DotNetUtils.FS
         #region Detect encoding
 
         /// <summary>
-        ///     Detects the encoding of the file using .NET's <see cref="StreamReader"/> class.
+        ///     Detects the encoding of the file using .NET's <see href="StreamReader"/> class.
         /// </summary>
         /// <param name="filePath">
         ///     Relative or absolute path to a text file.
@@ -132,10 +132,10 @@ namespace DotNetUtils.FS
         ///     The detected encoding of the text file specified by <paramref name="filePath" />.
         /// </returns>
         /// <exception cref="ID10TException">
-        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
-        /// <seealso cref="http://stackoverflow.com/a/8935635/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/8935635/467582"/>
         public static Encoding DetectEncodingAuto(string filePath, out string contents)
         {
             EnsureValidChars(filePath);
@@ -173,9 +173,9 @@ namespace DotNetUtils.FS
         /// </returns>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
-        /// <seealso cref="http://stackoverflow.com/a/12853721/467582" />
+        /// <seealso href="http://stackoverflow.com/a/12853721/467582" />
         public static Encoding DetectEncodingManual(string filePath, out string contents, int taster = 1000)
         {
             EnsureValidChars(filePath);
@@ -278,7 +278,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         public static void CreateDirectory(string path)
         {
@@ -333,7 +333,7 @@ namespace DotNetUtils.FS
         /// </exception>
         /// <exception cref="ArgumentException">
         ///     <paramref name="filePath"/> is a zero-length string, contains only white space, or contains one or more
-        ///     invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.
+        ///     invalid characters as defined by <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="filePath"/> is null.
@@ -354,7 +354,7 @@ namespace DotNetUtils.FS
         /// </exception>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         public static void TouchFile(string filePath)
         {
@@ -398,7 +398,7 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     Human-friendly string representation of the file size specified by <paramref name="byteCount"/>.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/4975942/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/4975942/467582"/>
         public static string HumanFriendlyFileSize(ulong byteCount)
         {
             string[] suf = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" }; // Longs run out around EB
@@ -443,7 +443,7 @@ namespace DotNetUtils.FS
         /// </returns>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         public static bool IsFile(string path)
         {
@@ -462,7 +462,7 @@ namespace DotNetUtils.FS
         /// </returns>
         /// <exception cref="ID10TException">
         ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         public static bool IsDirectory(string path)
         {
@@ -544,7 +544,7 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     <c>true</c> if <paramref name="fileName"/> is a valid file name; otherwise <c>false</c>.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
+        /// <seealso href="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
         public static bool IsValidFilename(string fileName)
         {
             var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
@@ -553,7 +553,7 @@ namespace DotNetUtils.FS
 
         /// <summary>
         ///     Returns any invalid characters found in the given <paramref name="path"/> as determined by
-        ///     <see cref="Path.GetInvalidPathChars"/>.
+        ///     <see href="Path.GetInvalidPathChars"/>.
         /// </summary>
         /// <param name="path">
         ///     Path to a file or directory.
@@ -571,7 +571,7 @@ namespace DotNetUtils.FS
         /// </summary>
         /// <param name="path"></param>
         /// <exception cref="ID10TException">
-        ///     Thrown if <paramref name="path"/> contains any illegal characters as determined by <see cref="GetInvalidChars"/>.
+        ///     Thrown if <paramref name="path"/> contains any illegal characters as determined by <see href="GetInvalidChars"/>.
         /// </exception>
         public static void EnsureValidChars(string path)
         {
@@ -663,7 +663,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void OpenFile([NotNull] string filePath, [CanBeNull] Control control = null)
@@ -686,7 +686,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void ShowInFolder([NotNull] string filePath, [CanBeNull] Control control = null)
@@ -711,7 +711,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="folderPath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void OpenFolder([NotNull] string folderPath, [CanBeNull] Control control = null)

@@ -21,7 +21,7 @@ using System;
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Values for <see cref="MENUITEMINFO.fType"/>.
+    ///     Values for <see href="MENUITEMINFO.fType"/>.
     /// </summary>
     [Flags]
     internal enum MenuItemType : uint
@@ -29,7 +29,7 @@ namespace NativeAPI.Win.User
         /// <summary>
         ///     Displays the menu item using a bitmap. The low-order word of the <c>dwTypeData</c> member is the bitmap
         ///     handle, and the <c>cch</c> member is ignored.
-        ///     <see cref="MFT_BITMAP"/> is replaced by <see cref="MenuItemInfoMember.MIIM_BITMAP"/> and <c>hbmpItem</c>.
+        ///     <see href="MFT_BITMAP"/> is replaced by <see href="MenuItemInfoMember.MIIM_BITMAP"/> and <c>hbmpItem</c>.
         /// </summary>
         MFT_BITMAP = 0x00000004,
 
@@ -83,7 +83,7 @@ namespace NativeAPI.Win.User
         /// <summary>
         ///     Displays the menu item using a text string. The <c>dwTypeData</c> member is the pointer to a
         ///     null-terminated string, and the <c>cch</c> member is the length of the string.
-        ///     <see cref="MFT_STRING"/> is replaced by <see cref="MenuItemInfoMember.MIIM_STRING"/>.
+        ///     <see href="MFT_STRING"/> is replaced by <see href="MenuItemInfoMember.MIIM_STRING"/>.
         /// </summary>
         MFT_STRING = 0x00000000,
     }

@@ -2,7 +2,7 @@
 namespace NativeAPI.Win.User
 {
     /// <summary>
-    ///     Static class containing values for the WPARAM field of <see cref="WindowMessageType.WM_ACTIVATE"/> messages.
+    ///     Static class containing values for the WPARAM field of <see href="WindowMessageType.WM_ACTIVATE"/> messages.
     /// </summary>
     public static class WindowActivate
     {

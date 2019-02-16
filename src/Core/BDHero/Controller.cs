@@ -43,7 +43,7 @@ namespace BDHero
         private readonly IPreferenceManager _preferenceManager;
 
         /// <summary>
-        /// Needed for <see cref="ProgressProviderOnUpdated"/> to invoke progress update callbacks on the correct thread.
+        /// Needed for <see href="ProgressProviderOnUpdated"/> to invoke progress update callbacks on the correct thread.
         /// </summary>
         private ISynchronizeInvoke _uiContext;
 

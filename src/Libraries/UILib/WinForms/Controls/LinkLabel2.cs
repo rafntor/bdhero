@@ -25,7 +25,7 @@ using NativeAPI.Win.User;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     A better replacement for .NET's default <see cref="LinkLabel"/>.
+    ///     A better replacement for .NET's default <see href="LinkLabel"/>.
     /// </summary>
     /// <remarks>
     ///     <para>For the latest version visit: http://wyday.com/linklabel2/ </para>
@@ -46,7 +46,7 @@ namespace UILib.WinForms.Controls
         private bool _isKeyHandled;
 
         /// <summary>
-        ///     Constructs a new <see cref="LinkLabel2"/> instance.
+        ///     Constructs a new <see href="LinkLabel2"/> instance.
         /// </summary>
         public LinkLabel2()
         {
@@ -72,7 +72,7 @@ namespace UILib.WinForms.Controls
 
         /// <summary>
         ///     Gets or sets the amount of padding (in pixels) to place between
-        ///     the text and the right side of the <see cref="Image"/>.
+        ///     the text and the right side of the <see href="Image"/>.
         /// </summary>
         [DefaultValue(8)]
         public int ImageRightPad

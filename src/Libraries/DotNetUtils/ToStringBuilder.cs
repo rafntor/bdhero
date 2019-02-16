@@ -23,10 +23,10 @@ namespace DotNetUtils
 {
     /// <summary>
     ///     Utility class for quickly generating string representations of classes
-    ///     for their <see cref="Object.ToString()"/> method.
+    ///     for their <see href="Object.ToString()"/> method.
     /// </summary>
     /// <typeparam name="TClass">
-    ///     Data type of the class containing the <see cref="Object.ToString()"/>
+    ///     Data type of the class containing the <see href="Object.ToString()"/>
     ///     method being generated.
     /// </typeparam>
     public sealed class ToStringBuilder<TClass>
@@ -36,12 +36,12 @@ namespace DotNetUtils
         private readonly IList<Pair> _props;
 
         /// <summary>
-        ///     Constructs a new <see cref="ToStringBuilder{TClass}"/> object
-        ///     that will generate <see cref="Object.ToString()"/> output for
+        ///     Constructs a new <see href="ToStringBuilder{TClass}"/> object
+        ///     that will generate <see href="Object.ToString()"/> output for
         ///     the given <paramref name="obj"/>.
         /// </summary>
         /// <param name="obj">
-        ///     Object whose <see cref="Object.ToString()"/> method is being generated.
+        ///     Object whose <see href="Object.ToString()"/> method is being generated.
         /// </param>
         public ToStringBuilder(TClass obj)
         {
@@ -62,7 +62,7 @@ namespace DotNetUtils
         ///     Data type of the property returned by <paramref name="expression"/>.
         /// </typeparam>
         /// <returns>
-        ///     A reference to this <see cref="ToStringBuilder{TClass}"/> object.
+        ///     A reference to this <see href="ToStringBuilder{TClass}"/> object.
         /// </returns>
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="expression"/> is not a simple property expression.

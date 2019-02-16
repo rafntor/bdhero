@@ -26,7 +26,7 @@ using Ninject;
 namespace BDHero.Plugin
 {
     /// <summary>
-    ///     Subclass of <see cref="PluginService"/> used for local testing and development
+    ///     Subclass of <see href="PluginService"/> used for local testing and development
     ///     in Visual Studio / Xamarin Studio.
     /// </summary>
     internal class DevPluginService : PluginService

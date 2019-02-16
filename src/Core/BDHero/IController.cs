@@ -56,7 +56,7 @@ namespace BDHero
 
         /// <summary>
         /// Invoked when the scanning stage completes, regardless of whether the it succeeded or failed.
-        /// This event always occurs after the <see cref="ScanSucceeded"/> and <see cref="ScanFailed"/> events.
+        /// This event always occurs after the <see href="ScanSucceeded"/> and <see href="ScanFailed"/> events.
         /// </summary>
         event AlwaysPromiseHandler<bool> ScanCompleted;
 
@@ -81,7 +81,7 @@ namespace BDHero
 
         /// <summary>
         /// Invoked when the conversion stage completes, regardless of whether the it succeeded or failed.
-        /// This event always occurs after the <see cref="ConvertSucceeded"/> and <see cref="ConvertFailed"/> events.
+        /// This event always occurs after the <see href="ConvertSucceeded"/> and <see href="ConvertFailed"/> events.
         /// </summary>
         event AlwaysPromiseHandler<bool> ConvertCompleted;
 
@@ -90,7 +90,7 @@ namespace BDHero
         #region Progress
 
         /// <summary>
-        /// Invoked whenever an <see cref="IPlugin"/>'s state or progress changes.
+        /// Invoked whenever an <see href="IPlugin"/>'s state or progress changes.
         /// </summary>
         event PluginProgressHandler PluginProgressUpdated;
 
@@ -99,7 +99,7 @@ namespace BDHero
         #region Unhandled Exceptions
 
         /// <summary>
-        /// Invoked when an exception is thrown by an <see cref="IPlugin"/>.
+        /// Invoked when an exception is thrown by an <see href="IPlugin"/>.
         /// </summary>
         event UnhandledExceptionEventHandler UnhandledException;
 
@@ -119,14 +119,14 @@ namespace BDHero
         void SetUIContext(ISynchronizeInvoke uiContext);
 
         /// <summary>
-        /// Runs all <see cref="INameProviderPlugin"/>s synchronously.
+        /// Runs all <see href="INameProviderPlugin"/>s synchronously.
         /// </summary>
         /// <param name="mkvPath"></param>
         void RenameSync(string mkvPath);
 
         /// <summary>
         /// Retrieves metadata, auto-detects the type of each playlist and track, and renames tracks and output file names.
-        /// Same as <see cref="CreateScanTask"/>, except this method doesn't re-scan the BD-ROM, and it accepts custom callbacks.
+        /// Same as <see href="CreateScanTask"/>, except this method doesn't re-scan the BD-ROM, and it accepts custom callbacks.
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <param name="start">Callback that will be invoked before the task starts</param>

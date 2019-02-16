@@ -18,7 +18,7 @@
 namespace DotNetUtils.Concurrency
 {
     /// <summary>
-    /// Invoked on the <strong>UI</strong> thread before the <see cref="IPromise{TResult} "/> begins execution in the background.
+    /// Invoked on the <strong>UI</strong> thread before the <see href="IPromise{TResult} "/> begins execution in the background.
     /// </summary>
     /// <param name="promise">Promise that triggered the event.</param>
     public delegate void BeforePromiseHandler<TResult>(IPromise<TResult> promise);
@@ -30,14 +30,14 @@ namespace DotNetUtils.Concurrency
     public delegate void DoWorkPromiseHandler<TResult>(IPromise<TResult> promise);
 
     /// <summary>
-    /// Invoked on the <strong>UI</strong> thread when the <see cref="IPromise{TResult} "/> has been <em>requested</em> to
+    /// Invoked on the <strong>UI</strong> thread when the <see href="IPromise{TResult} "/> has been <em>requested</em> to
     /// cancel execution, but is still running in the background.
     /// </summary>
     /// <param name="promise">Promise that triggered the event.</param>
     public delegate void CancellationRequestedPromiseHandler<TResult>(IPromise<TResult> promise);
 
     /// <summary>
-    /// Invoked on the <strong>UI</strong> thread after the <see cref="IPromise{TResult}"/> has been canceled and the
+    /// Invoked on the <strong>UI</strong> thread after the <see href="IPromise{TResult}"/> has been canceled and the
     /// background thread has exited.
     /// </summary>
     /// <param name="promise">Promise that triggered the event.</param>
@@ -58,8 +58,8 @@ namespace DotNetUtils.Concurrency
 
     /// <summary>
     /// Invoked on the <strong>UI</strong> thread after the background thread has exited, regardless of the
-    /// background thread's state.  Always invoked <em>after</em> <see cref="CanceledPromiseHandler{TResult}"/>,
-    /// <see cref="SuccessPromiseHandler{TResult}"/>, and <see cref="FailurePromiseHandler{TResult}"/> handlers.
+    /// background thread's state.  Always invoked <em>after</em> <see href="CanceledPromiseHandler{TResult}"/>,
+    /// <see href="SuccessPromiseHandler{TResult}"/>, and <see href="FailurePromiseHandler{TResult}"/> handlers.
     /// </summary>
     /// <param name="promise">Promise that triggered the event.</param>
     public delegate void AlwaysPromiseHandler<TResult>(IPromise<TResult> promise);

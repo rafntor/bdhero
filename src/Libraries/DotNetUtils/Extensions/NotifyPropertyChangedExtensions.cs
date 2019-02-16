@@ -23,7 +23,7 @@ using System.Reflection;
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    /// Automatic <see cref="INotifyPropertyChanged"/> extensions.
+    /// Automatic <see href="INotifyPropertyChanged"/> extensions.
     /// </summary>
     /// <example>
     /// <code>
@@ -51,7 +51,7 @@ namespace DotNetUtils.Extensions
     /// employee.SubscribeToChange(() => employee.FirstName, firstName_PropertyChanged);
     /// </code>
     /// </example>
-    /// <seealso cref="http://stackoverflow.com/a/527840/467582"/>
+    /// <seealso href="http://stackoverflow.com/a/527840/467582"/>
     public static class NotifyPropertyChangedExtensions
     {
         #region Delegates
@@ -59,7 +59,6 @@ namespace DotNetUtils.Extensions
         /// <summary>
         /// A property changed handler without the property name.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
         /// <typeparam name="TSender"></typeparam>
         /// <param name="sender">The object that raised the event.</param>
         public delegate void PropertyChangedHandler<TSender>(TSender sender);

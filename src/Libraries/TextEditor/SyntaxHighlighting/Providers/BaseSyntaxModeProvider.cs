@@ -5,7 +5,7 @@ using System.Xml;
 namespace TextEditor.SyntaxHighlighting.Providers
 {
     /// <summary>
-    ///     Provides common base functionality for <see cref="ISyntaxModeProvider"/>.
+    ///     Provides common base functionality for <see href="ISyntaxModeProvider"/>.
     /// </summary>
     public abstract class BaseSyntaxModeProvider : ISyntaxModeProvider
     {

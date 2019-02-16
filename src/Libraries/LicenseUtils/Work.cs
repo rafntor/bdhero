@@ -33,7 +33,7 @@ namespace LicenseUtils
         public Urls Urls;
 
         /// <summary>
-        ///     <see cref="LicenseUtils.License.Id"/>.
+        ///     <see href="LicenseUtils.License.Id"/>.
         /// </summary>
         public string LicenseId;
 

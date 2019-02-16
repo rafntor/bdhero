@@ -34,12 +34,12 @@ namespace NativeAPI.Win.User
         /// <param name="bRevert">
         ///     <para>The action to be taken.</para>
         ///     <para>
-        ///         If this parameter is <c>false</c>, <see cref="GetSystemMenu"/> returns a handle
+        ///         If this parameter is <c>false</c>, <see href="GetSystemMenu"/> returns a handle
         ///         to the copy of the window menu currently in use. The copy is initially identical to the window menu,
         ///         but it can be modified.
         ///     </para>
         ///     <para>
-        ///         If this parameter is <c>true</c>, <see cref="GetSystemMenu"/> resets the window menu back to the default state.
+        ///         If this parameter is <c>true</c>, <see href="GetSystemMenu"/> resets the window menu back to the default state.
         ///         The previous window menu, if any, is destroyed.
         ///     </para>
         /// </param>
@@ -54,7 +54,7 @@ namespace NativeAPI.Win.User
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         Any window that does not use the <see cref="GetSystemMenu"/> function to make its own copy of the
+        ///         Any window that does not use the <see href="GetSystemMenu"/> function to make its own copy of the
         ///         window menu receives the standard window menu.
         ///     </para>
         ///     <para>
@@ -91,12 +91,12 @@ namespace NativeAPI.Win.User
         /// </param>
         /// <param name="uIDNewItem">
         ///     The identifier of the new menu item or, if the <paramref name="uFlags"/> parameter is set to
-        ///     <see cref="MenuFlags.MF_POPUP"/>, a handle to the drop-down menu or submenu.
+        ///     <see href="MenuFlags.MF_POPUP"/>, a handle to the drop-down menu or submenu.
         /// </param>
         /// <param name="lpNewItem">
         ///     The content of the new menu item. The interpretation of <paramref name="lpNewItem"/> depends on whether
         ///     the <paramref name="uFlags"/> parameter includes the following values:
-        ///     <see cref="MenuFlags.MF_BITMAP"/>, <see cref="MenuFlags.MF_OWNERDRAW"/>, <see cref="MenuFlags.MF_STRING"/>.
+        ///     <see href="MenuFlags.MF_BITMAP"/>, <see href="MenuFlags.MF_OWNERDRAW"/>, <see href="MenuFlags.MF_STRING"/>.
         /// </param>
         /// <returns>
         ///     <c>true</c> if the function succeeds; <c>false</c> if it fails.
@@ -104,7 +104,7 @@ namespace NativeAPI.Win.User
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         The application must call the <see cref="DrawMenuBar"/> function whenever a menu changes, whether the menu is in
+        ///         The application must call the <see href="DrawMenuBar"/> function whenever a menu changes, whether the menu is in
         ///         a displayed window.
         ///     </para>
         ///     <para>
@@ -113,10 +113,10 @@ namespace NativeAPI.Win.User
         ///     </para>
         ///     <para>The following groups of flags cannot be used together:</para>
         ///     <list>
-        ///         <item><see cref="MenuFlags.MF_BITMAP"/>, <see cref="MenuFlags.MF_STRING"/>, and <see cref="MenuFlags.MF_OWNERDRAW"/></item>
-        ///         <item><see cref="MenuFlags.MF_CHECKED"/> and <see cref="MenuFlags.MF_UNCHECKED"/></item>
-        ///         <item><see cref="MenuFlags.MF_DISABLED"/>, <see cref="MenuFlags.MF_ENABLED"/>, and <see cref="MenuFlags.MF_GRAYED"/></item>
-        ///         <item><see cref="MenuFlags.MF_MENUBARBREAK"/> and <see cref="MenuFlags.MF_MENUBREAK"/></item>
+        ///         <item><see href="MenuFlags.MF_BITMAP"/>, <see href="MenuFlags.MF_STRING"/>, and <see href="MenuFlags.MF_OWNERDRAW"/></item>
+        ///         <item><see href="MenuFlags.MF_CHECKED"/> and <see href="MenuFlags.MF_UNCHECKED"/></item>
+        ///         <item><see href="MenuFlags.MF_DISABLED"/>, <see href="MenuFlags.MF_ENABLED"/>, and <see href="MenuFlags.MF_GRAYED"/></item>
+        ///         <item><see href="MenuFlags.MF_MENUBARBREAK"/> and <see href="MenuFlags.MF_MENUBREAK"/></item>
         ///     </list>
         /// </remarks>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -127,10 +127,10 @@ namespace NativeAPI.Win.User
         ///         Inserts a new menu item into a menu, moving other items down the menu.
         ///     </para>
         ///     <para>
-        ///         <b>Note</b>: The <see cref="InsertMenu"/> function has been superseded by the
-        ///         <see cref="InsertMenuItem"/> function.
-        ///         You can still use <see cref="InsertMenu"/>, however, if you do not need any of the extended features
-        ///         of <see cref="InsertMenuItem"/>.
+        ///         <b>Note</b>: The <see href="InsertMenu"/> function has been superseded by the
+        ///         <see href="InsertMenuItem"/> function.
+        ///         You can still use <see href="InsertMenu"/>, however, if you do not need any of the extended features
+        ///         of <see href="InsertMenuItem"/>.
         ///     </para>
         /// </summary>
         /// <param name="hMenu">
@@ -143,16 +143,16 @@ namespace NativeAPI.Win.User
         /// <param name="uFlags">
         ///     Controls the interpretation of the <paramref name="uPosition"/> parameter and the content, appearance,
         ///     and behavior of the new menu item. This parameter must include either
-        ///     <see cref="MenuFlags.MF_BYCOMMAND"/> or <see cref="MenuFlags.MF_BYPOSITION"/>.
+        ///     <see href="MenuFlags.MF_BYCOMMAND"/> or <see href="MenuFlags.MF_BYPOSITION"/>.
         /// </param>
         /// <param name="uIDNewItem">
         ///     The identifier of the new menu item or, if the <paramref name="uFlags"/> parameter has the
-        ///     <see cref="MenuFlags.MF_POPUP"/> flag set, a handle to the drop-down menu or submenu.
+        ///     <see href="MenuFlags.MF_POPUP"/> flag set, a handle to the drop-down menu or submenu.
         /// </param>
         /// <param name="lpNewItem">
         ///     The content of the new menu item. The interpretation of <paramref name="lpNewItem"/> depends on whether
         ///     the <paramref name="uFlags"/> parameter includes the
-        ///     <see cref="MenuFlags.MF_BITMAP"/>, <see cref="MenuFlags.MF_OWNERDRAW"/>, or <see cref="MenuFlags.MF_STRING"/> flag.
+        ///     <see href="MenuFlags.MF_BITMAP"/>, <see href="MenuFlags.MF_OWNERDRAW"/>, or <see href="MenuFlags.MF_STRING"/> flag.
         /// </param>
         /// <returns>
         ///     <c>true</c> if the function succeeds; <c>false</c> if it fails.
@@ -160,18 +160,18 @@ namespace NativeAPI.Win.User
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         The application must call the <see cref="DrawMenuBar"/> function whenever a menu changes,
+        ///         The application must call the <see href="DrawMenuBar"/> function whenever a menu changes,
         ///         whether the menu is in a displayed window.
         ///     </para>
         ///     <para>
         ///         The following groups of flags cannot be used together:
         ///     </para>
         ///     <list>
-        ///         <item><see cref="MenuFlags.MF_BYCOMMAND"/> and <see cref="MenuFlags.MF_BYPOSITION"/></item>
-        ///         <item><see cref="MenuFlags.MF_DISABLED"/>, <see cref="MenuFlags.MF_ENABLED"/>, and <see cref="MenuFlags.MF_GRAYED"/></item>
-        ///         <item><see cref="MenuFlags.MF_BITMAP"/>, <see cref="MenuFlags.MF_STRING"/>, <see cref="MenuFlags.MF_OWNERDRAW"/>, and <see cref="MenuFlags.MF_SEPARATOR"/></item>
-        ///         <item><see cref="MenuFlags.MF_MENUBARBREAK"/> and <see cref="MenuFlags.MF_MENUBREAK"/></item>
-        ///         <item><see cref="MenuFlags.MF_CHECKED"/> and <see cref="MenuFlags.MF_UNCHECKED"/></item>
+        ///         <item><see href="MenuFlags.MF_BYCOMMAND"/> and <see href="MenuFlags.MF_BYPOSITION"/></item>
+        ///         <item><see href="MenuFlags.MF_DISABLED"/>, <see href="MenuFlags.MF_ENABLED"/>, and <see href="MenuFlags.MF_GRAYED"/></item>
+        ///         <item><see href="MenuFlags.MF_BITMAP"/>, <see href="MenuFlags.MF_STRING"/>, <see href="MenuFlags.MF_OWNERDRAW"/>, and <see href="MenuFlags.MF_SEPARATOR"/></item>
+        ///         <item><see href="MenuFlags.MF_MENUBARBREAK"/> and <see href="MenuFlags.MF_MENUBREAK"/></item>
+        ///         <item><see href="MenuFlags.MF_CHECKED"/> and <see href="MenuFlags.MF_UNCHECKED"/></item>
         ///     </list>
         /// </remarks>
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
@@ -185,15 +185,15 @@ namespace NativeAPI.Win.User
         /// </param>
         /// <param name="uItem">
         ///     The identifier or position of the menu item to get information about.
-        ///     The meaning of this parameter depends on the value of <see cref="fByPosition"/>.
+        ///     The meaning of this parameter depends on the value of <see href="fByPosition"/>.
         /// </param>
         /// <param name="fByPosition">
-        ///     The meaning of <see cref="uItem"/>. If this parameter is <c>false</c>, <see cref="uItem"/> is a
+        ///     The meaning of <see href="uItem"/>. If this parameter is <c>false</c>, <see href="uItem"/> is a
         ///     menu item identifier. Otherwise, it is a menu item position.
         /// </param>
         /// <param name="lpmii">
-        ///     A pointer to a <see cref="MENUITEMINFO"/> structure that specifies the information to retrieve and
-        ///     receives information about the menu item. Note that you must set the <see cref="MENUITEMINFO.cbSize"/>
+        ///     A pointer to a <see href="MENUITEMINFO"/> structure that specifies the information to retrieve and
+        ///     receives information about the menu item. Note that you must set the <see href="MENUITEMINFO.cbSize"/>
         ///     member to <c>sizeof(MENUITEMINFO)</c> before calling this function.
         /// </param>
         /// <returns>
@@ -202,18 +202,18 @@ namespace NativeAPI.Win.User
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         To retrieve a menu item of type <see cref="MenuItemType.MFT_STRING"/>, first find the size of the string by
-        ///         setting the <see cref="MENUITEMINFO.dwTypeData"/> member of <see cref="MENUITEMINFO"/> to
-        ///         <see cref="IntPtr.Zero"/> and then calling <see cref="GetMenuItemInfo"/>.
-        ///         The value of <see cref="MENUITEMINFO.cch"/><c>+1</c> is the size needed.
+        ///         To retrieve a menu item of type <see href="MenuItemType.MFT_STRING"/>, first find the size of the string by
+        ///         setting the <see href="MENUITEMINFO.dwTypeData"/> member of <see href="MENUITEMINFO"/> to
+        ///         <see href="IntPtr.Zero"/> and then calling <see href="GetMenuItemInfo"/>.
+        ///         The value of <see href="MENUITEMINFO.cch"/><c>+1</c> is the size needed.
         ///         Then allocate a buffer of this size, place the pointer to the buffer in
-        ///         <see cref="MENUITEMINFO.dwTypeData"/>, increment <see cref="MENUITEMINFO.cch"/> by one, and then
-        ///         call <see cref="GetMenuItemInfo"/> once again to fill the buffer with the string.
+        ///         <see href="MENUITEMINFO.dwTypeData"/>, increment <see href="MENUITEMINFO.cch"/> by one, and then
+        ///         call <see href="GetMenuItemInfo"/> once again to fill the buffer with the string.
         ///     </para>
         ///     <para>
-        ///         If the retrieved menu item is of some other type, then <see cref="GetMenuItemInfo"/> sets the
-        ///         <see cref="MENUITEMINFO.dwTypeData"/> member to a value whose type is specified by the
-        ///         <see cref="MENUITEMINFO.fType"/> member and sets <see cref="MENUITEMINFO.cch"/> to <c>0</c>.
+        ///         If the retrieved menu item is of some other type, then <see href="GetMenuItemInfo"/> sets the
+        ///         <see href="MENUITEMINFO.dwTypeData"/> member to a value whose type is specified by the
+        ///         <see href="MENUITEMINFO.fType"/> member and sets <see href="MENUITEMINFO.cch"/> to <c>0</c>.
         ///     </para>
         /// </remarks>
         [DllImport("user32.dll")]
@@ -234,7 +234,7 @@ namespace NativeAPI.Win.User
         ///     a menu item identifier. Otherwise, it is a menu item position.
         /// </param>
         /// <param name="lpmii">
-        ///     A pointer to a <see cref="MENUITEMINFO"/> structure that contains information about the menu item and
+        ///     A pointer to a <see href="MENUITEMINFO"/> structure that contains information about the menu item and
         ///     specifies which menu item attributes to change.
         /// </param>
         /// <returns>
@@ -243,7 +243,7 @@ namespace NativeAPI.Win.User
         /// </returns>
         /// <remarks>
         ///     <para>
-        ///         The application must call the <see cref="DrawMenuBar"/> function whenever a menu changes, whether the menu is in
+        ///         The application must call the <see href="DrawMenuBar"/> function whenever a menu changes, whether the menu is in
         ///         a displayed window.
         ///     </para>
         ///     <para>

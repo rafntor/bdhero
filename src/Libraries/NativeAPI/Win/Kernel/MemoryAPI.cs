@@ -28,7 +28,7 @@ namespace NativeAPI.Win.Kernel
         ///     Retrieves information about the system's current usage of both physical and virtual memory.
         /// </summary>
         /// <param name="lpBuffer">
-        ///     A pointer to a <see cref="MEMORYSTATUSEX"/> structure that receives information about current memory availability.
+        ///     A pointer to a <see href="MEMORYSTATUSEX"/> structure that receives information about current memory availability.
         /// </param>
         /// <returns>
         ///     If the function succeeds, the return value is nonzero.
@@ -44,7 +44,7 @@ namespace NativeAPI.Win.Kernel
         ///         that two sequential calls to this function will return the same information.
         ///     </para>
         ///     <para>
-        ///         The <see cref="MEMORYSTATUSEX.ullAvailPhys"/> member of the <see cref="MEMORYSTATUSEX"/> structure
+        ///         The <see href="MEMORYSTATUSEX.ullAvailPhys"/> member of the <see href="MEMORYSTATUSEX"/> structure
         ///         at <paramref name="lpBuffer"/> includes memory for all NUMA nodes.
         ///     </para>
         /// </remarks>

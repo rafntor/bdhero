@@ -21,8 +21,8 @@ namespace TextEditor.SyntaxHighlighting.Providers
         private readonly IDictionary<string, string> _models;
 
         /// <summary>
-        ///     Constructs a new <see cref="T4SyntaxModeProvider"/> instance with the default list of syntax modes
-        ///     stored in the <see cref="TextEditor.SyntaxHighlighting.Definitions"/> namespace.
+        ///     Constructs a new <see href="T4SyntaxModeProvider"/> instance with the default list of syntax modes
+        ///     stored in the <see href="TextEditor.SyntaxHighlighting.Definitions"/> namespace.
         /// </summary>
         public T4SyntaxModeProvider()
             : this(DefaultModels)
@@ -30,7 +30,7 @@ namespace TextEditor.SyntaxHighlighting.Providers
         }
 
         /// <summary>
-        ///     Constructs a new <see cref="T4SyntaxModeProvider"/> instance with the the given list of <paramref name="models"/>.
+        ///     Constructs a new <see href="T4SyntaxModeProvider"/> instance with the the given list of <paramref name="models"/>.
         /// </summary>
         /// <param name="models">
         ///     Map of key value pairs where the <b>key</b> is the syntax mode's file name and

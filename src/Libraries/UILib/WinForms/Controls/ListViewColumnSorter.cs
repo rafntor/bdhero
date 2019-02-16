@@ -23,7 +23,7 @@ namespace UILib.WinForms.Controls
     /// <summary>
     ///     This class is an implementation of the 'IComparer' interface.
     /// </summary>
-    /// <seealso cref="http://support.microsoft.com/kb/319401" />
+    /// <seealso href="http://support.microsoft.com/kb/319401" />
     public class ListViewColumnSorter : IComparer
     {
         /// <summary>

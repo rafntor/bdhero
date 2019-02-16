@@ -23,7 +23,7 @@ using OSUtils.JobObjects;
 namespace ProcessUtils
 {
     /// <summary>
-    /// Threaded version of <see cref="NonInteractiveProcess"/>.  Allows a process to run in the background
+    /// Threaded version of <see href="NonInteractiveProcess"/>.  Allows a process to run in the background
     /// on a separate thread while reporting its status and progress information to the UI.
     /// </summary>
     public class BackgroundProcessWorker : NonInteractiveProcess
@@ -59,7 +59,7 @@ namespace ProcessUtils
         public event BackgroundProgressHandler ProgressUpdated;
 
         /// <summary>
-        ///     Constructs a new <see cref="BackgroundProcessWorker"/> object that uses the given
+        ///     Constructs a new <see href="BackgroundProcessWorker"/> object that uses the given
         ///     <paramref name="jobObjectManager"/> to ensure that child processes are terminated
         ///     if the parent process exits prematurely.
         /// </summary>

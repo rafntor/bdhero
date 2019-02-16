@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 namespace LicenseUtils
 {
     /// <summary>
-    ///     A person or organization that contributed to a <see cref="Work"/>.
+    ///     A person or organization that contributed to a <see href="Work"/>.
     /// </summary>
     [UsedImplicitly]
     public class Author
     {
         /// <summary>
-        ///     Array of years that this author made copyrightable contributions to the <see cref="Work"/>.
+        ///     Array of years that this author made copyrightable contributions to the <see href="Work"/>.
         /// </summary>
         public int[] Years;
 
@@ -22,7 +22,7 @@ namespace LicenseUtils
         public string Name;
 
         /// <summary>
-        ///     The name of the organization that commissioned the <see cref="Work"/>.
+        ///     The name of the organization that commissioned the <see href="Work"/>.
         /// </summary>
         public string Organization;
 
@@ -37,7 +37,7 @@ namespace LicenseUtils
         public string Url;
 
         /// <summary>
-        ///     Gets a human-readable summary of <see cref="Years"/> as a series of
+        ///     Gets a human-readable summary of <see href="Years"/> as a series of
         ///     year ranges.
         /// </summary>
         /// <example>

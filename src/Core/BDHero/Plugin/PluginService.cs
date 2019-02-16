@@ -29,7 +29,7 @@ using Ninject;
 namespace BDHero.Plugin
 {
     /// <summary>
-    ///     Default implementation of <see cref="IPluginService"/>.
+    ///     Default implementation of <see href="IPluginService"/>.
     /// </summary>
     internal class PluginService : IPluginService
     {

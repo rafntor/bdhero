@@ -28,14 +28,14 @@ namespace NativeAPI.Win.User
     /// </summary>
     /// <remarks>
     ///     <para>
-    ///         The <see cref="MENUITEMINFO"/> structure is used with the <see cref="SystemMenuAPI.GetMenuItemInfo"/>,
-    ///         <see cref="SystemMenuAPI.InsertMenuItem"/>, and <see cref="SystemMenuAPI.SetMenuItemInfo"/> functions.
+    ///         The <see href="MENUITEMINFO"/> structure is used with the <see href="SystemMenuAPI.GetMenuItemInfo"/>,
+    ///         <see href="SystemMenuAPI.InsertMenuItem"/>, and <see href="SystemMenuAPI.SetMenuItemInfo"/> functions.
     ///     </para>
     ///     <para>
     ///         The menu can display items using text, bitmaps, or both.
     ///     </para>
     /// </remarks>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647578(v=vs.85).aspx"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/windows/desktop/ms647578(v=vs.85).aspx"/>
     [StructLayout(LayoutKind.Sequential)]
     public struct MENUITEMINFO
     {
@@ -51,79 +51,79 @@ namespace NativeAPI.Win.User
         public MenuItemInfoMember fMask;
 
         /// <summary>
-        ///     The menu item type. This member can be one or more of the <see cref="MenuItemType"/> values.
-        ///     The <see cref="MenuItemType.MFT_BITMAP"/>, <see cref="MenuItemType.MFT_SEPARATOR"/>, and <see cref="MenuItemType.MFT_STRING"/> values
+        ///     The menu item type. This member can be one or more of the <see href="MenuItemType"/> values.
+        ///     The <see href="MenuItemType.MFT_BITMAP"/>, <see href="MenuItemType.MFT_SEPARATOR"/>, and <see href="MenuItemType.MFT_STRING"/> values
         ///     cannot be combined with one another.
-        ///     Set <see cref="fMask"/> and <see cref="MenuItemInfoMember.MIIM_TYPE"/> to use <see cref="fType"/>.
-        ///     <see cref="fType"/> is used only if <see cref="fType"/> has a value of <see cref="MenuItemInfoMember.MIIM_FTYPE"/>.
+        ///     Set <see href="fMask"/> and <see href="MenuItemInfoMember.MIIM_TYPE"/> to use <see href="fType"/>.
+        ///     <see href="fType"/> is used only if <see href="fType"/> has a value of <see href="MenuItemInfoMember.MIIM_FTYPE"/>.
         /// </summary>
         public uint fType;
 
         /// <summary>
-        ///     The menu item state. This member can be one or more of the <see cref="MenuItemState"/> values.
-        ///     Set <see cref="fMask"/> to <see cref="MenuItemInfoMember.MIIM_STATE"/> to use <see cref="fState"/>.
+        ///     The menu item state. This member can be one or more of the <see href="MenuItemState"/> values.
+        ///     Set <see href="fMask"/> to <see href="MenuItemInfoMember.MIIM_STATE"/> to use <see href="fState"/>.
         /// </summary>
         [MarshalAs(UnmanagedType.U4)]
         public MenuItemState fState;
 
         /// <summary>
-        ///     An application-defined value that identifies the menu item. Set <see cref="fMask"/> to
-        ///     <see cref="MenuItemInfoMember.MIIM_ID"/> to use <see cref="wID"/>.
+        ///     An application-defined value that identifies the menu item. Set <see href="fMask"/> to
+        ///     <see href="MenuItemInfoMember.MIIM_ID"/> to use <see href="wID"/>.
         /// </summary>
         public uint wID;
 
         /// <summary>
         ///     A handle to the drop-down menu or submenu associated with the menu item.
         ///     If the menu item is not an item that opens a drop-down menu or submenu, this member is
-        ///     <see cref="IntPtr.Zero"/>.
-        ///     Set <see cref="fMask"/> to <see cref="MenuItemInfoMember.MIIM_SUBMENU"/> to use <see cref="hSubMenu"/>.
+        ///     <see href="IntPtr.Zero"/>.
+        ///     Set <see href="fMask"/> to <see href="MenuItemInfoMember.MIIM_SUBMENU"/> to use <see href="hSubMenu"/>.
         /// </summary>
         public IntPtr hSubMenu;
 
         /// <summary>
         ///     A handle to the bitmap to display next to the item if it is selected.
-        ///     If this member is <see cref="IntPtr.Zero"/>, a default bitmap is used.
-        ///     If the <see cref="MenuItemType.MFT_RADIOCHECK"/> type value is specified, the default bitmap is a bullet.
-        ///     Otherwise, it is a check mark. Set <see cref="fMask"/> to <see cref="MenuItemInfoMember.MIIM_CHECKMARKS"/> to use
-        ///     <see cref="hbmpChecked"/>.
+        ///     If this member is <see href="IntPtr.Zero"/>, a default bitmap is used.
+        ///     If the <see href="MenuItemType.MFT_RADIOCHECK"/> type value is specified, the default bitmap is a bullet.
+        ///     Otherwise, it is a check mark. Set <see href="fMask"/> to <see href="MenuItemInfoMember.MIIM_CHECKMARKS"/> to use
+        ///     <see href="hbmpChecked"/>.
         /// </summary>
         public IntPtr hbmpChecked;
 
         /// <summary>
         ///     A handle to the bitmap to display next to the item if it is not selected.
-        ///     If this member is <see cref="IntPtr.Zero"/>, no bitmap is used.
-        ///     Set <see cref="fMask"/> to <see cref="MenuItemInfoMember.MIIM_CHECKMARKS"/> to use <see cref="hbmpUnchecked"/>.
+        ///     If this member is <see href="IntPtr.Zero"/>, no bitmap is used.
+        ///     Set <see href="fMask"/> to <see href="MenuItemInfoMember.MIIM_CHECKMARKS"/> to use <see href="hbmpUnchecked"/>.
         /// </summary>
         public IntPtr hbmpUnchecked;
 
         /// <summary>
         ///     An application-defined value associated with the menu item.
-        ///     Set <see cref="fMask"/> to <see cref="MenuItemInfoMember.MIIM_DATA"/> to use <see cref="dwItemData"/>.
+        ///     Set <see href="fMask"/> to <see href="MenuItemInfoMember.MIIM_DATA"/> to use <see href="dwItemData"/>.
         /// </summary>
         public IntPtr dwItemData;
 
         /// <summary>
         ///     <para>
-        ///         The contents of the menu item. The meaning of this member depends on the value of <see cref="fType" /> and is
-        ///         used only if the <see cref="MenuItemInfoMember.MIIM_TYPE" /> flag is set in the <see cref="fMask" /> member.
+        ///         The contents of the menu item. The meaning of this member depends on the value of <see href="fType" /> and is
+        ///         used only if the <see href="MenuItemInfoMember.MIIM_TYPE" /> flag is set in the <see href="fMask" /> member.
         ///     </para>
         ///     <para>
-        ///         To retrieve a menu item of type <see cref="MenuItemType.MFT_STRING" />, first find the size of the string by setting the
-        ///         <see cref="dwTypeData" /> member of <see cref="MENUITEMINFO" /> to <see cref="IntPtr.Zero" /> and then calling
-        ///         <see cref="SystemMenuAPI.GetMenuItemInfo" />. The value of <see cref="cch" /><c>+1</c> is the size needed. Then allocate a
+        ///         To retrieve a menu item of type <see href="MenuItemType.MFT_STRING" />, first find the size of the string by setting the
+        ///         <see href="dwTypeData" /> member of <see href="MENUITEMINFO" /> to <see href="IntPtr.Zero" /> and then calling
+        ///         <see href="SystemMenuAPI.GetMenuItemInfo" />. The value of <see href="cch" /><c>+1</c> is the size needed. Then allocate a
         ///         buffer of this size, place the pointer to the buffer in
-        ///         <see cref="dwTypeData" />, increment <see cref="cch" />, and call <see cref="SystemMenuAPI.GetMenuItemInfo" /> once again to
+        ///         <see href="dwTypeData" />, increment <see href="cch" />, and call <see href="SystemMenuAPI.GetMenuItemInfo" /> once again to
         ///         fill the buffer with the string. If the retrieved menu item is of some other type, then
-        ///         <see cref="SystemMenuAPI.GetMenuItemInfo" /> sets the <see cref="dwTypeData" /> member to a value whose type is specified by
-        ///         the <see cref="fType" /> member.
+        ///         <see href="SystemMenuAPI.GetMenuItemInfo" /> sets the <see href="dwTypeData" /> member to a value whose type is specified by
+        ///         the <see href="fType" /> member.
         ///     </para>
         ///     <para>
-        ///         When using with the <see cref="SystemMenuAPI.SetMenuItemInfo" /> function, this member should contain a value whose type is
-        ///         specified by the <see cref="fType" /> member.
+        ///         When using with the <see href="SystemMenuAPI.SetMenuItemInfo" /> function, this member should contain a value whose type is
+        ///         specified by the <see href="fType" /> member.
         ///     </para>
         ///     <para>
-        ///         <see cref="dwTypeData" /> is used only if the <see cref="MenuItemInfoMember.MIIM_STRING" /> flag is set in the
-        ///         <see cref="fMask" /> member
+        ///         <see href="dwTypeData" /> is used only if the <see href="MenuItemInfoMember.MIIM_STRING" /> flag is set in the
+        ///         <see href="fMask" /> member
         ///     </para>
         /// </summary>
         public string dwTypeData;
@@ -131,27 +131,27 @@ namespace NativeAPI.Win.User
         /// <summary>
         ///     <para>
         ///         The length of the menu item text, in characters, when information is received about a menu item of the
-        ///         <see cref="MenuItemType.MFT_STRING" /> type. However, <see cref="cch" /> is used only if the <see cref="MenuItemInfoMember.MIIM_TYPE" /> flag
-        ///         is set in the <see cref="fMask" /> member and is zero otherwise. Also, <see cref="cch" /> is ignored when the
-        ///         content of a menu item is set by calling <see cref="SystemMenuAPI.SetMenuItemInfo" />.
+        ///         <see href="MenuItemType.MFT_STRING" /> type. However, <see href="cch" /> is used only if the <see href="MenuItemInfoMember.MIIM_TYPE" /> flag
+        ///         is set in the <see href="fMask" /> member and is zero otherwise. Also, <see href="cch" /> is ignored when the
+        ///         content of a menu item is set by calling <see href="SystemMenuAPI.SetMenuItemInfo" />.
         ///     </para>
         ///     <para>
-        ///         Note that, before calling <see cref="SystemMenuAPI.GetMenuItemInfo" />, the application must set <see cref="cch" /> to the
-        ///         length of the buffer pointed to by the <see cref="dwTypeData" /> member. If the retrieved menu item is of type
-        ///         <see cref="MenuItemType.MFT_STRING"/> (as indicated by the <see cref="fType" /> member), then <see cref="SystemMenuAPI.GetMenuItemInfo" /> changes
-        ///         <see cref="cch" /> to the length of the menu item text. If the retrieved menu item is of some other type,
-        ///         <see cref="SystemMenuAPI.GetMenuItemInfo" /> sets the <see cref="cch" /> field to zero.
+        ///         Note that, before calling <see href="SystemMenuAPI.GetMenuItemInfo" />, the application must set <see href="cch" /> to the
+        ///         length of the buffer pointed to by the <see href="dwTypeData" /> member. If the retrieved menu item is of type
+        ///         <see href="MenuItemType.MFT_STRING"/> (as indicated by the <see href="fType" /> member), then <see href="SystemMenuAPI.GetMenuItemInfo" /> changes
+        ///         <see href="cch" /> to the length of the menu item text. If the retrieved menu item is of some other type,
+        ///         <see href="SystemMenuAPI.GetMenuItemInfo" /> sets the <see href="cch" /> field to zero.
         ///     </para>
         ///     <para>
-        ///         The <see cref="cch" /> member is used when the <see cref="MenuItemInfoMember.MIIM_STRING" /> flag is set in the
-        ///         <see cref="fMask" /> member.
+        ///         The <see href="cch" /> member is used when the <see href="MenuItemInfoMember.MIIM_STRING" /> flag is set in the
+        ///         <see href="fMask" /> member.
         ///     </para>
         /// </summary>
         public uint cch;
 
         /// <summary>
-        ///     A handle to the bitmap to be displayed, or it can be one of the <see cref="MenuItemBitmapType"/> values.
-        ///     It is used when the <see cref="MenuItemInfoMember.MIIM_BITMAP"/> flag is set in the <see cref="fMask"/> member.
+        ///     A handle to the bitmap to be displayed, or it can be one of the <see href="MenuItemBitmapType"/> values.
+        ///     It is used when the <see href="MenuItemInfoMember.MIIM_BITMAP"/> flag is set in the <see href="fMask"/> member.
         /// </summary>
         public IntPtr hbmpItem;
 

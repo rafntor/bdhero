@@ -26,8 +26,8 @@ namespace NativeAPI.Win.User
     ///     <c>WPARAM</c> is a typedef for <c>UINT_PTR</c> which is an <c>unsigned int</c> (unsigned 32-bit) on win32
     ///     and <c>unsigned __int64</c> (unsigned 64-bit) on x86_64.
     /// </summary>
-    /// <seealso cref="http://stackoverflow.com/a/2515285/467582"/>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/aa383751%28VS.85%29.aspx"/>
+    /// <seealso href="http://stackoverflow.com/a/2515285/467582"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/aa383751%28VS.85%29.aspx"/>
     public enum WParam : uint
     {
         /// <summary>

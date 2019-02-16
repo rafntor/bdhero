@@ -21,7 +21,7 @@ using System.Collections.Generic;
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    ///     Extension methods for <see cref="TimeSpan" /> objects.
+    ///     Extension methods for <see href="TimeSpan" /> objects.
     /// </summary>
     public static class TimeSpanExtensions
     {

@@ -10,7 +10,7 @@ using UILib.Extensions;
 namespace TextEditor.WinForms
 {
     /// <summary>
-    ///     Windows Forms control that wraps a <see cref="ITextEditor"/> object.
+    ///     Windows Forms control that wraps a <see href="ITextEditor"/> object.
     /// </summary>
     [DefaultProperty("Text")]
     [DefaultEvent("TextChanged")]
@@ -32,7 +32,7 @@ namespace TextEditor.WinForms
         private BorderStyle _borderStyle;
 
         /// <summary>
-        ///     Constructs a new <see cref="TextEditorControl"/> instance.
+        ///     Constructs a new <see href="TextEditorControl"/> instance.
         /// </summary>
         public TextEditorControl()
         {
@@ -290,14 +290,14 @@ namespace TextEditor.WinForms
         }
 
         /// <summary>
-        ///     Triggered whenever the value of the <see cref="BorderStyle"/> property changes.
+        ///     Triggered whenever the value of the <see href="BorderStyle"/> property changes.
         /// </summary>
         [Browsable(true)]
         [Description("Triggered whenever the value of the BorderStyle property changes.")]
         public event EventHandler BorderStyleChanged;
 
         /// <summary>
-        ///     Notifies <see cref="BorderStyleChanged"/> listeners whenever the value of the <see cref="BorderStyle"/> property changes.
+        ///     Notifies <see href="BorderStyleChanged"/> listeners whenever the value of the <see href="BorderStyle"/> property changes.
         /// </summary>
         /// <param name="args"></param>
         protected virtual void OnBorderStyleChanged(EventArgs args = null)
@@ -435,7 +435,7 @@ namespace TextEditor.WinForms
         #region Padding
 
         /// <summary>
-        ///     Gets the full amount of padding required to accommodate the requested <see cref="Padding"/> value
+        ///     Gets the full amount of padding required to accommodate the requested <see href="Padding"/> value
         ///     and the editor's border, if applicable.
         /// </summary>
         protected virtual Padding CalculatedPadding
@@ -553,7 +553,7 @@ namespace TextEditor.WinForms
         }
 
         /// <summary>
-        ///     Event raised when the value of the <see cref="Multiline"/> property is changed on this <see cref="TextEditorControl"/>.
+        ///     Event raised when the value of the <see href="Multiline"/> property is changed on this <see href="TextEditorControl"/>.
         /// </summary>
         [Browsable(true)]
         [Description("Occurs when the value of the Multiline property changes.")]
@@ -561,7 +561,7 @@ namespace TextEditor.WinForms
         public event EventHandler MultilineChanged;
 
         /// <summary>
-        ///     Notifies <see cref="MultilineChanged"/> listeners whenever the value of the <see cref="Multiline"/> property changes.
+        ///     Notifies <see href="MultilineChanged"/> listeners whenever the value of the <see href="Multiline"/> property changes.
         /// </summary>
         /// <param name="args"></param>
         protected virtual void OnMultilineChanged(EventArgs args)

@@ -64,10 +64,10 @@ namespace OSUtils.Info
 
         /// <summary>
         /// Gets the total amount of installed physical memory on the system using native Win32 interop,
-        /// falling back to a Mono-specific <see cref="PerformanceCounter"/> implementation for *nix OSes.
+        /// falling back to a Mono-specific <see href="PerformanceCounter"/> implementation for *nix OSes.
         /// </summary>
         /// <returns>The total amount of installed physical memory on the system.</returns>
-        /// <see cref="http://stackoverflow.com/a/105109"/>
+        /// <see href="http://stackoverflow.com/a/105109"/>
         private static ulong GetTotalPhysicalMemory()
         {
             // ReSharper disable EmptyGeneralCatchClause
@@ -181,7 +181,7 @@ namespace OSUtils.Info
 
         #region Mac-specific memory
 
-        /// <seealso cref="http://stackoverflow.com/a/8782351/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/8782351/467582"/>
         private static ulong GetMemoryOSX2(MemPropOSX prop)
         {
             var output = GetProcessOutput("/usr/bin/vm_stat");

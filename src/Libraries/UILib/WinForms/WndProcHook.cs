@@ -5,22 +5,22 @@ using System.Windows.Forms;
 namespace UILib.WinForms
 {
     /// <summary>
-    ///     Hooks into the <see cref="Control.WndProc"/> message handler to allow classes outside of a <see cref="Control"/>
+    ///     Hooks into the <see href="Control.WndProc"/> message handler to allow classes outside of a <see href="Control"/>
     ///     to receive, handle, and suppress native window messages.
     /// </summary>
-    /// <seealso cref="http://stackoverflow.com/a/3539204/467582"/>
-    /// <seealso cref="http://msdn.microsoft.com/en-us/library/system.windows.forms.nativewindow(v=vs.100).aspx"/>
+    /// <seealso href="http://stackoverflow.com/a/3539204/467582"/>
+    /// <seealso href="http://msdn.microsoft.com/en-us/library/system.windows.forms.nativewindow(v=vs.100).aspx"/>
     public class WndProcHook
     {
         private readonly WndProcHookImpl _impl;
 
         /// <summary>
-        ///     Invoked whenever the hooked control's <see cref="Control.WndProc"/> method is called.
+        ///     Invoked whenever the hooked control's <see href="Control.WndProc"/> method is called.
         /// </summary>
         public event WndProcEventHandler WndProcMessage;
 
         /// <summary>
-        ///     Constructs a new <see cref="WndProcHook"/> instance that listens for <see cref="Control.WndProc"/> messages
+        ///     Constructs a new <see href="WndProcHook"/> instance that listens for <see href="Control.WndProc"/> messages
         ///     sent to the given <paramref name="control"/>.
         /// </summary>
         /// <param name="control">

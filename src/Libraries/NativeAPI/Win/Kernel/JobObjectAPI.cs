@@ -23,7 +23,7 @@ namespace NativeAPI.Win.Kernel
     /// <summary>
     ///     Public class that holds all the Windows API calls necessary to manage Windows Job Objects.
     /// </summary>
-    /// <seealso cref="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
+    /// <seealso href="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
     public static class JobObjectAPI
     {
 
@@ -514,7 +514,7 @@ namespace NativeAPI.Win.Kernel
         ///         The job is destroyed when its last handle has been closed and all associated processes have exited.
         ///     </para>
         ///     <para>
-        ///         However, if the job has the <see cref="LimitFlags.LimitKillOnJobClose"/> flag specified,
+        ///         However, if the job has the <see href="LimitFlags.LimitKillOnJobClose"/> flag specified,
         ///         closing the last job object handle terminates <b>all</b> associated processes
         ///         and then destroys the job object itself.
         ///     </para>

@@ -4,15 +4,15 @@ using System.Windows.Forms;
 namespace UILib.WinForms.Controls
 {
     /// <summary>
-    ///     Subclass of <see cref="PictureBox"/> that can be selected (focused) with the <kbd>TAB</kbd> key.
+    ///     Subclass of <see href="PictureBox"/> that can be selected (focused) with the <kbd>TAB</kbd> key.
     /// </summary>
-    /// <seealso cref="http://stackoverflow.com/a/2744485/467582"/>
+    /// <seealso href="http://stackoverflow.com/a/2744485/467582"/>
     public class SelectablePictureBox : PictureBox
     {
         private bool _isLeftClick;
 
         /// <summary>
-        ///     Constructs a new <see cref="SelectablePictureBox"/> instance.
+        ///     Constructs a new <see href="SelectablePictureBox"/> instance.
         /// </summary>
         public SelectablePictureBox()
         {
