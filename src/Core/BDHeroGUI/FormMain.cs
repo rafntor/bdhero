@@ -357,11 +357,11 @@ namespace BDHeroGUI
 
             pluginItem.DropDownItems.Add(enabledItem);
 
-            if (plugin.EditPreferences != null)
+            if (plugin.PropertiesHandler != null)
             {
-                pluginItem.DropDownItems.Add(new ToolStripMenuItem("Preferences...", null,
+                pluginItem.DropDownItems.Add(new ToolStripMenuItem("Properties...", null,
                                                                    (sender, args) =>
-                                                                   EditPreferences(plugin)));
+                                                                   InvokePropertyHandler(plugin)));
             }
 
             pluginItem.DropDownItems.Add("-");
@@ -378,9 +378,9 @@ namespace BDHeroGUI
             return curPluginType;
         }
 
-        private void EditPreferences(IPlugin plugin)
+        private void InvokePropertyHandler(IPlugin plugin)
         {
-            if (DialogResult.OK == plugin.EditPreferences(this))
+            if (DialogResult.OK == plugin.PropertiesHandler(this))
             {
                 if (plugin is INameProviderPlugin)
                 {
@@ -1273,7 +1273,7 @@ namespace BDHeroGUI
 
             if (plugins.Count == 1)
             {
-                EditPreferences(plugins.First());
+                InvokePropertyHandler(plugins.First());
             }
             else
             {
@@ -1289,7 +1289,7 @@ namespace BDHeroGUI
         private ToolStripMenuItem GetNameProviderPluginPreferenceMenuItem(INameProviderPlugin plugin)
         {
             var image = plugin.Icon != null ? plugin.Icon.ToBitmap() : null;
-            var item = new ToolStripMenuItem(plugin.Name, image, (sender, args) => EditPreferences(plugin));
+            var item = new ToolStripMenuItem(plugin.Name, image, (sender, args) => InvokePropertyHandler(plugin));
             return item;
         }
 

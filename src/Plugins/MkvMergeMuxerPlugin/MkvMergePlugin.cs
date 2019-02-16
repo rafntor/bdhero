@@ -1,4 +1,4 @@
-﻿// Copyright 2012-2014 Andrew C. Dvorak
+// Copyright 2012-2014 Andrew C. Dvorak
 //
 // This file is part of BDHero.
 //
@@ -43,7 +43,7 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         public int RunOrder { get { return 1; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public MatroskaFeatures SupportedFeatures
         {

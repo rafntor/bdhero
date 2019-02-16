@@ -46,7 +46,7 @@ namespace BDHero.Plugin.FileNamer
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences
+        public PluginPropertiesHandler PropertiesHandler
         {
             get { return EditPluginPreferenceHandler; }
         }
