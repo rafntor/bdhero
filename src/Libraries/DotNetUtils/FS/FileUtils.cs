@@ -40,7 +40,7 @@ namespace DotNetUtils.FS
         /// <summary>
         ///     Reads an entire stream into memory and returns it as an array of bytes.
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/6586039/467582" />
+        /// <seealso href="http://stackoverflow.com/a/6586039/467582" />
         public static byte[] ReadStream(Stream input)
         {
             using (var ms = new MemoryStream())

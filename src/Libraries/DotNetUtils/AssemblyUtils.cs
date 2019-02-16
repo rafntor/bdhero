@@ -57,7 +57,7 @@ namespace DotNetUtils
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns>Date and time the assembly was linked.</returns>
-        /// <seealso cref="http://stackoverflow.com/a/1600990/467582" />
+        /// <seealso href="http://stackoverflow.com/a/1600990/467582" />
         public static DateTime GetLinkerTimestamp(Assembly assembly = null)
         {
             assembly = AssemblyOrDefault(assembly);
