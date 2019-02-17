@@ -7,19 +7,33 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using OSUtils.JobObjects;
 
 namespace BDHero.Plugin.MkvMergeMuxer
 {
     public partial class PluginInfoForm : Form
     {
-        public PluginInfoForm()
+        Thread m_thread;
+        public PluginInfoForm(IJobObjectManager jobObjectManager)
         {
             InitializeComponent();
+
+            lblVersion.Text = "looking up version...";
+
+            m_thread = new Thread(MakeVersion);
+            m_thread.Start(jobObjectManager);
         }
-        public string MkvMergeVersion
+        void MakeVersion(object jobObjectManager)
         {
-            get { return lblVersion.Text; }
-            set { lblVersion.Text = value; }
+            string version = MkvMerge.ExeVersion(jobObjectManager as IJobObjectManager);
+
+            lblVersion.Invoke((MethodInvoker)delegate { lblVersion.Text = version; });
+        }
+        private void PluginInfoForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            lblVersion.Text = "waiting to close lookup request...";
+            m_thread.Join();
         }
     }
 }

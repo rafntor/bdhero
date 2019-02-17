@@ -83,6 +83,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugin information";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PluginInfoForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 

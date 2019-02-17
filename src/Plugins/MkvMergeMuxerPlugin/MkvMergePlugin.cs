@@ -114,10 +114,8 @@ namespace BDHero.Plugin.MkvMergeMuxer
 
         private DialogResult ShowPluginInfoForm(Form parent)
         {
-            using (var form = new PluginInfoForm())
+            using (var form = new PluginInfoForm(_jobObjectManager))
             {
-                form.MkvMergeVersion = MkvMerge.ExeVersion(_jobObjectManager);
-
                 return form.ShowDialog(parent);
             }
         }

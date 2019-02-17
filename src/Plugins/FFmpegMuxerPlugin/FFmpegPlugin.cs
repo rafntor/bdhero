@@ -111,22 +111,10 @@ namespace BDHero.Plugin.FFmpegMuxer
             throw new FFmpegException(_exception.Message, _exception);
         }
 
-        string GetMkvPropEditVersion()
-        {
-            string result = "";
-            var mkvpropedit = new MkvPropEdit(_jobObjectManager, null);
-            mkvpropedit.Arguments = new ArgumentList("--version");
-            mkvpropedit.StdOut += delegate (string line) { result += line; };
-            mkvpropedit.Start(); // sync
-            return result;
-        }
         private DialogResult ShowPluginInfoForm(Form parent)
         {
-            using (var form = new PluginInfoForm())
+            using (var form = new PluginInfoForm(_jobObjectManager))
             {
-                form.FFMpegVersion = FFmpeg.ExeVersion(_jobObjectManager);
-                form.MkvPropEditVersion = GetMkvPropEditVersion();
-
                 return form.ShowDialog(parent);
             }
         }

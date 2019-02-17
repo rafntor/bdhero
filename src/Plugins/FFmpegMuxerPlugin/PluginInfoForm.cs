@@ -7,24 +7,57 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Threading;
+using OSUtils.JobObjects;
 
 namespace BDHero.Plugin.FFmpegMuxer
 {
     public partial class PluginInfoForm : Form
     {
-        public PluginInfoForm()
+        Thread m_thread1, m_thread2;
+        public PluginInfoForm(IJobObjectManager jobObjectManager)
         {
             InitializeComponent();
+
+            lblFFMpegVer.Text = lblMkvPropEditVer.Text = "looking up version...";
+
+            m_thread1 = new Thread(MakeFFMpegVersion);
+            m_thread1.Start(jobObjectManager);
+
+            m_thread2 = new Thread(MakeMkvPropEditVersion);
+            m_thread2.Start(jobObjectManager);
         }
-        public string FFMpegVersion
+        private void PluginInfoForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            get { return lblFFMpegVer.Text; }
-            set { lblFFMpegVer.Text = value; }
+            lblMkvPropEditVer.Text = "waiting to close lookup request...";
+            m_thread2.Join();
+            lblMkvPropEditVer.Text = "ready";
+
+            lblFFMpegVer.Text = "waiting to close lookup request...";
+            m_thread1.Join();
+            lblFFMpegVer.Text = "ready";
         }
-        public string MkvPropEditVersion
+        void MakeFFMpegVersion(object jobObjectManager)
         {
-            get { return lblMkvPropEditVer.Text; }
-            set { lblMkvPropEditVer.Text = value; }
+            string version = FFmpeg.ExeVersion(jobObjectManager as IJobObjectManager);
+
+            lblFFMpegVer.Invoke((MethodInvoker)delegate { lblFFMpegVer.Text = version; });
+        }
+        void MakeMkvPropEditVersion(object jobObjectManager)
+        {
+            string version = GetMkvPropEditVersion(jobObjectManager as IJobObjectManager);
+
+            lblMkvPropEditVer.Invoke((MethodInvoker)delegate { lblMkvPropEditVer.Text = version; });
+
+        }
+        string GetMkvPropEditVersion(IJobObjectManager jobObjectManager)
+        {
+            string result = "";
+            var mkvpropedit = new MkvPropEdit(jobObjectManager, null);
+            mkvpropedit.Arguments = new ProcessUtils.ArgumentList("--version");
+            mkvpropedit.StdOut += delegate (string line) { result += line; };
+            mkvpropedit.Start(); // sync
+            return result;
         }
     }
 }

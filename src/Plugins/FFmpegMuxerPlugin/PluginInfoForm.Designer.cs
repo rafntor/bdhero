@@ -42,7 +42,7 @@
             this.lblFFMpegVer.Location = new System.Drawing.Point(13, 29);
             this.lblFFMpegVer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblFFMpegVer.Name = "lblFFMpegVer";
-            this.lblFFMpegVer.Size = new System.Drawing.Size(502, 133);
+            this.lblFFMpegVer.Size = new System.Drawing.Size(651, 133);
             this.lblFFMpegVer.TabIndex = 5;
             this.lblFFMpegVer.Text = "version -?-";
             this.lblFFMpegVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -51,7 +51,7 @@
             // 
             this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(403, 313);
+            this.btnOK.Location = new System.Drawing.Point(552, 313);
             this.btnOK.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(112, 35);
@@ -65,7 +65,7 @@
             this.lblMkvPropEditVer.Location = new System.Drawing.Point(13, 200);
             this.lblMkvPropEditVer.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblMkvPropEditVer.Name = "lblMkvPropEditVer";
-            this.lblMkvPropEditVer.Size = new System.Drawing.Size(502, 95);
+            this.lblMkvPropEditVer.Size = new System.Drawing.Size(651, 95);
             this.lblMkvPropEditVer.TabIndex = 7;
             this.lblMkvPropEditVer.Text = "version -?-";
             this.lblMkvPropEditVer.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -94,7 +94,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(528, 362);
+            this.ClientSize = new System.Drawing.Size(677, 362);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblMkvPropEditVer);
             this.Controls.Add(this.btnOK);
@@ -108,6 +108,7 @@
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Plugin information";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.PluginInfoForm_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
