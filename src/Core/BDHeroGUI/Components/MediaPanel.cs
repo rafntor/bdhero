@@ -25,9 +25,9 @@ using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using DotNetUtils.Controls;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
-using DotNetUtils.TaskUtils;
+using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Components
 {
@@ -69,6 +69,12 @@ namespace BDHeroGUI.Components
         }
 
         private Job _job;
+
+        public bool SearchLinkEnabled
+        {
+            get { return linkLabelSearch.Enabled; }
+            set { linkLabelSearch.Enabled = value; }
+        }
 
         #endregion
 
@@ -179,23 +185,21 @@ namespace BDHeroGUI.Components
             var coverArt = medium.CoverArtImages.FirstOrDefault();
             if (coverArt == null) return;
 
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork(delegate
-                {
-                    var image = coverArt.Image;
-                    Logger.DebugFormat("Finished loading poster image: {0}", image);
-                })
-                .Fail(delegate(ExceptionEventArgs args)
-                {
-                    Logger.Error("Unable to fetch poster image", args.Exception);
-                    SelectedCoverArt = null;
-                })
-                .Succeed(delegate
-                {
-                    SelectedCoverArt = coverArt;
-                })
-                .Build()
+            new EmptyPromise(this)
+                .Work(delegate
+                      {
+                          var image = coverArt.Image;
+                          Logger.DebugFormat("Finished loading poster image: {0}", image);
+                      })
+                .Fail(delegate(IPromise<Nil> promise)
+                      {
+                          Logger.Error("Unable to fetch poster image", promise.LastException);
+                          SelectedCoverArt = null;
+                      })
+                .Done(delegate
+                      {
+                          SelectedCoverArt = coverArt;
+                      })
                 .Start()
                 ;
         }
@@ -214,7 +218,10 @@ namespace BDHeroGUI.Components
 
         private void linkLabelCustom_Click(object sender, EventArgs e)
         {
-            new FormMediaCustom(SelectedReleaseMedium as Movie).ShowDialog(this);
+            using (var form = new FormMediaCustom(SelectedReleaseMedium as Movie))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

@@ -15,8 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System.Collections.Generic;
-using System.Linq;
 using BDInfo;
 using I18N;
 
@@ -231,6 +229,36 @@ namespace BDHero.BDROM
         }
 
         #endregion
+
+        public string SummaryDisplayable
+        {
+            get
+            {
+                if (IsVideo)
+                    return string.Format("{0,5} {1} @ {2} ({3})",
+                                         VideoFormatDisplayable,
+                                         Codec.ShortName,
+                                         FrameRateDisplayable,
+                                         AspectRatioDisplayable);
+                
+                if (IsAudio)
+                    return string.Format("{0} {1:F1} ch",
+                                         Codec.ShortName,
+                                         ChannelCount);
+
+                return Codec.ShortName;
+            }
+        }
+
+        public string ToStringLoggable()
+        {
+            return string.Format("Track w/ stream PID {0,5:D} (0x{0:x4}): {1,2:D} [{2}] {3}, {4}",
+                                 PID,
+                                 Index,
+                                 Keep ? "X" : " ",
+                                 Language.ISO_639_2,
+                                 SummaryDisplayable);
+        }
     }
 
     public enum TrackType

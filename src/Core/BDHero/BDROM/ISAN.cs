@@ -15,10 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using DotNetUtils.Annotations;
 using Newtonsoft.Json;
@@ -65,7 +62,7 @@ namespace BDHero.BDROM
     /// <para>is equivalent to:</para>
     /// <code>0000-0000-14A9-0000-0000-0002</code>
     /// <para>
-    /// <see cref="Number"/> and <see cref="NumberFormatted"/> do <b>NOT</b> contain check digits.
+    /// <see href="Number"/> and <see href="NumberFormatted"/> do <b>NOT</b> contain check digits.
     /// The ISAN found in the <c>AACS/mcmf.xml</c> file on Blu-ray Discs does not contain the optional check digits,
     /// so BDHero doesn't bother calculating them.
     /// </para>
@@ -171,7 +168,7 @@ namespace BDHero.BDROM
         public int? LengthMin;
 
         /// <summary>
-        /// Gets a value indicating whether the ISAN's <see cref="Root"/> is valid and searchable (i.e., is not all zeros or Fs).
+        /// Gets a value indicating whether the ISAN's <see href="Root"/> is valid and searchable (i.e., is not all zeros or Fs).
         /// </summary>
         public bool IsSearchable
         {

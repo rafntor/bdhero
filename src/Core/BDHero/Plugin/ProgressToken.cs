@@ -21,7 +21,7 @@ namespace BDHero.Plugin
 {
     /// <summary>
     /// <para>
-    /// Wrapper for an <see cref="IPluginHost"/>, <see cref="IPlugin"/>, and <see cref="CancellationToken"/>
+    /// Wrapper for an <see href="IPluginHost"/>, <see href="IPlugin"/>, and <see href="CancellationToken"/>
     /// that allows all 3 to be passed around as a single object instead of being passed separately.
     /// </para>
     /// </summary>
@@ -56,10 +56,10 @@ namespace BDHero.Plugin
             _plugin = plugin;
         }
 
-        public void ReportProgress(double percentComplete, string status)
+        public void ReportProgress(double percentComplete, string shortStatus, string longStatus = null)
         {
             if (_host != null)
-                _host.ReportProgress(_plugin, percentComplete, status);
+                _host.ReportProgress(_plugin, percentComplete, shortStatus, longStatus);
         }
     }
 }

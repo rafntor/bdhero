@@ -18,9 +18,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 
 namespace DotNetUtils.TaskUtils
 {
@@ -41,7 +39,7 @@ namespace DotNetUtils.TaskUtils
         /// <summary>
         ///     Gets or sets the minimum number of samples required to generate a meaningful "time remaining" estimate.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="MinSampleSize"/> is set to a value less than 2.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see href="MinSampleSize"/> is set to a value less than 2.</exception>
         public int MinSampleSize
         {
             get { return _minSampleSize; }
@@ -59,7 +57,7 @@ namespace DotNetUtils.TaskUtils
         ///     Gets or sets the maximum number of samples to consider when calculating "time remaining" estimates.
         ///     Samples older than this number will be discarded.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="MaxSampleSize"/> is set to a value less than 2.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see href="MaxSampleSize"/> is set to a value less than 2.</exception>
         public int MaxSampleSize
         {
             get { return _maxSampleSize; }
@@ -76,7 +74,7 @@ namespace DotNetUtils.TaskUtils
         /// <summary>
         ///     Gets the estimated time remaining.
         /// </summary>
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="MinSampleSize"/> is greater than <see cref="MaxSampleSize"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see href="MinSampleSize"/> is greater than <see href="MaxSampleSize"/>.</exception>
         public TimeSpan EstimatedTimeRemaining
         {
             get { return Calculate(); }
@@ -187,7 +185,7 @@ namespace DotNetUtils.TaskUtils
             }
         }
 
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="MinSampleSize"/> is greater than <see cref="MaxSampleSize"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see href="MinSampleSize"/> is greater than <see href="MaxSampleSize"/>.</exception>
         private bool CanCalculate
         {
             get
@@ -211,7 +209,7 @@ namespace DotNetUtils.TaskUtils
             }
         }
 
-        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see cref="MinSampleSize"/> is greater than <see cref="MaxSampleSize"/>.</exception>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <see href="MinSampleSize"/> is greater than <see href="MaxSampleSize"/>.</exception>
         private TimeSpan Calculate()
         {
             if (!CanCalculate)

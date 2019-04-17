@@ -17,15 +17,13 @@
 
 using System.Net;
 using System.Net.NetworkInformation;
-using System.Threading;
-using DotNetUtils;
 using DotNetUtils.Annotations;
-using DotNetUtils.TaskUtils;
+using DotNetUtils.Concurrency;
 
 namespace OSUtils.Net
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports all OSes,
+    ///     Concrete implementation of the <see href="INetworkStatusMonitor"/> interface that supports all OSes,
     ///     though is likely slower and less accurate than <c>Windows7NetworkStatusMonitor</c>.
     /// </summary>
     [UsedImplicitly]
@@ -55,22 +53,23 @@ namespace OSUtils.Net
 
         private void TestConnectionAsync(bool notify)
         {
-            var taskBuilder =
-                new TaskBuilder()
-                    .OnCurrentThread()
-                    .DoWork(TestConnection)
+            var promise =
+                new SimplePromise()
+                    .Work(TestConnection)
                     .Fail(Fail)
-                    .Succeed(Succeed);
+                    .Canceled(Fail)
+                    .Done(Done)
+                ;
 
             if (notify)
             {
-                taskBuilder.Finally(NotifyObservers);
+                promise.Always(NotifyObservers);
             }
 
-            taskBuilder.Build().Start();
+            promise.Start();
         }
 
-        private static void TestConnection(IThreadInvoker threadInvoker, CancellationToken cancellationToken)
+        private static void TestConnection(IPromise<bool> promise)
         {
             // ReSharper disable once UnusedVariable
             using (var client = new WebClient())
@@ -85,17 +84,17 @@ namespace OSUtils.Net
             }
         }
 
-        private void Fail(ExceptionEventArgs args)
+        private void Fail(IPromise<bool> promise)
         {
             IsOnline = false;
         }
 
-        private void Succeed()
+        private void Done(IPromise<bool> promise)
         {
             IsOnline = true;
         }
 
-        private void NotifyObservers()
+        private void NotifyObservers(IPromise<bool> promise)
         {
             if (NetworkStatusChanged != null)
                 NetworkStatusChanged(IsOnline);

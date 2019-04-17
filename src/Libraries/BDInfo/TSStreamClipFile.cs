@@ -27,7 +27,7 @@ namespace BDInfo
 {
     /// <summary>
     /// Represents a BDMV/CLIPINF/XXXXX.CLPI file that contains information about
-    /// the corresponding <see cref="TSStreamFile"/> (BDMV/STREAM/XXXXX.M2TS file).
+    /// the corresponding <see href="TSStreamFile"/> (BDMV/STREAM/XXXXX.M2TS file).
     /// </summary>
     public class TSStreamClipFile
     {
@@ -68,12 +68,12 @@ namespace BDInfo
                 byte[] fileType = new byte[8];
                 Array.Copy(data, 0, fileType, 0, fileType.Length);
                 
-                FileType = ASCIIEncoding.ASCII.GetString(fileType);
+                FileType = Encoding.ASCII.GetString(fileType);
                 if (FileType != "HDMV0100" &&
                     FileType != "HDMV0200")
                 {
-                    throw new Exception(string.Format(
-                        "Clip info file {0} has an unknown file type {1}.",
+                    throw new InvalidDataException(string.Format(
+                        "Clip info file {0} has an unknown file type {1}.  The disc may be damaged or corrupt.",
                         FileInfo.Name, FileType));
                 }
 #if DEBUG                

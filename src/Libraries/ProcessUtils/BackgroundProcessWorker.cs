@@ -16,17 +16,14 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
 using System.Timers;
 using OSUtils.JobObjects;
 
 namespace ProcessUtils
 {
     /// <summary>
-    /// Threaded version of <see cref="NonInteractiveProcess"/>.  Allows a process to run in the background
+    /// Threaded version of <see href="NonInteractiveProcess"/>.  Allows a process to run in the background
     /// on a separate thread while reporting its status and progress information to the UI.
     /// </summary>
     public class BackgroundProcessWorker : NonInteractiveProcess
@@ -62,7 +59,7 @@ namespace ProcessUtils
         public event BackgroundProgressHandler ProgressUpdated;
 
         /// <summary>
-        ///     Constructs a new <see cref="BackgroundProcessWorker"/> object that uses the given
+        ///     Constructs a new <see href="BackgroundProcessWorker"/> object that uses the given
         ///     <paramref name="jobObjectManager"/> to ensure that child processes are terminated
         ///     if the parent process exits prematurely.
         /// </summary>
@@ -96,13 +93,19 @@ namespace ProcessUtils
             if (State == NonInteractiveProcessState.Running)
                 _timer.Start();
             else
-                _timer.Stop();
+                _timer.Elapsed += StopTimer;
+        }
+
+        private void StopTimer(object sender, ElapsedEventArgs args)
+        {
+            _timer.Stop();
+            _timer.Elapsed -= StopTimer;
         }
 
         /// <summary>
         /// Runs in UI thread.
         /// </summary>
-        private void TimerOnTick(object sender, ElapsedEventArgs elapsedEventArgs)
+        private void TimerOnTick(object sender, ElapsedEventArgs args)
         {
             CalculateTimeRemaining();
             if (ProgressUpdated != null)

@@ -56,10 +56,10 @@ namespace DotNetUtils
 
         /// <summary>
         ///     Adds a lap to the timer.  The time between this lap and the previous one will be displayed in the
-        ///     <see cref="ToString"/> output along with the lap's <paramref name="name"/> (if specified).
+        ///     <see href="ToString"/> output along with the lap's <paramref name="name"/> (if specified).
         /// </summary>
         /// <param name="name">
-        ///     Optional name to display in the <see cref="ToString"/> output along side the execution time.
+        ///     Optional name to display in the <see href="ToString"/> output along side the execution time.
         /// </param>
         /// <returns>
         ///     Reference to this DebugTimer object.

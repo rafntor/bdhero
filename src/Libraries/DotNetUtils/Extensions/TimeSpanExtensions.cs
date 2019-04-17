@@ -16,42 +16,77 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections.Generic;
 
 namespace DotNetUtils.Extensions
 {
     /// <summary>
-    /// Extension methods for <see cref="TimeSpan"/> objects.
+    ///     Extension methods for <see href="TimeSpan" /> objects.
     /// </summary>
     public static class TimeSpanExtensions
     {
         /// <summary>
-        /// Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss</c> format.
+        ///     Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss</c> format.
         /// </summary>
         /// <param name="timeSpan"></param>
-        /// <returns><c>hh:mm:ss</c></returns>
+        /// <returns>
+        ///     <c>hh:mm:ss</c>
+        /// </returns>
         public static string ToStringShort(this TimeSpan timeSpan)
         {
             return timeSpan.ToString(@"hh\:mm\:ss");
         }
 
         /// <summary>
-        /// Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fff</c> format.
+        ///     Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fff</c> format.
         /// </summary>
         /// <param name="timeSpan"></param>
-        /// <returns><c>hh:mm:ss.fff</c></returns>
+        /// <returns>
+        ///     <c>hh:mm:ss.fff</c>
+        /// </returns>
         public static string ToStringMedium(this TimeSpan timeSpan)
         {
             return timeSpan.ToString(@"hh\:mm\:ss\.fff");
         }
 
         /// <summary>
-        /// Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fffffff</c> format.
+        ///     Returns a culture-invariant representation of the TimeSpan in <c>hh:mm:ss.fffffff</c> format.
         /// </summary>
         /// <param name="timeSpan"></param>
-        /// <returns><c>hh:mm:ss.fffffff</c></returns>
+        /// <returns>
+        ///     <c>hh:mm:ss.fffffff</c>
+        /// </returns>
         public static string ToStringLong(this TimeSpan timeSpan)
         {
             return timeSpan.ToString(@"hh\:mm\:ss\.fffffff");
+        }
+
+        /// <summary>
+        ///     Returns a culture-invariant representation of the TimeSpan in <c>1h 2m 3s</c> format.
+        /// </summary>
+        /// <param name="timeSpan"></param>
+        /// <returns>
+        ///     <c>1h 2m 3s</c>
+        /// </returns>
+        public static string ToStringMicro(this TimeSpan timeSpan)
+        {
+            var strings = new List<string>();
+
+            strings.Add(timeSpan.Seconds.ToString("D") + "s");
+
+            if (timeSpan.TotalMinutes >= 1)
+            {
+                strings.Add(timeSpan.Minutes.ToString("D") + "m");
+
+                if (timeSpan.TotalHours >= 1)
+                {
+                    strings.Add(timeSpan.Hours.ToString("D") + "h");
+                }
+            }
+
+            strings.Reverse();
+
+            return string.Join(" ", strings);
         }
     }
 }

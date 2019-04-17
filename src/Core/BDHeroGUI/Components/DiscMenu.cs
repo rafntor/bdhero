@@ -16,19 +16,17 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Security;
-using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.Design;
 using BDHero.Utils;
 using DotNetUtils.Annotations;
-using DotNetUtils.Forms;
-using DotNetUtils.TaskUtils;
+using DotNetUtils.Concurrency;
 using OSUtils.DriveDetector;
+using UILib.WinForms;
 
 namespace BDHeroGUI.Components
 {
@@ -127,23 +125,25 @@ namespace BDHeroGUI.Components
         #region Initialization
 
         /// <summary>
-        /// Initializes the <see cref="BDHeroGUI.Components.DiscMenu"/> for use.
+        /// Initializes the <see href="BDHeroGUI.Components.DiscMenu"/> for use.
         /// </summary>
-        /// <param name="observable">
-        /// Windows Forms control (typically a <see cref="Form"/>) to listen for <see cref="Form.WndProc"/> events on.
+        /// <param name="form">
+        /// Windows Forms control (typically a <see href="Form"/>) to listen for <see href="Form.WndProc"/> events on.
         /// </param>
         /// <param name="detector">
         /// Drive detector.
         /// </param>
         /// <exception cref="InvalidOperationException">Thrown if this method is called more than once.</exception>
-        public void Initialize(IWndProcObservable observable, IDriveDetector detector)
+        public void Initialize(Form form, IDriveDetector detector)
         {
             if (_isInitialized)
             {
                 throw new InvalidOperationException("DiscMenu has already been initialized");
             }
 
-            observable.WndProcMessage += WndProc;
+            var hook = new WndProcHook(form);
+
+            hook.WndProcMessage += WndProc;
 
             _detector = detector;
             _detector.DeviceArrived += OnDeviceArrived;
@@ -161,26 +161,30 @@ namespace BDHeroGUI.Components
 
         #region Event handlers
 
-        private void OnDeviceArrived(object sender, DriveDetectorEventArgs driveDetectorEventArgs)
+        private void OnDeviceArrived(object sender, DriveDetectorEventArgs args)
         {
+            Logger.InfoFormat("Device arrived: {0}", args.DriveInfo);
             Refresh();
         }
 
-        private void OnDeviceRemoved(object sender, DriveDetectorEventArgs driveDetectorEventArgs)
+        private void OnDeviceRemoved(object sender, DriveDetectorEventArgs args)
         {
+            Logger.InfoFormat("Device removed: {0}", args.DriveInfo);
             Refresh();
         }
 
         private void OnDropDownOpened(object sender, EventArgs eventArgs)
         {
+            Logger.Debug("DropDown opened");
             Refresh();
         }
 
         private void OnDropDownClosed(object sender, EventArgs eventArgs)
         {
+            Logger.Debug("DropDown closed");
         }
 
-        private void WndProc(ref Message m)
+        private void WndProc(ref Message m, HandledEventArgs args)
         {
             _detector.WndProc(ref m);
         }
@@ -212,11 +216,11 @@ namespace BDHeroGUI.Components
         {
             if (_isScanning)
             {
-                Logger.Debug("Already scanning for discs; ignoring");
+                Logger.Info("Already scanning for discs; ignoring");
                 return;
             }
 
-            Logger.Debug("Scanning for discs...");
+            Logger.Info("Scanning for discs...");
 
             _isScanning = true;
 
@@ -225,13 +229,11 @@ namespace BDHeroGUI.Components
 
             var menuItems = new ToolStripItem[0];
 
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork((invoker, token) => menuItems = CreateToolStripItems(Drives))
-                .Succeed(() => UpdateMenu(menuItems))
-                .Fail(args => Logger.Error("Error occurred while scanning for discs", args.Exception))
-                .Finally(() => _isScanning = false)
-                .Build()
+            new EmptyPromise(Parent)
+                .Work(promise => menuItems = CreateToolStripItems(Drives))
+                .Done(promise => UpdateMenu(menuItems))
+                .Fail(promise => Logger.Error("Error occurred while scanning for discs", promise.LastException))
+                .Always(promise => _isScanning = false)
                 .Start();
         }
 
@@ -262,7 +264,7 @@ namespace BDHeroGUI.Components
 
         private void UpdateMenu(ToolStripItem[] menuItems)
         {
-            Logger.DebugFormat("Found {0} discs", menuItems.Length);
+            Logger.InfoFormat("Found {0} discs", menuItems.Length);
 
             var selectionState = new MenuSelectionState(AllMenuItems);
 
@@ -313,7 +315,8 @@ namespace BDHeroGUI.Components
         private ToolStripItem CreateMenuItem(DriveInfo driveInfo)
         {
             var driveLetter = driveInfo.Name;
-            var text = string.Format("{0} {1}", driveLetter, driveInfo.VolumeLabel);
+            var volumeLabel = driveInfo.VolumeLabel;
+            var text = driveLetter == volumeLabel ? volumeLabel : string.Format("{0} {1}", driveLetter, volumeLabel);
             var menuItem = new ToolStripMenuItem(text) { Tag = driveInfo };
             menuItem.Click += MenuItemOnClick;
             return menuItem;
@@ -338,7 +341,7 @@ namespace BDHeroGUI.Components
             private readonly DriveInfo _selectedDrive;
 
             /// <summary>
-            /// Constructs a new <see cref="MenuSelectionState"/> object and captures the selection state
+            /// Constructs a new <see href="MenuSelectionState"/> object and captures the selection state
             /// (i.e., which menu item is selected, if any) from the given menu items.
             /// </summary>
             /// <param name="oldMenuItems">Items present in the dropdown menu <b>before</b> being repopulated.</param>

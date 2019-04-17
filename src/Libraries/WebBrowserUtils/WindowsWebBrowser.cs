@@ -21,7 +21,7 @@ using Microsoft.Win32;
 
 namespace WebBrowserUtils
 {
-    /// <seealso cref="http://stackoverflow.com/a/17599201/467582"/>
+    /// <seealso href="http://stackoverflow.com/a/17599201/467582"/>
     public class WindowsWebBrowser : BaseWebBrowser
     {
         private static WindowsWebBrowser _instance;

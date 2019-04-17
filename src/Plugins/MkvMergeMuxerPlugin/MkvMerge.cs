@@ -15,93 +15,103 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Text.RegularExpressions;
+using BDHero.BDROM;
+using BDHero.JobQueue;
+using DotNetUtils.Extensions;
+using DotNetUtils.FS;
+using OSUtils.JobObjects;
 using ProcessUtils;
 
 namespace BDHero.Plugin.MkvMergeMuxer
 {
-    /// <see cref="http://stackoverflow.com/a/11867784/467582"/>
+    /// <see href="http://stackoverflow.com/a/11867784/467582"/>
     /// TODO: Switch to BackgroundProcessWorker
 // ReSharper disable LocalizableElement
 // ReSharper disable RedundantNameQualifier
     [System.ComponentModel.DesignerCategory("Code")]
 // ReSharper restore RedundantNameQualifier
 // ReSharper restore LocalizableElement
-    public class MkvMerge
+    public class MkvMerge : BackgroundProcessWorker
     {
-        private readonly string _inputM2TsPath;
-        private readonly string _inputMkvPath;
-        private readonly string _inputChaptersPath;
-        private readonly string _outputMkvPath;
-        private readonly bool _keepM2TsAudio;
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private double _progress;
-        private readonly List<String> _errorMessages = new List<string>();
+        private readonly ITempFileRegistrar _tempFileRegistrar;
 
-        string Name { get { return "MkvMerge"; } }
-        string Filename { get { return "mkvmerge.exe"; } }
-
-        public MkvMerge(string inputM2TsPath, string inputMkvPath, string inputChaptersPath, string outputMkvPath, bool keepM2TsAudio = true)
+        public MkvMerge(Job job, Playlist playlist, string outputMKVPath, IJobObjectManager jobObjectManager, ITempFileRegistrar tempFileRegistrar)
+            : base(jobObjectManager)
         {
-            _inputM2TsPath = inputM2TsPath;
-            _inputMkvPath = inputMkvPath;
-            _inputChaptersPath = inputChaptersPath;
-            _outputMkvPath = outputMkvPath;
-            _keepM2TsAudio = keepM2TsAudio;
+            _tempFileRegistrar = tempFileRegistrar;
+
+            var cli = new MkvMergeCLI(Arguments, tempFileRegistrar)
+                .SetOutputPath(outputMKVPath)
+                .SetSelectedTracks(playlist)
+                .NoGlobalTags()
+                .NoTrackTags()
+                .NoChapters()
+                .SetInputPath(playlist.FullPath)
+                .AttachCoverArt(job.SelectedReleaseMedium)
+                .SetMovieTitle(job)
+                .SetChapters(playlist.Chapters)
+                ;
+
+            ExePath = cli.ExePath;
+
+            StdOut += HandleOutputLine;
+            StdErr += HandleOutputLine;
+            Exited += (state, code, exception, time) => OnExited(state, code, job.SelectedReleaseMedium, playlist, outputMKVPath);
+
+//            CleanExit = false;
         }
 
-        public void Mux(object sender, DoWorkEventArgs e)
+        private MkvMerge(ArgumentList arguments, IJobObjectManager jobObjectManager)
+            : base(jobObjectManager)
         {
-            var inputM2TsFlags = _keepM2TsAudio ? null : "--no-audio";
-            var inputMkvFlags = _keepM2TsAudio ? "--no-audio" : null;
+            Arguments = arguments;
 
-            var args = new ArgumentList();
+            var cli = new MkvMergeCLI(Arguments, null);
 
-            // Chapter file
-            args.AddIfAllNonEmpty("--chapters", _inputChaptersPath);
+            ExePath = cli.ExePath;
+        }
+        public static string ExeVersion(IJobObjectManager jobObjectManager)
+        {
+            string result = "";
 
-            // Output file
-            args.AddAll("-o", _outputMkvPath);
+            var arguments = new ArgumentList("--version");
 
-            // Input M2TS file
-            args.AddNonEmpty("--no-video", inputM2TsFlags, _inputM2TsPath);
+            var mkvmerge = new MkvMerge(arguments, jobObjectManager);
 
-            // If an input chapter file is specified, exclude chapters from the input MKV file
-            if (!string.IsNullOrEmpty(_inputChaptersPath))
-                args.Add("--no-chapters");
+            mkvmerge.StdOut += delegate (string line) { result += line; };
 
-            // Input MKV file
-            args.AddNonEmpty(inputMkvFlags, _inputMkvPath);
-            
-            Execute(args, sender, e);
+            mkvmerge.Start(); // sync
+
+            return result;
         }
 
-        private void Execute(ArgumentList args, object sender, DoWorkEventArgs e)
+        private void OnExited(NonInteractiveProcessState state, int exitCode, ReleaseMedium releaseMedium, Playlist playlist, string outputMKVPath)
         {
+//            _tempFileRegistrar.DeleteTempFiles("", "", "");
         }
 
-        protected void HandleOutputLine(string line, object sender, DoWorkEventArgs e)
+        private void HandleOutputLine(string line)
         {
             const string progressRegex = @"^Progress: ([\d\.]+)\%";
             const string errorRegex = @"^Error:";
 
+            if (string.IsNullOrWhiteSpace(line))
+                return;
+
             if (Regex.IsMatch(line, progressRegex))
             {
                 var match = Regex.Match(line, progressRegex);
-                Double.TryParse(match.Groups[1].Value, out _progress);
+                match.Groups[1].Value.TryParseDoubleInvariant(out _progress);
             }
             else if (Regex.IsMatch(line, errorRegex))
             {
-                _errorMessages.Add(line);
+//                _errorMessages.Add(line);
+                Logger.Error(line);
             }
-        }
-
-        protected ISet<string> GetOutputFilesImpl()
-        {
-            return new HashSet<string> { _outputMkvPath };
         }
     }
 }

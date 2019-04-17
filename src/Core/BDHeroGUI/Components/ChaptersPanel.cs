@@ -18,11 +18,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Components
 {

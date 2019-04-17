@@ -19,7 +19,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using WindowsOSUtils.Win32;
+using NativeAPI.Win.User;
 using BDHero.Plugin;
 using BDHero.Utils;
 using DotNetUtils;
@@ -27,6 +27,7 @@ using DotNetUtils.Extensions;
 using LicenseUtils;
 using LicenseUtils.Controls;
 using OSUtils.Info;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {
@@ -54,14 +55,14 @@ namespace BDHeroGUI.Forms
         /// <summary>
         ///     Reduce flickering.
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/89125/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/89125/467582"/>
         protected override CreateParams CreateParams
         {
             get
             {
                 var cp = base.CreateParams;
                 if (!SystemInformation.TerminalServerSession)
-                    cp.ExStyle |= ExtendedWindowStyles.WS_EX_COMPOSITED;
+                    cp.ExStyle |= ExtendedWindowStyles.WS_EX_COMPOSITED.ToInt32();
                 return cp;
             }
         }

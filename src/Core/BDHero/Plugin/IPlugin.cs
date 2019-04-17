@@ -25,7 +25,7 @@ using DotNetUtils.Annotations;
 
 namespace BDHero.Plugin
 {
-    public delegate DialogResult EditPluginPreferenceHandler(Form parent);
+    public delegate DialogResult PluginPropertiesHandler(Form parent);
 
     public interface IPlugin
     {
@@ -52,7 +52,7 @@ namespace BDHero.Plugin
         /// </summary>
         int RunOrder { get; }
 
-        EditPluginPreferenceHandler EditPreferences { get; }
+        PluginPropertiesHandler PropertiesHandler { get; }
 
         /// <summary>
         /// Invoked when the application first starts up and loads the plugin assembly.

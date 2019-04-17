@@ -34,7 +34,7 @@ namespace DotNetUtils.Extensions
         /// <param name="value">Enum value.</param>
         /// <param name="expression">Function expression that returns the value of the desired attribute property.</param>
         /// <returns>The value of the attribute's property returned by <paramref name="expression"/>.</returns>
-        /// <seealso cref="http://stackoverflow.com/a/4877704/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/4877704/467582"/>
         [CanBeNull]
         public static TResult GetAttributeProperty<TAttribute, TResult>(this Enum value, Func<TAttribute, TResult> expression)
             where TAttribute : Attribute
@@ -49,7 +49,7 @@ namespace DotNetUtils.Extensions
         /// <typeparam name="T">The type of the attribute.</typeparam>
         /// <param name="value">Enum value.</param>
         /// <returns>The attribute value.</returns>
-        /// <seealso cref="http://stackoverflow.com/a/4877704/467582" />
+        /// <seealso href="http://stackoverflow.com/a/4877704/467582" />
         [CanBeNull]
         public static T GetAttribute<T>(this Enum value)
             where T : Attribute

@@ -15,7 +15,7 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using DotNetUtils.Controls;
+using UILib.WinForms.Controls;
 
 namespace BDHeroGUI.Components
 {
@@ -47,8 +47,8 @@ namespace BDHeroGUI.Components
         /// </summary>
         private void InitializeComponent()
         {
-            this.splitContainerOuter = new DotNetUtils.Controls.SplitContainerWithDivider();
-            this.splitContainerInner = new DotNetUtils.Controls.SplitContainerWithDivider();
+            this.splitContainerOuter = new SplitContainerWithDivider();
+            this.splitContainerInner = new SplitContainerWithDivider();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();

@@ -15,12 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows.Forms;
 using BDHero.JobQueue;
@@ -50,7 +46,7 @@ namespace BDHero.Plugin.FileNamer
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences
+        public PluginPropertiesHandler PropertiesHandler
         {
             get { return EditPluginPreferenceHandler; }
         }
@@ -74,12 +70,33 @@ namespace BDHero.Plugin.FileNamer
 
             job.OutputPath = namer.GetPath().FullName;
 
-            Host.ReportProgress(this, 100.0, "Finished auto-renaming output file");
+            Host.ReportProgress(this, 100.0, "Renamed output file", "Finished auto-renaming output file");
         }
 
         private Preferences GetPreferences()
         {
-            return PluginUtils.GetPreferences(AssemblyInfo, () => new Preferences());
+            var prefs = PluginUtils.GetPreferences(AssemblyInfo, () => new Preferences());
+            prefs.Movies.Directory  = UpgradeSyntax(prefs.Movies.Directory);
+            prefs.Movies.FileName   = UpgradeSyntax(prefs.Movies.FileName);
+            prefs.TVShows.Directory = UpgradeSyntax(prefs.TVShows.Directory);
+            prefs.TVShows.FileName  = UpgradeSyntax(prefs.TVShows.FileName);
+            return prefs;
+        }
+
+        private static string UpgradeSyntax(string path)
+        {
+            return new Regex(@"%(\w+?)%").Replace(path, MigrateVariableSyntax);
+        }
+
+        private static string MigrateVariableSyntax(Match match)
+        {
+            var variableName = match.Groups[1].Value;
+            if (FileNameVars.MovieVars.Contains(variableName) ||
+                FileNameVars.TVShowVars.Contains(variableName))
+            {
+                return match.Result(@"{$1}");
+            }
+            return match.Value;
         }
 
         private void SavePreferences(Preferences prefs)
@@ -89,9 +106,14 @@ namespace BDHero.Plugin.FileNamer
 
         private DialogResult EditPluginPreferenceHandler(Form parent)
         {
+            DialogResult result;
+
             // FormFileNamerPreferences automatically copies the user's changes to
             // Preferences if the user hits "Save".
-            var result = new FormFileNamerPreferences(Preferences).ShowDialog(parent);
+            using (var form = new FormFileNamerPreferences(Preferences))
+            {
+                result = form.ShowDialog(parent);
+            }
 
             if (result == DialogResult.OK)
             {

@@ -56,7 +56,7 @@ namespace DotNetUtils.FS
         ///     The caller does not have the required permission.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Path contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.
+        ///     Path contains one or more invalid characters as defined by <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         /// <exception cref="PathTooLongException">
         ///     Path exceeds the system-defined maximum length.  For example, on Windows-based platforms,
@@ -87,7 +87,7 @@ namespace DotNetUtils.FS
         ///     The caller does not have the required permission.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Path contains one or more invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.
+        ///     Path contains one or more invalid characters as defined by <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         /// <exception cref="PathTooLongException">
         ///     Path exceeds the system-defined maximum length.  For example, on Windows-based platforms,
@@ -128,8 +128,8 @@ namespace DotNetUtils.FS
         ///     -or-
         ///     Path specified a read-only file.
         /// </exception>
-        /// <seealso cref="CreateTempDirectory(System.Reflection.Assembly,string[])"/>
-        /// <seealso cref="FileUtils.TouchFile"/>
+        /// <seealso href="CreateTempDirectory(System.Reflection.Assembly,string[])"/>
+        /// <seealso href="FileUtils.TouchFile"/>
         string CreateTempFile(Assembly assembly, string filename = null, params string[] subdirectoryNames);
 
         /// <summary>
@@ -159,8 +159,8 @@ namespace DotNetUtils.FS
         ///     -or-
         ///     Path specified a read-only file.
         /// </exception>
-        /// <seealso cref="CreateTempDirectory(System.Type,string[])"/>
-        /// <seealso cref="FileUtils.TouchFile"/>
+        /// <seealso href="CreateTempDirectory(System.Type,string[])"/>
+        /// <seealso href="FileUtils.TouchFile"/>
         string CreateTempFile(Type type, string filename = null, params string[] subdirectoryNames);
 
         /// <summary>

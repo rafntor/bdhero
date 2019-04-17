@@ -24,40 +24,45 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using WindowsOSUtils.Win32;
 using BDHero;
 using BDHero.BDROM;
+using BDHero.ErrorReporting;
+using BDHero.JobQueue;
 using BDHero.Plugin;
 using BDHero.Prefs;
 using BDHero.Startup;
+using BDHero.SyntaxHighlighting;
 using BDHero.Utils;
-using BDHeroGUI.DIalogs;
+using BDHeroGUI.Components;
+using BDHeroGUI.Dialogs;
 using BDHeroGUI.Forms;
 using BDHeroGUI.Helpers;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using DotNetUtils.Controls;
-using DotNetUtils.Dialogs;
+using DotNetUtils.Concurrency;
+using DotNetUtils.Exceptions;
 using DotNetUtils.Extensions;
-using DotNetUtils.Forms;
 using DotNetUtils.FS;
-using DotNetUtils.Net;
-using DotNetUtils.TaskUtils;
 using log4net;
-using Microsoft.Win32;
 using OSUtils.DriveDetector;
 using OSUtils.Net;
 using OSUtils.TaskbarUtils;
+using OSUtils.Window;
+using TextEditor;
+using TextEditor.WinForms;
+using UILib.Extensions;
+using UILib.WinForms;
 using UpdateLib;
 
 namespace BDHeroGUI
 {
     [UsedImplicitly]
-    public partial class FormMain : Form, IWndProcObservable
+    public partial class FormMain : Form, IErrorReportResultVisitor
     {
         private const string PluginEnabledMenuItemName = "enabled";
 
         private readonly ILog _logger;
+        private readonly LogInitializer _logInitializer;
         private readonly IDirectoryLocator _directoryLocator;
         private readonly IPreferenceManager _preferenceManager;
         private readonly PluginLoader _pluginLoader;
@@ -65,13 +70,12 @@ namespace BDHeroGUI
         private readonly IController _controller;
         private readonly IDriveDetector _driveDetector;
         private readonly ITaskbarItem _taskbarItem;
+        private readonly IWindowMenuFactory _windowMenuFactory;
         private readonly INetworkStatusMonitor _networkStatusMonitor;
+        private readonly UpdateClient _updateClient;
+        private readonly AppConfig _appConfig;
 
-        private readonly Updater _updater;
-        private readonly UpdateHelper _updateHelper;
-        private bool _hasCheckedForUpdateOnStartup;
-
-        private readonly ToolTip _progressBarToolTip;
+        private readonly ToolTip _progressBarToolTip = new ToolTip();
 
         private bool _isRunning;
         private CancellationTokenSource _cancellationTokenSource;
@@ -79,9 +83,11 @@ namespace BDHeroGUI
         private ProgressProviderState _state = ProgressProviderState.Ready;
         private Stage _stage = Stage.None;
 
-        public string[] Args = new string[0];
+        private DateTime _lastControllerEvent;
+        private double _lastProgressPercentComplete;
+        private string _lastProgressPercentCompleteStr;
 
-        public event WndProcEventHandler WndProcMessage;
+        public string[] Args = new string[0];
 
         #region Properties
 
@@ -94,16 +100,18 @@ namespace BDHeroGUI
 
         #region Constructor and OnLoad
 
-        public FormMain(ILog logger, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
+        public FormMain(ILog logger, LogInitializer logInitializer, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager,
                         PluginLoader pluginLoader, IPluginRepository pluginRepository, IController controller,
-                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory,
-                        INetworkStatusMonitor networkStatusMonitor, Updater updater)
+                        IDriveDetector driveDetector, ITaskbarItemFactory taskbarItemFactory, IWindowMenuFactory windowMenuFactory,
+                        INetworkStatusMonitor networkStatusMonitor, UpdateClient updateClient, AppConfig appConfig)
         {
             InitializeComponent();
 
             Load += OnLoad;
+            FormClosing += OnFormClosing;
 
             _logger = logger;
+            _logInitializer = logInitializer;
             _directoryLocator = directoryLocator;
             _preferenceManager = preferenceManager;
             _pluginLoader = pluginLoader;
@@ -111,36 +119,13 @@ namespace BDHeroGUI
             _controller = controller;
             _driveDetector = driveDetector;
             _taskbarItem = taskbarItemFactory.GetInstance(Handle);
+            _windowMenuFactory = windowMenuFactory;
             _networkStatusMonitor = networkStatusMonitor;
-
-            _updater = updater;
-            _updater.IsPortable = _directoryLocator.IsPortable;
-            _updateHelper = new UpdateHelper(_updater, AppUtils.AppVersion) { AllowDownload = false };
-
-            _progressBarToolTip = new ToolTip();
-            _progressBarToolTip.SetToolTip(progressBar, null);
+            _updateClient = updateClient;
+            _appConfig = appConfig;
 
             progressBar.UseCustomColors = true;
             progressBar.GenerateText = percentComplete => string.Format("{0}: {1:0.00}%", _state, percentComplete);
-
-            playlistListView.ItemSelectionChanged += PlaylistListViewOnItemSelectionChanged;
-            playlistListView.ShowAllChanged += PlaylistListViewOnShowAllChanged;
-            playlistListView.PlaylistReconfigured += PlaylistListViewOnPlaylistReconfigured;
-
-            tracksPanel.PlaylistReconfigured += TracksPanelOnPlaylistReconfigured;
-
-            mediaPanel.SelectedMediaChanged += MediaPanelOnSelectedMediaChanged;
-            mediaPanel.Search = ShowMetadataSearchWindow;
-
-            var updateObserver = new FormMainUpdateObserver(this,
-                                                            checkForUpdatesToolStripMenuItem,
-                                                            updateToolStripMenuItem,
-                                                            downloadUpdateToolStripMenuItem);
-            updateObserver.BeforeInstallUpdate += update => DisableUpdates();
-            SystemEvents.SessionEnded += (sender, args) => DisableUpdates();
-            _updateHelper.RegisterObserver(updateObserver);
-
-            FormClosing += OnFormClosing;
 
             var recentFiles = _preferenceManager.Preferences.RecentFiles;
             if (recentFiles.RememberRecentFiles && recentFiles.RecentBDROMPaths.Any())
@@ -148,7 +133,91 @@ namespace BDHeroGUI
                 textBoxInput.Text = recentFiles.RecentBDROMPaths.First();
             }
 
+            toolsToolStripMenuItem.Visible = false;
+            debugToolStripMenuItem.Visible = _appConfig.IsDebugMode;
+            updateToolStripMenuItem.Visible = false;
+            toolStripStatusLabelOffline.Visible = false;
+        }
+
+        private void OnLoad(object sender, EventArgs eventArgs)
+        {
+            Text += " v" + AppUtils.AppVersion;
+
+            LogDirectoryPaths();
+            LoadPlugins();
+            LogPlugins();
+
+            InitController();
+            InitPluginMenu();
             InitSystemMenu();
+            InitDriveDetector();
+            InitNetworkStatusMonitor(); // TODO: Add setting to enable/disable
+            InitUpdateCheck();          // TODO: Add setting to enable/disable
+
+            #region UI event binding
+
+            playlistListView.ItemSelectionChanged += PlaylistListViewOnItemSelectionChanged;
+            playlistListView.ShowAllChanged += PlaylistListViewOnShowAllChanged;
+
+            tracksPanel.PlaylistReconfigured += TracksPanelOnPlaylistReconfigured;
+
+            mediaPanel.Search = ShowMetadataSearchWindow;
+
+            #endregion
+
+            EnableControls(true);
+            splitContainerTop.Enabled = false;
+            splitContainerMain.Enabled = false;
+
+            this.EnableSelectAll();
+
+            textBoxOutput.FileTypes = new[]
+                {
+                    new FileType
+                        {
+                            Description = "Matroska video file",
+                            Extensions = new[] {".mkv"}
+                        }
+                };
+
+            InitAboutBox();
+            InitTextEditor();
+
+            ScanOnStartup();
+
+            this.Descendants<TextEditorControl>().ForEach(BindTextEditorControlPreviewKeyDown);
+        }
+
+        private void BindTextEditorControlPreviewKeyDown(TextEditorControl textEditorControl)
+        {
+            textEditorControl.PreviewKeyDown += TextEditorControlOnPreviewKeyDown;
+        }
+
+        private void TextEditorControlOnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+        {
+            // AvalonEdit captures and suppresses CTRL+I (for "Indent"),
+            // even though the command doesn't appear to actually do anything.
+            // Since we may actually want to process this key combo,
+            // TextEditorImpl and TextEditorControl proxy the key event
+            // for us to listen to.
+            if (e.Control && e.KeyCode == Keys.I)
+            {
+                // Nasty hack: To get AvalonEdit/WinForms to do what we want, we have to temporarily move focus
+                // to a _different_ control so that AvalonEdit won't consume the CTRL + I key events.
+                // To do this, we create a temporary dummy button, add it to the form, move focus to it, and then
+                // remove it from the form after a very brief delay (just long enough for the key press events
+                // to get delivered to the window).  When the button is removed, WinForms automatically moves focus
+                // back to the last control that had focus prior to the dummy button, which is the AvalonEdit text editor.
+                // The user will never notice that the text editor technically lost focus for several milliseconds.  Tada!
+                var button = new Button();
+                Controls.Add(button);
+                button.Select();
+                button.Focus();
+
+                new EmptyPromise(this)
+                    .Always(promise => Controls.Remove(button))
+                    .Start();
+            }
         }
 
         private void OnFormClosing(object sender, FormClosingEventArgs args)
@@ -186,131 +255,33 @@ namespace BDHeroGUI
             }
         }
 
-        private void DisableUpdates()
+        #endregion
+
+        private void Invoke(Action action)
         {
-            _updateHelper.AllowInstallUpdate = false;
-            _updater.CancelDownload();
-        }
-
-        private void OnLoad(object sender, EventArgs eventArgs)
-        {
-            Text += " v" + AppUtils.AppVersion;
-
-            LogDirectoryPaths();
-            LoadPlugins();
-            LogPlugins();
-            InitController();
-            InitPluginMenu();
-            InitUpdateCheck();
-
-            EnableControls(true);
-            splitContainerTop.Enabled = false;
-            splitContainerMain.Enabled = false;
-
-            this.EnableSelectAll();
-
-            textBoxOutput.FileTypes = new[]
-                {
-                    new FileType
-                        {
-                            Description = "Matroska video file",
-                            Extensions = new[] {".mkv"}
-                        }
-                };
-
-            InitDriveDetector();
-
-            toolStripStatusLabelOffline.Visible = false;
-
-            // TODO: Add setting to enable/disable
-            InitNetworkStatusMonitor();
-
-            ScanOnStartup();
-
-            InitAboutBox();
-        }
-
-        private void InitNetworkStatusMonitor()
-        {
-            _networkStatusMonitor.NetworkStatusChanged += SetIsOnline;
-            _networkStatusMonitor.TestConnectionAsync();
-        }
-
-        private void ScanOnStartup()
-        {
-            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
-            if (path == null)
-                return;
-            Scan(path);
-        }
-
-        /// <summary>
-        ///     The <see cref="AboutBox"/> takes several seconds to initialize the first time
-        ///     it is constructed, so preemptively instantiate it in a
-        ///     background thread to speed up loading when the user actually opens it.
-        /// </summary>
-        private void InitAboutBox()
-        {
-            Task.Factory.StartNew(() => new AboutBox(_pluginRepository));
+            base.Invoke(action);
         }
 
         private void ShowAboutBox()
         {
-            new AboutBox(_pluginRepository).ShowDialog(this);
-        }
-
-        private void SetIsOnline(bool isOnline)
-        {
-            toolStripStatusLabelOffline.Visible = !isOnline;
-
-            if (!isOnline || _hasCheckedForUpdateOnStartup)
-                return;
-
-            _updateHelper.Click();
-            _hasCheckedForUpdateOnStartup = true;
-        }
-
-        #endregion
-
-        private void ShowExceptionDetail(string title, Exception exception)
-        {
-            if (ExceptionDialog.IsPlatformSupported)
-                new ExceptionDialog(title, exception).ShowDialog(this);
-            else
-                DetailForm.ShowExceptionDetail(this, title, exception);
-        }
-
-        #region Win32 Window message handling
-
-        /// <summary>
-        /// This function receives all the windows messages for this window (form).
-        /// We call the IDriveDetector from here so that is can pick up the messages about
-        /// drives arrived and removed.
-        /// </summary>
-        protected override void WndProc(ref Message m)
-        {
-            base.WndProc(ref m);
-
-            if (WndProcMessage != null)
+            using (var form = new AboutBox(_pluginRepository))
             {
-                WndProcMessage(ref m);
+                form.ShowDialog(this);
             }
         }
 
-        #endregion
-
         #region Initialization
+
+        #region Logging
 
         private void LogDirectoryPaths()
         {
-            _logger.InfoFormat("IsPortable = {0}", _directoryLocator.IsPortable);
-            _logger.InfoFormat("InstallDir = {0}", _directoryLocator.InstallDir);
-            _logger.InfoFormat("AppConfigDir = {0}", _directoryLocator.AppConfigDir);
-            _logger.InfoFormat("PluginConfigDir = {0}", _directoryLocator.PluginConfigDir);
-            _logger.InfoFormat("RequiredPluginDir = {0}", _directoryLocator.RequiredPluginDir);
-            _logger.InfoFormat("CustomPluginDir = {0}", _directoryLocator.CustomPluginDir);
-            _logger.InfoFormat("LogDir = {0}", _directoryLocator.LogDir);
+            _logInitializer.LogDirectoryPaths();
         }
+
+        #endregion
+
+        #region Plugins
 
         private void LoadPlugins()
         {
@@ -322,9 +293,13 @@ namespace BDHeroGUI
             _pluginLoader.LogPlugins();
         }
 
+        #endregion
+
+        #region Controller event bindings
+
         private void InitController()
         {
-            _controller.ScanStarted += ControllerOnScanStarted;
+            _controller.BeforeScanStart += ControllerOnBeforeScanStart;
             _controller.ScanSucceeded += ControllerOnScanSucceeded;
             _controller.ScanFailed += ControllerOnScanFailed;
             _controller.ScanCompleted += ControllerOnScanCompleted;
@@ -382,11 +357,11 @@ namespace BDHeroGUI
 
             pluginItem.DropDownItems.Add(enabledItem);
 
-            if (plugin.EditPreferences != null)
+            if (plugin.PropertiesHandler != null)
             {
-                pluginItem.DropDownItems.Add(new ToolStripMenuItem("Preferences...", null,
+                pluginItem.DropDownItems.Add(new ToolStripMenuItem("Properties...", null,
                                                                    (sender, args) =>
-                                                                   EditPreferences(plugin)));
+                                                                   InvokePropertyHandler(plugin)));
             }
 
             pluginItem.DropDownItems.Add("-");
@@ -403,13 +378,13 @@ namespace BDHeroGUI
             return curPluginType;
         }
 
-        private void EditPreferences(IPlugin plugin)
+        private void InvokePropertyHandler(IPlugin plugin)
         {
-            if (DialogResult.OK == plugin.EditPreferences(this))
+            if (DialogResult.OK == plugin.PropertiesHandler(this))
             {
                 if (plugin is INameProviderPlugin)
                 {
-                    RenameSync();
+                    RenameAsync();
                 }
             }
         }
@@ -453,21 +428,19 @@ namespace BDHeroGUI
             }
 
             linkLabelNameProviderPreferences.Enabled = EnabledNameProviderPlugins.Any();
+
+            AutoEnableMetadataSearchControls();
         }
 
         #endregion
 
-        #region Updates
+        #region System menu
 
-        private void InitUpdateCheck()
+        private void InitSystemMenu()
         {
-            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
-        }
-
-        private void InstallUpdateIfAvailable(bool silent)
-        {
-            // TODO: Re-enable when automatic updating is implemented
-//            _updateHelper.InstallUpdateIfAvailable(silent);
+            new StandardWindowMenuBuilder(this, _windowMenuFactory)
+                .Resize()
+                .AlwaysOnTop();
         }
 
         #endregion
@@ -482,31 +455,165 @@ namespace BDHeroGUI
 
         #endregion
 
-        #region System menu
+        #region Network status
 
-        private void InitSystemMenu()
+        private void InitNetworkStatusMonitor()
         {
-            var systemMenu = new SystemMenu(this, this);
+            _networkStatusMonitor.NetworkStatusChanged += NetworkStatusMonitorOnNetworkStatusChanged;
+            _networkStatusMonitor.TestConnectionAsync();
+        }
 
-            var resizeMenuItem = systemMenu.CreateMenuItem("&Resize...");
-            resizeMenuItem.Clicked += delegate
-                                      {
-                                          new FormResizeWindow(this).ShowDialog(this);
-                                      };
+        private void NetworkStatusMonitorOnNetworkStatusChanged(bool isConnectedToInternet)
+        {
+            Invoke(() => SetIsOnline(isConnectedToInternet));
+        }
 
-            var alwaysOnTopMenuItem = systemMenu.CreateMenuItem("Always on &top");
-            alwaysOnTopMenuItem.Clicked += delegate
-                                           {
-                                               var alwaysOnTop = !alwaysOnTopMenuItem.Checked;
-                                               TopMost = alwaysOnTop;
-                                               alwaysOnTopMenuItem.Checked = alwaysOnTop;
-                                               systemMenu.UpdateMenu(alwaysOnTopMenuItem);
-                                           };
+        private void SetIsOnline(bool isOnline)
+        {
+            toolStripStatusLabelOffline.Visible = !isOnline;
 
-            uint pos = 5;
-            systemMenu.InsertSeparator(pos++);
-            systemMenu.InsertMenu(pos++, resizeMenuItem);
-            systemMenu.InsertMenu(pos++, alwaysOnTopMenuItem);
+            if (!isOnline)
+                return;
+
+            _updateClient.CheckForUpdateAsync();
+        }
+
+        #endregion
+
+        #region Updates
+
+        private void InitUpdateCheck()
+        {
+//            Disposed += (sender, args) => InstallUpdateIfAvailable(true);
+
+            var updateObserver = new FormMainUpdateObserver(checkForUpdatesToolStripMenuItem,
+                                                            updateToolStripMenuItem,
+                                                            downloadUpdateToolStripMenuItem);
+
+            _updateClient.CurrentVersion = AppUtils.AppVersion;
+            _updateClient.IsPortable = _directoryLocator.IsPortable;
+
+            _updateClient.Checking += updater => Invoke(updateObserver.Checking);
+            _updateClient.UpdateFound += updater => Invoke(() => updateObserver.UpdateFound(_updateClient.LatestUpdate));
+            _updateClient.UpdateNotFound += updater => Invoke(updateObserver.NoUpdateFound);
+            _updateClient.Error += (updater, exception) => Invoke(() => updateObserver.Error(exception));
+
+            downloadUpdateToolStripMenuItem.ToolTipText = AppConstants.DownloadPageUrl;
+        }
+
+        private void OpenDownloadPageInBrowser()
+        {
+            FileUtils.OpenUrl(AppConstants.DownloadPageUrl);
+        }
+
+        #endregion
+
+        #region Assembly cache priming
+
+        /// <summary>
+        ///     The <see href="AboutBox"/> takes several seconds to initialize the first time
+        ///     it is constructed, so preemptively instantiate it in a
+        ///     background thread to speed up loading when the user actually opens it.
+        /// </summary>
+        private void InitAboutBox()
+        {
+            Task.Factory.StartNew(InitAboutBoxImpl);
+        }
+
+        private void InitAboutBoxImpl()
+        {
+            using (var form = new AboutBox(_pluginRepository))
+            {
+            }
+        }
+
+        private static void InitTextEditor()
+        {
+            // Syntax definitions are loaded globally for all TextEditor instances,
+            // so we only need to call this method once on startup.
+            var editor = TextEditorFactory.CreateMultiLineTextEditor();
+            editor.LoadSyntaxDefinitions(new BDHeroT4SyntaxModeProvider());
+        }
+
+        #endregion
+
+        #region Scan on startup
+
+        private void ScanOnStartup()
+        {
+            var path = Args.FirstOrDefault(arg => File.Exists(arg) || Directory.Exists(arg));
+            if (path == null)
+                return;
+            Scan(path);
+        }
+
+        #endregion
+
+        #endregion
+
+        #region Error Reporting
+
+        private void ShowErrorDialog(string title, Exception exception, bool isReportable = true)
+        {
+            var report = new ErrorReport(exception, _pluginRepository, _directoryLocator);
+
+            IErrorDialog dialog;
+
+            if (Windows7ErrorDialog.IsPlatformSupported)
+            {
+                dialog = new Windows7ErrorDialog(report, _networkStatusMonitor, _updateClient, _appConfig);
+            }
+            else
+            {
+                dialog = new GenericErrorDialog(report);
+            }
+
+            dialog.Title = title;
+
+            dialog.AddResultVisitor(this);
+
+            if (isReportable && ExceptionUtils.IsReportable(exception))
+            {
+                dialog.ShowReportable(this);
+            }
+            else
+            {
+                dialog.ShowNonReportable(this);
+            }
+        }
+
+        private void ShowNonReportableErrorDialog(Exception exception)
+        {
+            const string title = "Unable to submit error report";
+            ShowErrorDialog(title, exception, false);
+        }
+
+        public void Visit(ErrorReportResultCreated result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddLabel("Submitted")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultUpdated result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddLabel("Updated")
+                .AddHyperlink(result)
+                .Build();
+            statusStrip1.Items.Add(panel);
+        }
+
+        public void Visit(ErrorReportResultFailed result)
+        {
+            var panel = new ToolStripControlBuilder()
+                .AddImage(Properties.Resources.error_circle)
+                .AddLabel("Unable to submit error report")
+                .AddLink("(details)", (sender, args) => ShowNonReportableErrorDialog(result.Exception))
+                .Build();
+            statusStrip1.Items.Add(panel);
         }
 
         #endregion
@@ -538,11 +645,21 @@ namespace BDHeroGUI
 
             if (job == null) return;
 
-            var form = new FormMetadataSearch(job.SearchQuery);
+            DialogResult result;
+            SearchQuery searchQuery;
 
-            if (DialogResult.OK != form.ShowDialog(this)) return;
+            using (var form = new FormMetadataSearch(job.SearchQuery))
+            {
+                result = form.ShowDialog(this);
+                searchQuery = form.SearchQuery;
+            }
 
-            job.SearchQuery = form.SearchQuery;
+            if (DialogResult.OK != result)
+            {
+                return;
+            }
+
+            job.SearchQuery = searchQuery;
 
             _controller
                 .CreateMetadataTask(CreateCancellationTokenSource().Token, GetMetadataStart, GetMetadataFail, GetMetadataSucceed)
@@ -550,7 +667,7 @@ namespace BDHeroGUI
                 ;
         }
 
-        private void GetMetadataStart()
+        private void GetMetadataStart(IPromise<bool> promise)
         {
             buttonScan.Text = "Searching...";
             textBoxStatus.Text = "Searching for metadata...";
@@ -558,11 +675,11 @@ namespace BDHeroGUI
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
-        private void GetMetadataSucceed()
+        private void GetMetadataSucceed(IPromise<bool> promise)
         {
             // TODO: Centralize button text
             buttonScan.Text = "Scan";
-            textBoxOutput.Text = _controller.Job.OutputPath;
+            textBoxOutput.SelectedPath = _controller.Job.OutputPath;
             AppendStatus("Metadata search completed successfully!");
             _taskbarItem.NoProgress();
             RefreshUI();
@@ -572,13 +689,15 @@ namespace BDHeroGUI
 
         private void PromptForMetadataIfNeeded()
         {
-            if (!_controller.Job.Movies.Any() && !_controller.Job.TVShows.Any())
+            if (!_controller.Job.Movies.Any() &&
+                !_controller.Job.TVShows.Any() &&
+                _controller.PluginsByType.OfType<IMetadataProviderPlugin>().Any(plugin => plugin.Enabled))
             {
                 ShowMetadataSearchWindow();
             }
         }
 
-        private void GetMetadataFail(ExceptionEventArgs args)
+        private void GetMetadataFail(IPromise<bool> promise)
         {
             // TODO: Centralize button text
             buttonScan.Text = "Scan";
@@ -594,9 +713,9 @@ namespace BDHeroGUI
                 _taskbarItem.Error();
             }
 
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowExceptionDetail("Error: Metadata Search Failed", args.Exception);
+                ShowErrorDialog("Error: Metadata Search Failed", promise.LastException);
             }
 
             EnableControls(true);
@@ -606,12 +725,28 @@ namespace BDHeroGUI
 
         #region File renamer
 
-        private void RenameSync()
+        private bool _isRenaming;
+        private bool _preventRename;
+
+        private void RenameAsync()
         {
             if (_controller.Job == null)
                 return;
-            _controller.RenameSync(null);
-            textBoxOutput.Text = _controller.Job.OutputPath;
+
+            if (_isRenaming)
+                return;
+
+            if (_preventRename)
+                return;
+
+            _isRenaming = true;
+
+            new EmptyPromise(this)
+                .Work(p => _controller.RenameSync(null))
+                .Done(p => textBoxOutput.SelectedPath = _controller.Job.OutputPath)
+                .Always(p => _isRenaming = false)
+                .Start()
+                ;
         }
 
         #endregion
@@ -631,8 +766,25 @@ namespace BDHeroGUI
                 playlistListView.Playlists = _controller.Job.Disc.Playlists;
         }
 
+        private void AutoEnableMetadataSearchControls()
+        {
+            var hasJob = _controller.Job != null;
+            var isMetadataPluginEnabled = _controller.PluginsByType.OfType<IMetadataProviderPlugin>().Any(plugin => plugin.Enabled);
+            var enableMetadataSearch = hasJob && isMetadataPluginEnabled;
+
+            searchForMetadataToolStripMenuItem.Enabled = enableMetadataSearch;
+            mediaPanel.SearchLinkEnabled = enableMetadataSearch;
+        }
+
         private void EnableControls(bool enabled)
         {
+            AutoEnableMetadataSearchControls();
+            if (!enabled)
+            {
+                searchForMetadataToolStripMenuItem.Enabled = false;
+                mediaPanel.SearchLinkEnabled = false;
+            }
+
             var isPlaylistSelected = playlistListView.SelectedPlaylist != null;
             var hasJob = _controller.Job != null;
             var isScanning = (_stage == Stage.Scan);
@@ -640,7 +792,6 @@ namespace BDHeroGUI
 
             openBDROMFolderToolStripMenuItem.Enabled = enabled;
             openDiscToolStripMenuItem.Enabled = enabled;
-            searchForMetadataToolStripMenuItem.Enabled = enabled && hasJob;
 
             discInfoToolStripMenuItem.Enabled = (enabled || isConverting) && hasJob;
             filterPlaylistsToolStripMenuItem.Enabled = enabled;
@@ -674,6 +825,30 @@ namespace BDHeroGUI
 
         #endregion
 
+        #region Controller timestamping
+
+        private void SetLastControllerEventTimeStamp()
+        {
+            _lastControllerEvent = DateTime.Now;
+        }
+
+        /// <summary>
+        /// Gets whether the user is allowed to press the "Scan" or "Convert" buttons.
+        /// </summary>
+        /// <remarks>
+        /// If the user presses "Scan" and "Cancel" in succession too quickly, it can goof up the state of the controller
+        /// and/or plugins because the cancel event may get received <i>after</i> the subsequent "Scan" event,
+        /// which causes <see href="ProgressProvider"/> to throw an exception when its <see href="ProgressProvider.Reset"/>
+        /// method is called.  To prevent this from happening, we must enforce a one second delay between actions performed
+        /// on the controller.
+        /// </remarks>
+        private bool PermitScanOrConvert
+        {
+            get { return DateTime.Now - _lastControllerEvent > TimeSpan.FromSeconds(0.5); }
+        }
+
+        #endregion
+
         #region Scan & Convert stages
 
         /// <summary>
@@ -682,17 +857,34 @@ namespace BDHeroGUI
         /// <param name="path">Optional path to the root BD-ROM folder.  If specified, the "Source BD-ROM" textbox will be populated with this path.</param>
         private void Scan(string path = null)
         {
-            if (path != null)
-                textBoxInput.Text = path;
+            if (!PermitScanOrConvert)
+                return;
 
-            _controller.SetEventScheduler();
+            if (path != null)
+                textBoxInput.SelectedPath = path;
+
+            var textBoxInputPath = textBoxInput.SelectedPath;
+            var textBoxOutputPath = textBoxOutput.SelectedPath;
+
+            try
+            {
+                FileUtils.EnsureValidChars(textBoxInputPath);
+                FileUtils.EnsureValidChars(textBoxOutputPath);
+            }
+            catch (ID10TException e)
+            {
+                ShowErrorDialog("Unable to scan BD-ROM", e, false);
+                return;
+            }
+
+            _controller.SetUIContext(this);
 
             // TODO: Let File Namer plugin handle this
-            var outputDirectory = FileUtils.ContainsFileName(textBoxOutput.Text)
-                                      ? Path.GetDirectoryName(textBoxOutput.Text)
-                                      : textBoxOutput.Text;
+            var outputDirectory = FileUtils.ContainsFileName(textBoxOutputPath)
+                                      ? Path.GetDirectoryName(textBoxOutputPath)
+                                      : textBoxOutputPath;
             _controller
-                .CreateScanTask(CreateCancellationTokenSource().Token, textBoxInput.Text, outputDirectory)
+                .CreateScanTask(CreateCancellationTokenSource().Token, textBoxInputPath, outputDirectory)
                 .Start();
         }
 
@@ -701,6 +893,9 @@ namespace BDHeroGUI
         /// </summary>
         private void Convert()
         {
+            if (!PermitScanOrConvert)
+                return;
+
             var selectedPlaylist = playlistListView.SelectedPlaylist;
             if (selectedPlaylist == null)
             {
@@ -711,10 +906,10 @@ namespace BDHeroGUI
 
             _controller.Job.SelectedPlaylistIndex = _controller.Job.Disc.Playlists.IndexOf(selectedPlaylist);
 
-            _controller.SetEventScheduler();
+            _controller.SetUIContext(this);
 
             _controller
-                .CreateConvertTask(CreateCancellationTokenSource().Token, textBoxOutput.Text)
+                .CreateConvertTask(CreateCancellationTokenSource().Token, textBoxOutput.SelectedPath)
                 .Start();
         }
 
@@ -722,91 +917,127 @@ namespace BDHeroGUI
 
         #region Scan events
 
-        private void ControllerOnScanStarted()
+        private void ControllerOnBeforeScanStart(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             _stage = Stage.Scan;
+
             buttonScan.Text = "Scanning...";
             textBoxStatus.Text = "Scan started...";
             EnableControls(false);
+
             _taskbarItem.SetProgress(0).Indeterminate();
+
+            _preventRename = true;
         }
 
-        private void ControllerOnScanSucceeded()
+        private void ControllerOnScanSucceeded(IPromise<bool> promise)
         {
-            textBoxOutput.Text = _controller.Job.OutputPath;
+            SetLastControllerEventTimeStamp();
+
+            textBoxOutput.SelectedPath = _controller.Job.OutputPath;
             AppendStatus("Scan succeeded!");
-            _taskbarItem.NoProgress();
+
+            _state = ProgressProviderState.Success;
+
+            _preventRename = false;
+            RenameAsync();
+
             RefreshUI();
             PromptForMetadataIfNeeded();
         }
 
-        private void ControllerOnScanFailed(ExceptionEventArgs args)
+        private void ControllerOnScanFailed(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             if (IsCancellationRequested)
             {
                 AppendStatus("Scan canceled!");
-                _taskbarItem.NoProgress();
+                _state = ProgressProviderState.Canceled;
             }
             else
             {
                 AppendStatus("Scan failed!");
-                _taskbarItem.Error();
+                _state = ProgressProviderState.Error;
             }
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowExceptionDetail("Error: Scan Failed", args.Exception);
+                ShowErrorDialog("Error: Scan Failed", promise.LastException);
             }
+
+            _preventRename = false;
         }
 
-        private void ControllerOnScanCompleted()
+        private void ControllerOnScanCompleted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             _stage = Stage.None;
+            
             buttonScan.Text = "Scan";
             EnableControls(true);
+
+            UpdateProgressBars();
         }
 
         #endregion
 
         #region Convert events
 
-        private void ControllerOnConvertStarted()
+        private void ControllerOnConvertStarted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             _stage = Stage.Convert;
+
             buttonConvert.Text = "Converting...";
             AppendStatus("Convert started...");
             EnableControls(false);
+            
             _taskbarItem.SetProgress(0).Indeterminate();
         }
 
-        private void ControllerOnConvertSucceeded()
+        private void ControllerOnConvertSucceeded(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             AppendStatus("Convert succeeded!");
-            _taskbarItem.NoProgress();
+
+            _state = ProgressProviderState.Success;
         }
 
-        private void ControllerOnConvertFailed(ExceptionEventArgs args)
+        private void ControllerOnConvertFailed(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             if (IsCancellationRequested)
             {
                 AppendStatus("Convert canceled!");
-                _taskbarItem.NoProgress();
+                _state = ProgressProviderState.Canceled;
             }
             else
             {
                 AppendStatus("Convert failed!");
-                _taskbarItem.Error();
+                _state = ProgressProviderState.Error;
             }
-            if (args.Exception != null)
+            if (promise.LastException != null)
             {
-                ShowExceptionDetail("Error: Convert Failed", args.Exception);
+                ShowErrorDialog("Error: Convert Failed", promise.LastException);
             }
         }
 
-        private void ControllerOnConvertCompleted()
+        private void ControllerOnConvertCompleted(IPromise<bool> promise)
         {
+            SetLastControllerEventTimeStamp();
+
             _stage = Stage.None;
+            
             buttonConvert.Text = "Convert";
             EnableControls(true);
+
+            UpdateProgressBars();
         }
 
         #endregion
@@ -815,24 +1046,43 @@ namespace BDHeroGUI
 
         private void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
-            if (!_isRunning)
-                return;
+            SetLastControllerEventTimeStamp();
 
-            _state = progressProvider.State;
+            if (_isRunning || progressProvider.State != ProgressProviderState.Running)
+            {
+                _state = progressProvider.State;
+            }
 
-            var percentCompleteStr = (progressProvider.PercentComplete/100.0).ToString("P");
+            if (!_isRunning && _state == ProgressProviderState.Running)
+            {
+                _logger.Warn("State mismatch: _isRunning == false but _state == Running");
+            }
+
+            var percentCompleteStr = (progressProvider.PercentComplete / 100.0).ToString("P");
             var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
                                      plugin.Name, progressProvider.State, percentCompleteStr,
-                                     progressProvider.Status,
+                                     progressProvider.LongStatus,
                                      progressProvider.RunTime.ToStringShort(),
                                      progressProvider.TimeRemaining.ToStringShort());
-            AppendStatus(line);
 
-            progressBar.ValuePercent = progressProvider.PercentComplete;
-            _progressBarToolTip.SetToolTip(progressBar, string.Format("{0}: {1}", progressProvider.State, percentCompleteStr));
-            _taskbarItem.Progress = progressProvider.PercentComplete;
+            if (_isRunning)
+            {
+                AppendStatus(line);
+            }
 
-            switch (progressProvider.State)
+            _lastProgressPercentComplete = progressProvider.PercentComplete;
+            _lastProgressPercentCompleteStr = percentCompleteStr;
+
+            UpdateProgressBars();
+        }
+
+        private void UpdateProgressBars()
+        {
+            progressBar.ValuePercent = _lastProgressPercentComplete;
+            _progressBarToolTip.SetToolTip(progressBar, string.Format("{0}: {1}", _state, _lastProgressPercentCompleteStr));
+            _taskbarItem.Progress = _lastProgressPercentComplete;
+
+            switch (_state)
             {
                 case ProgressProviderState.Error:
                     progressBar.SetError();
@@ -844,6 +1094,10 @@ namespace BDHeroGUI
                     break;
                 case ProgressProviderState.Canceled:
                     progressBar.SetMuted();
+                    _taskbarItem.NoProgress();
+                    break;
+                case ProgressProviderState.Success:
+                    progressBar.SetSuccess();
                     _taskbarItem.NoProgress();
                     break;
                 default:
@@ -859,8 +1113,9 @@ namespace BDHeroGUI
 
         private void ControllerOnUnhandledException(object sender, UnhandledExceptionEventArgs args)
         {
+            SetLastControllerEventTimeStamp();
             var caption = string.Format("{0} Error", AppUtils.AppName);
-            ShowExceptionDetail(caption, args.ExceptionObject as Exception);
+            ShowErrorDialog(caption, args.ExceptionObject as Exception);
         }
 
         #endregion
@@ -894,9 +1149,12 @@ namespace BDHeroGUI
 
         private void discInfoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if (_controller.Job != null)
+            if (_controller.Job == null)
+                return;
+
+            using (var form = new FormDiscInfo(_controller.Job.Disc, _windowMenuFactory))
             {
-                new FormDiscInfo(_controller.Job.Disc).ShowDialog(this);
+                form.ShowDialog(this);
             }
         }
 
@@ -947,7 +1205,10 @@ namespace BDHeroGUI
 
         private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _updateHelper.Click();
+            if (_updateClient.IsUpdateAvailable)
+                OpenDownloadPageInBrowser();
+            else
+                _updateClient.CheckForUpdateAsync();
         }
 
         private void aboutBDHeroToolStripMenuItem_Click(object sender, EventArgs e)
@@ -955,9 +1216,24 @@ namespace BDHeroGUI
             ShowAboutBox();
         }
 
+        private void forceGarbageCollectionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GC.Collect();
+        }
+
+        private void appendDividerToLogToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            _logger.Info("\n\n\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n\n\n");
+        }
+
+        private void textEditorToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new FormTextEditorTest().Show(this);
+        }
+
         private void downloadUpdateToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _updateHelper.Click();
+            OpenDownloadPageInBrowser();
         }
 
         #endregion
@@ -997,7 +1273,7 @@ namespace BDHeroGUI
 
             if (plugins.Count == 1)
             {
-                EditPreferences(plugins.First());
+                InvokePropertyHandler(plugins.First());
             }
             else
             {
@@ -1013,7 +1289,7 @@ namespace BDHeroGUI
         private ToolStripMenuItem GetNameProviderPluginPreferenceMenuItem(INameProviderPlugin plugin)
         {
             var image = plugin.Icon != null ? plugin.Icon.ToBitmap() : null;
-            var item = new ToolStripMenuItem(plugin.Name, image, (sender, args) => EditPreferences(plugin));
+            var item = new ToolStripMenuItem(plugin.Name, image, (sender, args) => InvokePropertyHandler(plugin));
             return item;
         }
 
@@ -1026,11 +1302,6 @@ namespace BDHeroGUI
             Scan();
         }
 
-        private void MediaPanelOnSelectedMediaChanged(object sender, EventArgs eventArgs)
-        {
-            RenameSync();
-        }
-
         private void PlaylistListViewOnItemSelectionChanged(object sender, ListViewItemSelectionChangedEventArgs args)
         {
             var playlist = playlistListView.SelectedPlaylist;
@@ -1039,8 +1310,6 @@ namespace BDHeroGUI
             buttonConvert.Enabled = playlist != null;
             tracksPanel.SetPlaylist(playlist, _controller.Job.Disc.Languages.ToArray());
             chaptersPanel.Playlist = playlist;
-
-            RenameSync();
         }
 
         private void PlaylistListViewOnShowAllChanged(object sender, EventArgs eventArgs)
@@ -1048,15 +1317,9 @@ namespace BDHeroGUI
             showAllPlaylistsToolStripMenuItem.Checked = playlistListView.ShowAll;
         }
 
-        private void PlaylistListViewOnPlaylistReconfigured(Playlist playlist)
-        {
-            RenameSync();
-        }
-
         private void TracksPanelOnPlaylistReconfigured(Playlist playlist)
         {
             playlistListView.ReconfigurePlaylist(playlist);
-            RenameSync();
         }
 
         #endregion

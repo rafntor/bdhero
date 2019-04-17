@@ -22,14 +22,18 @@ using System.Linq;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
-using DotNetUtils;
+using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 using I18N;
 
 namespace BDHero.Plugin.AutoDetector
 {
+    [UsedImplicitly]
     public class AutoDetector : IAutoDetectorPlugin
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IPluginHost Host { get; private set; }
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
 
@@ -41,7 +45,7 @@ namespace BDHero.Plugin.AutoDetector
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public void LoadPlugin(IPluginHost host, PluginAssemblyInfo assemblyInfo)
         {
@@ -294,7 +298,11 @@ namespace BDHero.Plugin.AutoDetector
             var bestPlaylists = job.Disc.ValidMainFeaturePlaylists;
             var bestPlaylist = bestPlaylists.FirstOrDefault();
 
-            if (bestPlaylist == null) return;
+            if (bestPlaylist == null)
+            {
+                job.SelectedPlaylistIndex = -1;
+                return;
+            }
 
             bestPlaylists.ForEach(playlist => playlist.IsBestGuess = true);
             job.SelectedPlaylistIndex = job.Disc.Playlists.IndexOf(bestPlaylist);
@@ -306,27 +314,35 @@ namespace BDHero.Plugin.AutoDetector
             {
                 // Video
 
-                playlist.VideoTracks.First().IsBestGuess = true;
-                playlist.VideoTracks.First().Keep = true;
+                var firstVideoTrack = playlist.VideoTracks.FirstOrDefault(IsMuxable);
+                if (firstVideoTrack == null)
+                {
+                    Logger.WarnFormat(playlist.VideoTracks.Any()
+                                          ? "Playlist {0} has no muxable video tracks - skipping"
+                                          : "Playlist {0} has no video tracks - skipping", playlist.FileName);
+                    continue;
+                }
+
+                SelectTrack(firstVideoTrack);
 
                 // Audio
 
-                var mainFeatureAudioTracks = playlist.AudioTracks.Where(track => track.IsMainFeature).ToList();
+                var mainFeatureAudioTracks = playlist.AudioTracks.Where(IsMuxable).Where(IsMainFeature).ToList();
                 var primaryLanguageAudioTracks = mainFeatureAudioTracks.Where(track => track.Language == disc.PrimaryLanguage).ToList();
-                var firstAudioTrack = playlist.AudioTracks.FirstOrDefault();
+                var firstAudioTrack = playlist.AudioTracks.FirstOrDefault(IsMuxable);
 
                 if (primaryLanguageAudioTracks.Any())
                     SelectTracks(primaryLanguageAudioTracks);
                 else if (mainFeatureAudioTracks.Any())
-                    SelectTrack(primaryLanguageAudioTracks.First());
+                    SelectTrack(mainFeatureAudioTracks.First());
                 else if (firstAudioTrack != null)
                     SelectTrack(firstAudioTrack);
 
                 // Subtitles
 
-                var mainFeatureSubtitleTracks = playlist.SubtitleTracks.Where(track => track.IsMainFeature).ToList();
+                var mainFeatureSubtitleTracks = playlist.SubtitleTracks.Where(IsMuxable).Where(IsMainFeature).ToList();
                 var primaryLanguageSubtitleTracks = mainFeatureSubtitleTracks.Where(track => track.Language == disc.PrimaryLanguage).ToList();
-                var firstSubtitleTrack = playlist.SubtitleTracks.FirstOrDefault();
+                var firstSubtitleTrack = playlist.SubtitleTracks.FirstOrDefault(IsMuxable);
 
                 if (primaryLanguageSubtitleTracks.Any())
                     SelectTracks(primaryLanguageSubtitleTracks);
@@ -345,10 +361,33 @@ namespace BDHero.Plugin.AutoDetector
             }
         }
 
-        private static void SelectTrack(Track track)
+        private static void SelectTrack([CanBeNull] Track track)
         {
+            if (track == null)
+                return;
+
+            if (!IsMuxable(track))
+            {
+                Logger.WarnFormat("{0} is not muxable; skipping", track.ToStringLoggable());
+                return;
+            }
+
             track.IsBestGuess = true;
             track.Keep = true;
+        }
+
+        #endregion
+
+        #region Track property methods for LINQ
+
+        private static bool IsMuxable(Track track)
+        {
+            return track.Codec.IsMuxable;
+        }
+
+        private static bool IsMainFeature(Track track)
+        {
+            return track.IsMainFeature;
         }
 
         #endregion

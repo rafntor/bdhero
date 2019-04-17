@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,10 +10,11 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BDHero</RootNamespace>
     <AssemblyName>BDHero</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -23,6 +24,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,18 +33,17 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\Newtonsoft.Json.6.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Newtonsoft.Json.12.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -64,16 +65,28 @@
     <Compile Include="BDROM\DiscFeatures.cs" />
     <Compile Include="BDROM\DiscMetadata.cs" />
     <Compile Include="BDROM\Isan.cs" />
+    <Compile Include="BDROM\JacketSize.cs" />
     <Compile Include="BDROM\Playlist.cs" />
     <Compile Include="BDROM\RegionCode.cs" />
     <Compile Include="BDROM\StreamClip.cs" />
     <Compile Include="BDROM\Track.cs" />
     <Compile Include="Config\InjectorFactory.cs" />
     <Compile Include="Controller.cs" />
-    <Compile Include="ErrorReporter.cs" />
+    <Compile Include="ErrorReporting\ErrorReport.cs" />
+    <Compile Include="ErrorReporting\ErrorReporter.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultCreated.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultFailed.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultSuccess.cs" />
+    <Compile Include="ErrorReporting\ErrorReportResultUpdated.cs" />
+    <Compile Include="ErrorReporting\IErrorReportResult.cs" />
+    <Compile Include="ErrorReporting\IErrorReportResultVisitor.cs" />
+    <Compile Include="Exceptions\InvalidJobException.cs" />
+    <Compile Include="Exceptions\InvalidPlaylistException.cs" />
     <Compile Include="Exceptions\RequiredPluginNotFoundException.cs" />
     <Compile Include="IController.cs" />
     <Compile Include="JobQueue\SearchQuery.cs" />
+    <Compile Include="Logging\FormattedLoggingEvent.cs" />
+    <Compile Include="Logging\BoundedMemoryAppender.cs" />
     <Compile Include="Plugin\DevPluginService.cs" />
     <Compile Include="Plugin\IPluginRepository.cs" />
     <Compile Include="Plugin\IPluginService.cs" />
@@ -90,14 +103,49 @@
     <Compile Include="JobQueue\CoverArt.cs" />
     <Compile Include="JobQueue\ReleaseMedium.cs" />
     <Compile Include="JobQueue\Job.cs" />
+    <Compile Include="Startup\AppConfig.cs" />
     <Compile Include="Startup\DirectoryLocator.cs" />
     <Compile Include="Startup\IDirectoryLocator.cs" />
     <Compile Include="Startup\LogInitializer.cs" />
     <Compile Include="Startup\PluginLoader.cs" />
+    <Compile Include="SyntaxHighlighting\BDHeroT4SyntaxModeProvider.cs" />
+    <Compile Include="FileNameVars.cs" />
+    <Compile Include="SyntaxHighlighting\MovieNameXshd.cs">
+      <DependentUpon>MovieNameXshd.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\MovieNameXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\MoviePathXshd.cs">
+      <DependentUpon>MoviePathXshd.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\MoviePathXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\TVShowNameXshd.cs">
+      <DependentUpon>TVShowNameXshd.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\TVShowNameXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\TVShowPathXshd.cs">
+      <DependentUpon>TVShowPathXshd.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\TVShowPathXshdModel.cs" />
     <Compile Include="Utils\AppConstants.cs" />
     <Compile Include="Utils\BDFileUtils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Libraries\GitHub\GitHub.csproj">
+      <Project>{290353D2-DD81-4374-9C6A-D8364D33A38C}</Project>
+      <Name>GitHub</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\TextEditor\TextEditor.csproj">
+      <Project>{acd66b56-a9cf-4958-8050-07ddd1aa43bf}</Project>
+      <Name>TextEditor</Name>
+    </ProjectReference>
     <ProjectReference Include="..\UpdateLib\UpdateLib.csproj">
       <Project>{F39EA837-99DD-4453-AA1A-DE408D47A0A6}</Project>
       <Name>UpdateLib</Name>
@@ -125,9 +173,27 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="SyntaxHighlighting\MovieNameXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>MovieNameXshd.cs</LastGenOutput>
+    </None>
+    <None Include="SyntaxHighlighting\MoviePathXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>MoviePathXshd.cs</LastGenOutput>
+    </None>
+    <None Include="SyntaxHighlighting\TVShowNameXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>TVShowNameXshd.cs</LastGenOutput>
+    </None>
+    <None Include="SyntaxHighlighting\TVShowPathXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>TVShowPathXshd.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

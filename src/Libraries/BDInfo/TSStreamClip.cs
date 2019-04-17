@@ -23,7 +23,7 @@ using System.Collections.Generic;
 namespace BDInfo
 {
     /// <summary>
-    /// Aggregation of information from a pair of <see cref="TSStreamClipFile"/> (.CLPI) and <see cref="TSStreamFile"/> (.M2TS) files.
+    /// Aggregation of information from a pair of <see href="TSStreamClipFile"/> (.CLPI) and <see href="TSStreamFile"/> (.M2TS) files.
     /// </summary>
     public class TSStreamClip
     {

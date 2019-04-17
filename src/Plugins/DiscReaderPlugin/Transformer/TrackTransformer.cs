@@ -15,12 +15,11 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BDHero.BDROM;
 using BDInfo;
+using I18N;
 
 namespace BDHero.Plugin.DiscReader.Transformer
 {
@@ -58,7 +57,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
                 {
                     Index = index,
                     PID = stream.PID,
-                    Language = stream.Language,
+                    Language = stream.Language ?? Language.Undetermined,
                     IsHidden = stream.IsHidden,
                     Codec = CodecTransformer.CodecFromStream(stream),
                     IsVideo = stream.IsVideoStream,

@@ -1,8 +1,4 @@
-*.exe
-!Restorer.exe
-
-7-Zip/
-ILMerge/
-InnoSetup/
-SignTool/
-unxutils/
+# Ignore all files...
+*
+# except of course..
+!.gitignore

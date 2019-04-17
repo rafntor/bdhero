@@ -16,8 +16,8 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System.Windows.Forms;
-using DotNetUtils.Controls;
 using LicenseUtils.Forms;
+using UILib.WinForms.Controls;
 
 namespace LicenseUtils.Controls
 {
@@ -90,7 +90,10 @@ namespace LicenseUtils.Controls
 
         private void labelLicense_Click(object sender, System.EventArgs e)
         {
-            new LicenseForm(_work).ShowDialog(this);
+            using (var form = new LicenseForm(_work))
+            {
+                form.ShowDialog(this);
+            }
         }
     }
 }

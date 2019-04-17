@@ -27,8 +27,8 @@ using Ninject.Modules;
 using OSUtils;
 using OSUtils.Info;
 using OSUtils.Net;
-using UpdateLib;
 using log4net;
+using UpdateLib;
 
 namespace BDHero.Config
 {
@@ -68,7 +68,7 @@ namespace BDHero.Config
     {
         public override void Load()
         {
-            Bind<ILog>().ToMethod(context => LogManager.GetLogger(context.Request.Target.Type));
+            Bind<ILog>().ToMethod(context => LogManager.GetLogger(context.Request.Target.Member.ReflectedType));
         }
     }
 
@@ -82,7 +82,7 @@ namespace BDHero.Config
             Bind<IPreferenceManager>().To<PreferenceManager>().InSingletonScope();
             Bind<IPluginRepository>().To<PluginRepository>().InSingletonScope();
             Bind<PluginLoader>().ToSelf().InSingletonScope();
-            Bind<Updater>().ToSelf().InSingletonScope();
+            Bind<UpdateClient>().ToSelf().InSingletonScope();
             Bind<IController>().To<Controller>();
 
             if (DevPluginService.IsDevMode)

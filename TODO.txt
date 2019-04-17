@@ -1,9 +1,19 @@
 Chores
 ======
 
-[ ] Break up DotNetUtils into separate projects
+[ ] UPDATE Build/Tools NuGet Package!!!
 
-[ ] Update BuildTools w/ "src/Core/BDHeroXXX" paths
+[ ] Add WyDay to LicenseUtils (SplitButton, LinkLabel2, etc.)
+[ ] Create new library that calls the native or managed API for each OS (e.g., DrawThemedTextBoxBorder)
+
+[ ] Use HandleRef instead of IntPtr
+[ ] Use try/catch around P/Invoke calls instead of #if !__MonoCS__?
+
+[ ] Normalize capitalization of Win32 classes/structs/enums
+
+[ ] Missing XML comment for publicly visible type or member ...
+
+[ ] Break up DotNetUtils into separate projects
 
 [ ] Test silent installs and updates
 [ ] Add /portable command line arg
@@ -27,61 +37,87 @@ Chores
 Bugs
 ====
 
-[ ] Charade (1963): Audio/Video/Subtitle track listviews aren't cleared because no "best guess" tracks were found
+[ ] ffmpeg:
+    [-] 00001.mpls: (2011) The Day
+    [ ] 00000.mpls: (2012) The Three Stooges
+    [Q] 00000.mpls: (2011) The Mechanic
+    [Q] 00000.mpls: (1997) Titanic
+        ! Stream map '0:2' matches no streams.
+    [-] 00000.mpls: (2008) Transporter 3
+    [-] 00000.mpls: (1988) Who Framed Roger Rabbit
+        ? 1080i @ 25fps
 
-[ ] Deception (2008): Metadata search is not using year from ISAN
-    V:\BD\Uncategorized\DECEPTION
+[ ] Path redaction: spaces in file paths without quotes
+    - e.g.: https://github.com/bdhero/bdhero/issues/37
 
-[ ] The Wolverine: FFmpeg fails without any error message (same as other X-Men/Wolverine movie(s)?)
-[ ] FFmpeg: error messages (e.g., "Permission denied") do not get logged with -loglevel fatal
-
-[ ] XP: ProgressBar2 black background
+[ ] "Filter Playlists" and "Filter Tracks" settings no longer work
 
 [ ] 500_DAYS_OF_SUMMER: bdmt_eng.xml title sanitized is blank: sanitization removes (... and everything after it, and BDMT title is (500) Days of Summer
 
-[ ] Exception thrown in FileUtils.CreateDirectory() when user types in goofy output path
-[ ] Time Remaining is jumpy, esp. > 80% complete.  Thread queue?
+Detection
+=========
+
+[ ] Battle Los Angeles (2011)
 
 Features
 ========
 
-[ ] Compile custom FFmpeg and/or MKVToolNix builds
+[ ] known ffmpeg defect alert
+[ ] max resync size reached, could not find sync byte
+    - https://github.com/bdhero/bdhero/issues/32
+    - https://github.com/bdhero/bdhero/issues/24
+[ ] mkvmerge plugin
+[ ] old ffmpeg versions
 
-[ ] Use more features from WinAPI Code Pack:
-    [ ] CommonOpenFileDialog
-            Windows API Code Pack 1.1\source\Samples\Shell\CommonFileDialogsDemo\CS\CommonFileDialogsDemo\Form1.cs, line 266
-    [ ] TaskDialog
-            Windows API Code Pack 1.1\source\Samples\TaskDialogDemo\CS\TaskDialogDemo\
-            Windows API Code Pack 1.1\source\Samples\Shell\TabbedThumbnailDemo\CS\Winforms\Form1.cs, line 107
-    [ ] NetworkListManager
-            Windows API Code Pack 1.1\source\Samples\NetworkDemo\CS\Window1.xaml, line 20
-    [ ] StockIcons
-            Windows API Code Pack 1.1\source\Samples\Shell\StockIconsDemo\CS\StockIconsDemo\Window1.xaml.cs, line 23
+[ ] Detection/auto-selection:
+    [ ] "Rate" tracks/playlists based on "evidence" - confidence level that they are main feature
+    [ ] Apply certain filters only AFTER main playlists have been determined
+        - e.g., "4 possible main playlists, but only 1 has ChapterDb results" (The Expendables 2)
+    [ ] Primary audio -OR- subtitle language
+        [ ] Most common first audio track language (main movie playlists only)
+        [ ] If no audio (e.g., silent film - NOSFERATU), use same algorithm w/ subtitles
+    [ ] Select primary language tracks -AND- tracks w/ the user's preferred language (e.g., Pan's Labyrinth)
+        [ ] Configurable via preferences
+        [ ] Prompt user for preferred language on first run?
+            [ ] Suggest languages from:
+                - InstalledUICulture: en-US
+                - CurrentCulture:     bs-Latn-BA
+                - CurrentUICulture:   en-US
 
-[ ] Allow to save as .MKA / .MKS
+[ ] Add ChapterGrabber preferences for adding leading chapter numbers
+    [X] Remove "1 - " (e.g.: "Killers" (2010)) (needs to be tested)
+    [ ] Machete (2010)
+    [ ] Battle Los Angeles (2011)
+        - Kapitola 1...16
+
+[ ] Clean up path placeholders in FileNamerPrefs (including upgrade search/replace)
+
+[ ] Add "use last folder" option to File Namer preference dialog
+[ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
+[ ] Add "Disc Info" icons to main form
 
 [ ] Cache folder?
 
-[ ] Scroll to auto-selected playlist (e.g., The Hunger Games)
+[ ] Customizable timeout values for ISAN, ChapterDb, and TMDb plugins
+[ ] Allow user to cancel HTTP requests (e.g., TMDb is taking too long)
+[ ] Allow to save as .MKA / .MKS
 
 [ ] Centralize cover art dimensions
     [ ] Download larger cover art as necessary when window is resized
     [ ] Be smart about downloading smallest sizes first
     [ ] Cache images on disk?  (w/ user preference?)
+
 [ ] Finish FormMediaCustom.cs (incl. drag-n-drop from browsers)
+
+[ ] Compile custom FFmpeg and/or MKVToolNix builds
+
+[ ] Remember window size and position (support aero snap) w/ preference to enable/disable
+[ ] "Resize Window" form: handle maximized/aero snap
 
 [ ] Decide whether to keep or remove subtitle track count in Playlist.IsPossibleMainFeature
 
-[ ] "Resize Window" form: handle maximized/aero snap
-
-[ ] Allow user to cancel HTTP requests (e.g., TMDb is taking too long)
-
 [ ] Revamp "Disc Info" dialog
-[ ] Add "Disc Info" icons to main form
 [ ] Context menu for Playlist listitems: add "Language" option
-
-[ ] Add "use last folder" option to File Namer preference dialog
-[ ] Expand placeholders in ALL paths (e.g., FormMain output path FileTextBox, command line)
 
 [ ] Fix or remove "low quality" playlist detection
 [ ] Consider chapter count and timestamps when looking for duplicate playlists (playlists w/ identical streams but different chapters are not dups)
@@ -94,17 +130,36 @@ Features
 Mono
 ====
 
+Critical
+--------
+
 1. Use Mono build of Ninject.dll
-2. Newtonsoft.Json.dll not getting copied to BDHeroGUI/bin/Debug
-3. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
+2. ICSharpCode.TextEditor.dll - Net20 NuGet package must be copied to Net40 folder
+3. Newtonsoft.Json.dll not getting copied to BDHeroGUI/bin/Debug
+
+Important
+---------
+
+2. Replace ffmpeg.exe and mkvmerge.exe with Mac versions
+
+Meh
+---
+
+[ ] Remove Mono compile-time checks (via #if __MonoCS__) and use runtime checks instead: http://stackoverflow.com/a/329072/467582.  Don't compile w/ Xamarin Studio - only use Visual Studio.
 
 Backlog
 =======
 
+[ ] Format specifiers for placeholder variables (e.g., lower/upper-case, short, long)
+
 [ ] "About 1 hour remaining" when estimates are in flux
 [ ] Estimate progress for the last 5 seconds (ever 5 seconds reset the counters for "time started" and "initial progress percentage")
 
-[ ] Scrape more information out of bdmt_eng.xml
+[ ] Scrape more information out of bdmt_eng.xml (e.g., "Charade (1963)")
+    [ ] <di:numSets>1</di:numSets>
+    [ ] <di:setNumber>1</di:setNumber>
+    [ ] <di:titleName titleNumber="1">Main Feature</di:titleName> (00001.MPLS)
+    [ ] <di:language>eng</di:language>
 
 [ ] What does AnyDVD HD report when it can't auto-detect the region code of a region-locked disc (e.g., Region A) and AnyDVD is configured to NOT remove region codes?  What does it report when it DOES remove the region code?
 
@@ -155,6 +210,16 @@ Backlog
 
 [ ] Add Windows 7 Taskbar buttons for pause/resume and cancel
 [ ] Add Windows 7 Taskbar jump lists?
+
+[ ] Code Completion:
+    [ ] When suggestion list is open, filter the list as the user types and close the suggestion list if no suggestions match what the user has typed (the text to the left of the caret).
+    [ ] Handle "%UserName%| \" (caret placed at the '|')
+    [ ] Handle "%|\" (caret placed at the '|')
+    [ ] TAB/ENTER key: disable default behavior when code completion window is open
+    [ ] Broken on Mono
+    [ ] Home/end key should jump to start/end of line when completion window is open (WPF)
+
+[ ] Allow user to use their own GitHub OAuth token (for error reporting, etc.)
 
 Chris' Plugins
 ==============

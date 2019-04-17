@@ -16,16 +16,12 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BDHero.BDROM;
-using DotNetUtils.Extensions;
+using BDHeroGUI.Components;
 using DotNetUtils.FS;
+using OSUtils.Window;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {
@@ -36,7 +32,7 @@ namespace BDHeroGUI.Forms
         private readonly bool _hasSmallJacketImage;
         private readonly string _smallJacketImagePath;
 
-        public FormDiscInfo(Disc disc)
+        public FormDiscInfo(Disc disc, IWindowMenuFactory windowMenuFactory)
         {
             InitializeComponent();
 
@@ -62,6 +58,8 @@ namespace BDHeroGUI.Forms
             discInfoFeaturesPanel.SetDisc(disc);
 
             this.EnableSelectAll();
+
+            new StandardWindowMenuBuilder(this, windowMenuFactory).Resize();
         }
 
         private static string GenerateQuickSummary(DiscMetadata metadata, DiscFileSystem fs)

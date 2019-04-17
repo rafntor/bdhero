@@ -26,6 +26,7 @@ using BDHeroGUI.Forms;
 using BDHeroGUI.Properties;
 using DotNetUtils.Extensions;
 using DotNetUtils.FS;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Components
 {
@@ -67,19 +68,50 @@ namespace BDHeroGUI.Components
             get { return listView.SelectedItems.Count > 0 ? listView.SelectedItems[0].Tag as Playlist : null; }
             set
             {
-                if (value == null)
-                {
-                    listView.SelectNone();
-                    return;
-                }
-
-                listView.SelectWhere(item => item.Tag == value);
-
-                if (listView.SelectedItems.Count == 0 && listView.Items.Count > 0)
-                {
-                    listView.Items[0].Selected = true;
-                }
+                IgnoreSelectionChange(() => SelectPlaylist(value));
+                TriggerItemSelectionChangedEvent();
             }
+        }
+
+        private void SelectPlaylist(Playlist playlist)
+        {
+            if (listView.Items.Count == 0)
+                return;
+
+            if (playlist == null)
+            {
+                listView.SelectNone();
+                return;
+            }
+
+            listView.SelectWhere(item => item.Tag == playlist);
+
+            if (listView.SelectedItems.Count == 0 && listView.Items.Count > 0)
+            {
+                listView.Items[0].Selected = true;
+            }
+
+            listView.EnsureVisible(listView.SelectedIndices[0]);
+            listView.AutoSizeColumns();
+        }
+
+        private void IgnoreSelectionChange(Action action)
+        {
+            _ignoreSelectionChange = true;
+            action();
+            _ignoreSelectionChange = false;
+        }
+
+        private void TriggerItemSelectionChangedEvent()
+        {
+            if (ItemSelectionChanged == null)
+                return;
+
+            var selectedItem = listView.SelectedItems.OfType<ListViewItem>().FirstOrDefault();
+            var isSelected = selectedItem != null && selectedItem.Selected;
+            var index = selectedItem != null ? selectedItem.Index : -1;
+
+            ItemSelectionChanged(listView, new ListViewItemSelectionChangedEventArgs(selectedItem, index, isSelected));
         }
 
         /// <summary>
@@ -106,16 +138,21 @@ namespace BDHeroGUI.Components
 
         private bool _showAllPlaylists;
 
+        private bool _ignoreSelectionChange;
+
         public PlaylistListView()
         {
             InitializeComponent();
             Load += OnLoad;
 
             listView.ItemSelectionChanged += delegate(object sender, ListViewItemSelectionChangedEventArgs args)
-                {
-                    if (ItemSelectionChanged != null)
-                        ItemSelectionChanged(sender, args);
-                };
+                                             {
+                                                 if (_ignoreSelectionChange)
+                                                     return;
+
+                                                 if (ItemSelectionChanged != null)
+                                                     ItemSelectionChanged(sender, args);
+                                             };
 
             listView.MouseClick += ListViewOnMouseClick;
             listView.MouseDoubleClick += ListViewOnMouseDoubleClick;
@@ -165,6 +202,7 @@ namespace BDHeroGUI.Components
             var playItem = new ToolStripMenuItem(assoc.HasAssociation ? string.Format("&Play with {0}", assoc.AppName) : "&Play with...");
             playItem.Click += (o, eventArgs) => FileUtils.OpenFile(playlist.FullPath, this);
             playItem.Font = new Font(playItem.Font, FontStyle.Bold);
+            playItem.Enabled = assoc.CanBeOpened;
             if (assoc.HasAssociation)
                 playItem.Image = assoc.GetProgramImage(16);
 
@@ -294,7 +332,12 @@ namespace BDHeroGUI.Components
 
         public void ShowFilterWindow()
         {
-            var result = new FormPlaylistFilter(_filter).ShowDialog(this);
+            DialogResult result;
+
+            using (var form = new FormPlaylistFilter(_filter))
+            {
+                result = form.ShowDialog(this);
+            }
 
             if (result == DialogResult.OK)
             {
@@ -305,7 +348,10 @@ namespace BDHeroGUI.Components
         public void SelectBestPlaylist()
         {
             if (!VisiblePlaylistsInSortOrder.Any())
+            {
+                SelectedPlaylist = null;
                 return;
+            }
 
             SelectedPlaylist = VisiblePlaylistsInSortOrder.FirstOrDefault(IsBestChoice) ??
                                VisiblePlaylistsInSortOrder.FirstOrDefault();

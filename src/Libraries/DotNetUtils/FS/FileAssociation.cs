@@ -21,9 +21,9 @@ using System.Drawing;
 using System.Drawing.IconLib;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using DotNetUtils.Annotations;
+using NativeAPI.Win.ShellLightWeight;
 
 namespace DotNetUtils.FS
 {
@@ -33,19 +33,19 @@ namespace DotNetUtils.FS
     public class FileAssociation
     {
         /// <summary>
-        ///     Gets the relative or absolute path to the file that <see cref="ExePath"/> is associated with and
-        ///     to which this <see cref="FileAssociation"/> object belongs.
+        ///     Gets the relative or absolute path to the file that <see href="ExePath"/> is associated with and
+        ///     to which this <see href="FileAssociation"/> object belongs.
         /// </summary>
         public readonly string FilePath;
 
         /// <summary>
-        ///     Full, absolute path to the executable associated with <see cref="FilePath"/>.
+        ///     Full, absolute path to the executable associated with <see href="FilePath"/>.
         /// </summary>
         [CanBeNull]
         public readonly string ExePath;
 
         /// <summary>
-        ///     Human-friendly name of the application associated with <see cref="FilePath"/>.
+        ///     Human-friendly name of the application associated with <see href="FilePath"/>.
         /// </summary>
         /// <example>
         ///     <c>"BDHero GUI"</c>
@@ -54,17 +54,25 @@ namespace DotNetUtils.FS
         public readonly string AppName;
 
         /// <summary>
-        ///     Human-friendly name of the product suite that contains the program associated with <see cref="FilePath"/>.
+        ///     Human-friendly name of the product suite that contains the program associated with <see href="FilePath"/>.
         /// </summary>
         [CanBeNull]
         public readonly string ProductName;
 
         /// <summary>
-        ///     Gets whether <see cref="FilePath"/> has a default program associated with it or not.
+        ///     Gets whether <see href="FilePath"/> has a default program associated with it or not.
         /// </summary>
         public bool HasAssociation
         {
             get { return ExePath != null; }
+        }
+
+        /// <summary>
+        ///     Gets whether <see href="FilePath"/> can be opened via <see href="Process.Start(string)"/>.
+        /// </summary>
+        public bool CanBeOpened
+        {
+            get { return GetDefaultProgram(FilePath) != null; }
         }
 
         [CanBeNull]
@@ -73,7 +81,7 @@ namespace DotNetUtils.FS
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new <see cref="FileAssociation"/> object containing information about the default program
+        ///     Constructs a new <see href="FileAssociation"/> object containing information about the default program
         ///     associated with the given <paramref name="filePath"/>.
         /// </summary>
         /// <param name="filePath">
@@ -144,10 +152,11 @@ namespace DotNetUtils.FS
                 return null;
             }
             var sizeObj = new Size(size, size);
-            return _multiIcon.First()
-                             .Where(img => img.Size.Equals(sizeObj))
-                             .OrderByDescending(img => img.ColorsInPalette)
-                             .FirstOrDefault();
+            var iconImages = _multiIcon.First()
+                                       .Where(img => img.Size.Equals(sizeObj))
+                                       .OrderByDescending(img => img.ColorsInPalette)
+                                       .ToArray();
+            return iconImages.FirstOrDefault();
         }
 
         /// <summary>
@@ -196,7 +205,7 @@ namespace DotNetUtils.FS
         /// <remarks>
         ///     Starting in Windows 8, file types that don't have an explicit program association
         ///     are implicitly associated with <c>C:\Windows\System32\OpenWith.exe</c>.
-        ///     Use <see cref="HasExplicitAssociation"/> to check if the file has an explicit association.
+        ///     Use <see href="HasExplicitAssociation"/> to check if the file has an explicit association.
         /// </remarks>
         [CanBeNull]
         public static string GetDefaultProgram([CanBeNull] string filePath)
@@ -262,48 +271,12 @@ namespace DotNetUtils.FS
         private static string FileExtentionInfo(AssocStr assocStr, string doctype)
         {
             uint pcchOut = 0;
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, null, ref pcchOut);
+            AssociationAPI.AssocQueryString(AssocF.Verify, assocStr, doctype, null, null, ref pcchOut);
 
             var pszOut = new StringBuilder((int)pcchOut);
-            AssocQueryString(AssocF.Verify, assocStr, doctype, null, pszOut, ref pcchOut);
+            AssociationAPI.AssocQueryString(AssocF.Verify, assocStr, doctype, null, pszOut, ref pcchOut);
             return pszOut.ToString();
         }
-
-        [DllImport("Shlwapi.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern uint AssocQueryString(AssocF flags, AssocStr str, string pszAssoc, string pszExtra, [Out] StringBuilder pszOut, [In][Out] ref uint pcchOut);
-
-        [Flags]
-        private enum AssocF
-        {
-            InitNoRemapCLSID    = 0x1,
-            InitByExeName       = 0x2,
-            OpenByExeName       = 0x2,
-            InitDefaultToStar   = 0x4,
-            InitDefaultToFolder = 0x8,
-            NoUserSettings      = 0x10,
-            NoTruncate          = 0x20,
-            Verify              = 0x40,
-            RemapRunDll         = 0x80,
-            NoFixUps            = 0x100,
-            IgnoreBaseClass     = 0x200
-        }
-
-        private enum AssocStr
-        {
-            Command = 1,
-            Executable,
-            FriendlyDocName,
-            FriendlyAppName,
-            NoOpen,
-            ShellNewValue,
-            DDECommand,
-            DDEIfExec,
-            DDEApplication,
-            DDETopic
-        }
-
-        // ReSharper restore UnusedMember.Local
-        // ReSharper restore InconsistentNaming
 
         #endregion
     }

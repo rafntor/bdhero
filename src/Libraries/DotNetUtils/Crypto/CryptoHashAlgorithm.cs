@@ -161,7 +161,7 @@ namespace DotNetUtils.Crypto
     }
 
     /// <summary>
-    ///     Concrete implementation of <seealso cref="CryptoHashAlgorithm"/> that generates MD5 sums.
+    ///     Concrete implementation of <seealso href="CryptoHashAlgorithm"/> that generates MD5 sums.
     /// </summary>
     public class MD5Algorithm : CryptoHashAlgorithm
     {
@@ -185,7 +185,7 @@ namespace DotNetUtils.Crypto
     }
 
     /// <summary>
-    ///     Concrete implementation of <seealso cref="CryptoHashAlgorithm"/> that generates SHA-1 sums.
+    ///     Concrete implementation of <seealso href="CryptoHashAlgorithm"/> that generates SHA-1 sums.
     /// </summary>
     public class SHA1Algorithm : CryptoHashAlgorithm
     {
@@ -209,7 +209,7 @@ namespace DotNetUtils.Crypto
     }
 
     /// <summary>
-    ///     Concrete implementation of <seealso cref="CryptoHashAlgorithm"/> that generates SHA-256 sums.
+    ///     Concrete implementation of <seealso href="CryptoHashAlgorithm"/> that generates SHA-256 sums.
     /// </summary>
     public class SHA256Algorithm : CryptoHashAlgorithm
     {
@@ -233,7 +233,7 @@ namespace DotNetUtils.Crypto
     }
 
     /// <summary>
-    ///     Concrete implementation of <seealso cref="CryptoHashAlgorithm"/> that generates SHA-512 sums.
+    ///     Concrete implementation of <seealso href="CryptoHashAlgorithm"/> that generates SHA-512 sums.
     /// </summary>
     public class SHA512Algorithm : CryptoHashAlgorithm
     {

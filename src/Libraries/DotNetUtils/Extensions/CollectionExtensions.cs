@@ -21,9 +21,41 @@ using System.Linq;
 
 namespace DotNetUtils.Extensions
 {
-    /// <see cref="http://stackoverflow.com/a/2984664/467582"/>
+    /// <see href="http://stackoverflow.com/a/2984664/467582"/>
     public static class CollectionExtensions
     {
+        #region Joining
+
+        public static string Join<T>(this IEnumerable<T> collection, string delimiter = "")
+        {
+            return string.Join(delimiter, collection);
+        }
+
+        public static string JoinLines<T>(this IEnumerable<T> collection)
+        {
+            return string.Join(Environment.NewLine, collection);
+        }
+
+        #endregion
+
+        #region Indentation
+
+        public static string Indent<TItem>(this IEnumerable<TItem> enumerable, int numSpaces = 4)
+        {
+            var padding = new string(' ', numSpaces);
+            return enumerable.Select(item => string.Format("{0}{1}", padding, item)).JoinLines();
+        }
+
+        public static string IndentTrim<TItem>(this IEnumerable<TItem> enumerable, int numSpaces = 4)
+        {
+            var padding = new string(' ', numSpaces);
+            return enumerable.Select(item => item.ToString())
+                             .Where(line => !string.IsNullOrWhiteSpace(line))
+                             .Select(item => string.Format("{0}{1}", padding, item)).JoinLines();
+        }
+
+        #endregion
+
         /// <summary>
         /// Adds all elements in the specified enumerable to this collection.
         /// </summary>

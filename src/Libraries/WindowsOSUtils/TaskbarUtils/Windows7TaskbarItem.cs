@@ -25,7 +25,7 @@ using OSUtils.TaskbarUtils;
 namespace WindowsOSUtils.TaskbarUtils
 {
     /// <summary>
-    /// Mono-safe wrapper for <see cref="Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager"/>.
+    /// Mono-safe wrapper for <see href="Microsoft.WindowsAPICodePack.Taskbar.TaskbarManager"/>.
     /// Requires Windows 7 or higher.
     /// </summary>
     public class Windows7TaskbarItem : ITaskbarItem

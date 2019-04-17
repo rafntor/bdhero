@@ -31,8 +31,8 @@ namespace DotNetUtils
         /// <summary>
         ///     Returns
         ///     <paramref name="assembly" /> if it is not <c>null</c>, otherwise
-        ///     <see cref="Assembly.GetEntryAssembly()" /> if it is not <c>null</c>, or
-        ///     <see cref="Assembly.GetCallingAssembly()" /> as a last resort.
+        ///     <see href="Assembly.GetEntryAssembly()" /> if it is not <c>null</c>, or
+        ///     <see href="Assembly.GetCallingAssembly()" /> as a last resort.
         ///     This method is guaranteed not to return null.
         /// </summary>
         public static Assembly AssemblyOrDefault(Assembly assembly = null)
@@ -57,7 +57,7 @@ namespace DotNetUtils
         /// </summary>
         /// <param name="assembly"></param>
         /// <returns>Date and time the assembly was linked.</returns>
-        /// <seealso cref="http://stackoverflow.com/a/1600990/467582" />
+        /// <seealso href="http://stackoverflow.com/a/1600990/467582" />
         public static DateTime GetLinkerTimestamp(Assembly assembly = null)
         {
             assembly = AssemblyOrDefault(assembly);
@@ -91,9 +91,9 @@ namespace DotNetUtils
         ///     This is usually, but not necessarily, the file name of the manifest file of the assembly,
         ///     minus its extension.
         /// </summary>
-        /// <param name="assembly">See <see cref="AssemblyOrDefault" />.</param>
+        /// <param name="assembly">See <see href="AssemblyOrDefault" />.</param>
         /// <returns>The simple name of the assembly.</returns>
-        /// <seealso cref="AssemblyOrDefault" />
+        /// <seealso href="AssemblyOrDefault" />
         public static string GetAssemblyName(Assembly assembly = null)
         {
             return AssemblyOrDefault(assembly).GetName().Name;
@@ -114,7 +114,7 @@ namespace DotNetUtils
         /// <summary>
         ///     Gets the assembly's version.
         /// </summary>
-        /// <param name="assembly">See <see cref="AssemblyOrDefault" />.</param>
+        /// <param name="assembly">See <see href="AssemblyOrDefault" />.</param>
         /// <returns>The assembly's version.</returns>
         public static Version GetAssemblyVersion(Assembly assembly = null)
         {
@@ -147,7 +147,7 @@ namespace DotNetUtils
         /// <example><pre>GetAssemblyVersionShort(1.2.4.8) -> 1.2.4.8</pre></example>
         /// <example><pre>GetAssemblyVersionShort(1.0.0.0, true) -> 1.0</pre></example>
         /// <example><pre>GetAssemblyVersionShort(1.2.0.0, true) -> 1.2</pre></example>
-        /// <seealso cref="AssemblyOrDefault" />
+        /// <seealso href="AssemblyOrDefault" />
         public static string GetAssemblyVersionShort(Assembly assembly = null, bool keepMinorIfZero = false)
         {
             var version = Regex.Replace(GetAssemblyVersion(assembly).ToString(), @"(?:\.0)+$", "");
@@ -184,7 +184,7 @@ namespace DotNetUtils
         /// <summary>
         ///     Gets the path to the directory that contains the given assembly.
         /// </summary>
-        /// <seealso cref="AssemblyOrDefault" />
+        /// <seealso href="AssemblyOrDefault" />
         public static string GetInstallDir(Assembly assembly = null)
         {
             return Path.GetDirectoryName(AssemblyOrDefault(assembly).Location);
@@ -193,7 +193,7 @@ namespace DotNetUtils
         /// <summary>
         ///     Gets the path to the directory that contains the assembly for the given <paramref name="type" />.
         /// </summary>
-        /// <seealso cref="AssemblyOrDefault" />
+        /// <seealso href="AssemblyOrDefault" />
         public static string GetInstallDir(Type type)
         {
             return Path.GetDirectoryName(AssemblyOrDefault(Assembly.GetAssembly(type)).Location);

@@ -19,12 +19,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using DotNetUtils.Annotations;
 
 namespace BDHero.Plugin
 {
-    /// <see cref="http://www.codeproject.com/Articles/6334/Plug-ins-in-C"/>
+    /// <see href="http://www.codeproject.com/Articles/6334/Plug-ins-in-C"/>
     [UsedImplicitly]
     public class PluginRepository : IPluginRepository
     {
@@ -60,10 +59,10 @@ namespace BDHero.Plugin
         public IList<IMuxerPlugin>            MuxerPlugins            { get { return PluginsOfType<IMuxerPlugin>(); } }
         public IList<IPostProcessorPlugin>    PostProcessorPlugins    { get { return PluginsOfType<IPostProcessorPlugin>(); } }
 
-        public void ReportProgress(IPlugin plugin, double percentComplete, string status)
+        public void ReportProgress(IPlugin plugin, double percentComplete, string shortStatus, string longStatus = null)
         {
             var progressProvider = GetProgressProvider(plugin);
-            progressProvider.Update(percentComplete, status);
+            progressProvider.Update(percentComplete, shortStatus, longStatus);
         }
 
         public ProgressProvider GetProgressProvider(IPlugin plugin)

@@ -16,22 +16,23 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Windows.Forms;
+using DotNetUtils.Annotations;
 using OSUtils.DriveDetector;
+using NativeAPI.Win.Device;
+using NativeAPI.Win.User;
 
 namespace WindowsOSUtils.DriveDetector
 {
     /// <summary>
-    ///     A Windows-specific implementation of the <see cref="IDriveDetector"/> interface.
+    ///     A Windows-specific implementation of the <see href="IDriveDetector"/> interface.
     /// </summary>
     /// <remarks>
     ///     Based on the CodeProject article "<a href="http://www.codeproject.com/Articles/18062/Detecting-USB-Drive-Removal-in-a-C-Program">Detecting USB Drive Removal in a C# Program</a>".
     /// </remarks>
+    [UsedImplicitly]
     public class WindowsDriveDetector : IDriveDetector
     {
         public event DriveDetectorEventHandler DeviceArrived;
@@ -39,44 +40,46 @@ namespace WindowsOSUtils.DriveDetector
 
         public void WndProc(ref Message m)
         {
-            if (!IsDeviceChangeEvent(m)) return;
-            if (!IsArrivalOrRemovalEvent(m)) return;
-            if (!IsLogicalVolume(m)) return;
+            WindowMessage msg = m;
+
+            if (!IsDeviceChangeEvent(msg)) return;
+            if (!IsArrivalOrRemovalEvent(msg)) return;
+            if (!IsLogicalVolume(msg)) return;
 
             // WM_DEVICECHANGE can have several meanings depending on the WParam value...
-            switch (GetEventType(m))
+            switch (msg.WParam)
             {
-                case DBT_DEVICEARRIVAL:
-                    HandleDeviceArrival(m);
+                case WParam.DBT_DEVICEARRIVAL:
+                    HandleDeviceArrival(msg);
                     break;
-                case DBT_DEVICEREMOVECOMPLETE:
-                    HandleDeviceAfterRemove(m);
+                case WParam.DBT_DEVICEREMOVECOMPLETE:
+                    HandleDeviceAfterRemove(msg);
                     break;
             }
         }
 
         /// <summary>
-        /// New device has just arrived.
+        ///     New device has just arrived.
         /// </summary>
-        private void HandleDeviceArrival(Message m)
+        private void HandleDeviceArrival(WindowMessage msg)
         {
-            Notify(DeviceArrived, m);
+            Notify(DeviceArrived, msg);
         }
 
         /// <summary>
-        /// Device has been removed.
+        ///     Device has been removed.
         /// </summary>
-        private void HandleDeviceAfterRemove(Message m)
+        private void HandleDeviceAfterRemove(WindowMessage msg)
         {
-            Notify(DeviceRemoved, m);
+            Notify(DeviceRemoved, msg);
         }
 
-        private void Notify(DriveDetectorEventHandler handler, Message m)
+        private void Notify(DriveDetectorEventHandler handler, WindowMessage msg)
         {
             if (handler == null)
                 return;
-            
-            var vol = (DEV_BROADCAST_VOLUME)Marshal.PtrToStructure(m.LParam, typeof(DEV_BROADCAST_VOLUME));
+
+            var vol = msg.GetLParamAsStruct<DEV_BROADCAST_VOLUME>();
             var driveLetter = DriveMaskToLetter(vol.dbcv_unitmask);
             var drivePath = driveLetter + @":\";
 
@@ -90,132 +93,45 @@ namespace WindowsOSUtils.DriveDetector
 
         #region Win32 helpers
 
-        private static bool IsDeviceChangeEvent(Message m)
+        private static bool IsDeviceChangeEvent(WindowMessage msg)
         {
-            return WM_DEVICECHANGE == m.Msg;
+            return msg.Is(WindowMessageType.WM_DEVICECHANGE);
         }
 
-        private static bool IsArrivalOrRemovalEvent(Message m)
+        private static bool IsArrivalOrRemovalEvent(WindowMessage msg)
         {
-            var eventType = GetEventType(m);
-            return DBT_DEVICEARRIVAL == eventType
-                || DBT_DEVICEREMOVECOMPLETE == eventType
-            ;
+            return msg.IsOneOf(WParam.DBT_DEVICEARRIVAL,
+                               WParam.DBT_DEVICEREMOVECOMPLETE);
         }
 
-        private static bool IsLogicalVolume(Message m)
+        private static bool IsLogicalVolume(WindowMessage msg)
         {
-            return DBT_DEVTYP_VOLUME == GetDeviceType(m);
-        }
-
-        private static int GetEventType(Message m)
-        {
-            return m.WParam.ToInt32();
-        }
-
-        private static int GetDeviceType(Message m)
-        {
-            return Marshal.ReadInt32(m.LParam, 4);
+            return msg.Is(LParam.DBT_DEVTYP_VOLUME);
         }
 
         /// <summary>
-        /// Gets drive letter from a bit mask where bit 0 = A, bit 1 = B etc.
-        /// There can actually be more than one drive in the mask but we 
-        /// just use the last one in this case.
+        ///     Gets the drive letter from a bit mask where bit 0 = A, bit 1 = B, bit 2 = C, etc.
+        ///     There can actually be more than one drive in the mask but we just return the first one in this case.
         /// </summary>
-        /// <param name="mask"></param>
-        /// <returns>The drive letter represented by the bit mask</returns>
-        private static char DriveMaskToLetter(int mask)
+        /// <param name="driveMask">
+        ///     Bit mask in which each bit represents a drive letter.
+        /// </param>
+        /// <returns>
+        ///     The drive letter represented by the bit mask.
+        /// </returns>
+        private static char DriveMaskToLetter(int driveMask)
         {
-            const string drives = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+            var curMask = driveMask;
 
-//            // 1 = A
-//            // 2 = B
-//            // 4 = C...
-//            int cnt = 0;
-//            int pom = mask / 2;
-//            while (pom != 0)
-//            {
-//                // while there is any bit set in the mask
-//                // shift it to the righ...                
-//                pom = pom / 2;
-//                cnt++;
-//            }
-//
-//            return cnt < drives.Length ? drives[cnt] : '?';
-
-            int i;
-
-            for (i = 0; i < 26; ++i)
+            for (var letter = 'A'; letter <= 'Z'; letter++)
             {
-                if ((mask & 0x1) != 0)
-                    break;
-                mask = mask >> 1;
+                if ((curMask & 0x1) != 0)
+                    return letter;
+                curMask = curMask >> 1;
             }
 
-            if (i >= drives.Length)
-                throw new ArgumentOutOfRangeException("Unable to determine drive letter for mask value " + mask);
-
-            return drives[i];
+            throw new ArgumentOutOfRangeException("driveMask", driveMask, "Unable to determine drive letter from mask value.");
         }
-
-        #endregion
-
-        #region Win32 constants
-
-// ReSharper disable InconsistentNaming
-
-        /// <summary>
-        ///     Notifies an application of a change to the hardware configuration of a device or the computer.
-        /// </summary>
-        private const int WM_DEVICECHANGE = 0x0219;
-        
-        /// <summary>
-        ///     A device or piece of media has been inserted and is now available.
-        /// </summary>
-        private const int DBT_DEVICEARRIVAL = 0x8000;
-
-        /// <summary>
-        ///     Permission is requested to remove a device or piece of media.
-        ///     Any application can deny this request and cancel the removal.
-        /// </summary>
-        private const int DBT_DEVICEQUERYREMOVE = 0x8001;
-
-        /// <summary>
-        ///     A device or piece of media has been removed.
-        /// </summary>
-        private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
-        
-        /// <summary>
-        ///     Drive type is logical volume.
-        /// </summary>
-        private const int DBT_DEVTYP_VOLUME = 0x00000002;
-
-// ReSharper restore InconsistentNaming
-
-        #endregion
-
-        #region Win32 structures
-
-// ReSharper disable InconsistentNaming
-// ReSharper disable MemberCanBePrivate.Local
-// ReSharper disable FieldCanBeMadeReadOnly.Local
-
-        /// <summary>
-        ///     Struct for parameters of the <see cref="WM_DEVICECHANGE"/> message.
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential)]
-        private struct DEV_BROADCAST_VOLUME
-        {
-            public int dbcv_size;
-            public int dbcv_devicetype;
-            public int dbcv_reserved;
-            public int dbcv_unitmask;
-        }
-
-// ReSharper restore FieldCanBeMadeReadOnly.Local
-// ReSharper restore MemberCanBePrivate.Local
-// ReSharper restore InconsistentNaming
 
         #endregion
     }

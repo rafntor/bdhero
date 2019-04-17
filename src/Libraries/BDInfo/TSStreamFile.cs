@@ -152,10 +152,13 @@ namespace BDInfo
 
     /// <summary>
     /// Represents a BDMV/STREAM/XXXXX.M2TS file that contains the physical stream data
-    /// described by the corresponding <see cref="TSStreamClipFile"/> (BDMV/CLIPINF/XXXXX.CLPI file).
+    /// described by the corresponding <see href="TSStreamClipFile"/> (BDMV/CLIPINF/XXXXX.CLPI file).
     /// </summary>
     public class TSStreamFile
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public FileInfo FileInfo = null;
         public string Name = null;
         public long Size = 0;
@@ -457,7 +460,7 @@ namespace BDInfo
             int dataSize = 16384;
             FileStream fileStream = null;
             try
-            {                
+            {
                 string fileName;
                 if (BDInfoSettings.EnableSSIF &&
                     InterleavedFile != null)
@@ -868,7 +871,9 @@ namespace BDInfo
                                         catch (Exception ex)
                                         {
                                             // TODO
-                                            Console.WriteLine(ex.Message);
+//                                            Console.WriteLine(ex.Message);
+
+                                            Logger.Warn("Exception thrown while parsing Program Map Tables (PMTs) - ignoring", ex);
                                         }
                                     }
                                 }
@@ -1548,6 +1553,6 @@ namespace BDInfo
             }
 
             return stream;
-        } 
+        }
     }
 }

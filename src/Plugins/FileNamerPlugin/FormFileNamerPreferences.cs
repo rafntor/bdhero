@@ -21,9 +21,9 @@ using System.Linq;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHero.JobQueue;
-using DotNetUtils.Controls;
-using DotNetUtils.Extensions;
-using DotNetUtils.FS;
+using BDHero.SyntaxHighlighting;
+using UILib.Extensions;
+using UILib.WinForms.Controls;
 
 namespace BDHero.Plugin.FileNamer
 {
@@ -73,10 +73,13 @@ namespace BDHero.Plugin.FileNamer
             InitializeComponent();
             Load += OnLoad;
             this.EnableSelectAll();
+
+            tabControl1.TabPages.Remove(tabPage2);
         }
 
         private void OnLoad(object sender, EventArgs eventArgs)
         {
+            InitTextEditors();
             InitLabelBackgrounds();
             InitValues();
             InitReplaceSpaces();
@@ -90,6 +93,15 @@ namespace BDHero.Plugin.FileNamer
         #endregion
 
         #region Initialization
+
+        private void InitTextEditors()
+        {
+            textBoxMovieDirectory.Editor.SetSyntaxFromExtension(MoviePathXshd.Extension);
+            textBoxTVShowDirectory.Editor.SetSyntaxFromExtension(TVShowPathXshd.Extension);
+
+            textBoxMovieFileName.Editor.SetSyntaxFromExtension(MovieNameXshd.Extension);
+            textBoxTVShowFileName.Editor.SetSyntaxFromExtension(TVShowNameXshd.Extension);
+        }
 
         private void InitLabelBackgrounds()
         {
@@ -197,10 +209,7 @@ namespace BDHero.Plugin.FileNamer
             textBoxTVShowReleaseDateFormat.TextChanged += textBoxTVShowReleaseDateFormat_TextChanged;
 
             selectableLabelMoviePlaceholders.SelectVariablesOnClick();
-            textBoxMovieFileName.SelectVariablesOnClick();
-
             selectableLabelTVShowPlaceholders.SelectVariablesOnClick();
-            textBoxTVShowFileName.SelectVariablesOnClick();
         }
 
         private void InitComboBoxEvents()

@@ -15,13 +15,12 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BDHero.Exceptions;
 using BDHero.Plugin;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 using log4net;
 
 namespace BDHero.Startup
@@ -68,22 +67,30 @@ namespace BDHero.Startup
 
         public void LogPlugins()
         {
-            _logger.InfoFormat("Loaded {0} plugins:", _pluginRepository.Count);
-            LogPlugins("Disc Readers", _pluginRepository.DiscReaderPlugins);
-            LogPlugins("Metadata Providers", _pluginRepository.MetadataProviderPlugins);
-            LogPlugins("Auto Detectors", _pluginRepository.AutoDetectorPlugins);
-            LogPlugins("Name Providers", _pluginRepository.NameProviderPlugins);
-            LogPlugins("Muxers", _pluginRepository.MuxerPlugins);
-            LogPlugins("Post Processors", _pluginRepository.PostProcessorPlugins);
+            var categories = new[]
+                             {
+                                 LogPlugins("Disc Readers", _pluginRepository.DiscReaderPlugins),
+                                 LogPlugins("Metadata Providers", _pluginRepository.MetadataProviderPlugins),
+                                 LogPlugins("Auto Detectors", _pluginRepository.AutoDetectorPlugins),
+                                 LogPlugins("Name Providers", _pluginRepository.NameProviderPlugins),
+                                 LogPlugins("Muxers", _pluginRepository.MuxerPlugins),
+                                 LogPlugins("Post Processors", _pluginRepository.PostProcessorPlugins),
+                             };
+
+            var lines = categories.Select(list => list.Indent()).JoinLines();
+
+            _logger.InfoFormat("Loaded {0} plugins:\n{1}", _pluginRepository.Count, lines);
         }
 
-        private void LogPlugins<T>(string name, IList<T> plugins) where T : IPlugin
+        private List<string> LogPlugins<T>(string name, IList<T> plugins) where T : IPlugin
         {
-            _logger.InfoFormat("\t {0} ({1}){2}", name, plugins.Count, plugins.Any() ? ":" : "");
+            var lines = new List<string>();
+            lines.Add(string.Format("{0} ({1}){2}", name, plugins.Count, plugins.Any() ? ":" : ""));
             foreach (var plugin in plugins)
             {
-                _logger.InfoFormat("\t\t {0} v{1} - {2} - {3}", plugin.Name, plugin.AssemblyInfo.Version, plugin.AssemblyInfo.Guid, plugin.AssemblyInfo.Location);
+                lines.Add(string.Format("{0} v{1} ({2})", plugin.Name, plugin.AssemblyInfo.Version, plugin.AssemblyInfo.Guid).Indent());
             }
+            return lines;
         }
     }
 }

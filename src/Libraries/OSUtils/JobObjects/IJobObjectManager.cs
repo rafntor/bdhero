@@ -25,10 +25,10 @@ namespace OSUtils.JobObjects
     public interface IJobObjectManager
     {
         /// <summary>
-        ///     Creates a new instance of a class that implements the <see cref="IJobObject"/> interface
+        ///     Creates a new instance of a class that implements the <see href="IJobObject"/> interface
         ///     for the current operating system.
         /// </summary>
-        /// <returns>OS-specific <see cref="IJobObject"/> instance.</returns>
+        /// <returns>OS-specific <see href="IJobObject"/> instance.</returns>
         IJobObject CreateJobObject();
 
         /// <summary>
@@ -73,8 +73,8 @@ namespace OSUtils.JobObjects
         ///         This method will <em>not</em> work with Visual Studio's <c>vhost.exe</c> debugging process.
         ///     </para>
         /// </remarks>
-        /// <seealso cref="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx"/>
-        /// <seealso cref="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx"/>
+        /// <seealso href="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx"/>
+        /// <seealso href="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx"/>
         bool TryBypassPCA(string[] args);
     }
 }

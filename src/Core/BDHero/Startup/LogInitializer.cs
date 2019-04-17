@@ -16,11 +16,11 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using DotNetUtils.Extensions;
 
 // ReSharper disable ClassNeverInstantiated.Global
 namespace BDHero.Startup
@@ -71,6 +71,70 @@ namespace BDHero.Startup
                 log4net.Config.XmlConfigurator.Configure(new MemoryStream(Encoding.UTF8.GetBytes(defaultLogConfig), false));
                 Logger.Error("Unable to create log4net config file", e);
             }
+        }
+
+        public void LogDirectoryPaths()
+        {
+            var paths = new[]
+                        {
+                            _directoryLocator.InstallDir,
+                            _directoryLocator.AppConfigDir,
+                            _directoryLocator.PluginConfigDir,
+                            _directoryLocator.RequiredPluginDir,
+                            _directoryLocator.CustomPluginDir,
+                            _directoryLocator.LogDir,
+                        };
+
+            var commonRoot = GetCommonRoot(paths);
+
+            var lines = new[]
+                        {
+                            string.Format("IsPortable        = {0}", _directoryLocator.IsPortable),
+                            string.Format("RootDir           = {0}", commonRoot),
+                            string.Format("InstallDir        = {0}", SubPath(commonRoot, _directoryLocator.InstallDir)),
+                            string.Format("AppConfigDir      = {0}", SubPath(commonRoot, _directoryLocator.AppConfigDir)),
+                            string.Format("PluginConfigDir   = {0}", SubPath(commonRoot, _directoryLocator.PluginConfigDir)),
+                            string.Format("RequiredPluginDir = {0}", SubPath(commonRoot, _directoryLocator.RequiredPluginDir)),
+                            string.Format("CustomPluginDir   = {0}", SubPath(commonRoot, _directoryLocator.CustomPluginDir)),
+                            string.Format("LogDir            = {0}", SubPath(commonRoot, _directoryLocator.LogDir)),
+                        };
+
+            Logger.InfoFormat("Directories:\n{0}", lines.Indent());
+        }
+
+        private static string SubPath(string commonRoot, string fullPath)
+        {
+            var subPath = fullPath.Substring(commonRoot.Length);
+            if (subPath.Any())
+                return subPath;
+            return ".";
+        }
+
+        private static string GetCommonRoot(params string[] paths)
+        {
+            if (paths.Length < 2)
+                return paths.FirstOrDefault();
+
+            var lowerPaths = paths.Select(s => s.ToLower()).ToArray();
+
+            var first = lowerPaths.First();
+            var root = new StringBuilder();
+
+            foreach (var ch in first)
+            {
+                var curRoot = root.ToString() + ch;
+
+                foreach (var path in lowerPaths.Skip(1))
+                {
+                    if (!path.StartsWith(curRoot))
+                        goto end;
+                }
+
+                root.Append(ch);
+            }
+
+        end:
+            return paths.First().Substring(0, root.Length);
         }
     }
 }

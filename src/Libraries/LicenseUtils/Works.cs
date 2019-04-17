@@ -1,4 +1,21 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2014 Andrew C. Dvorak
+//
+// This file is part of BDHero.
+//
+// BDHero is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BDHero is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
+
+using System.Collections.Generic;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using Newtonsoft.Json;
@@ -6,14 +23,14 @@ using Newtonsoft.Json;
 namespace LicenseUtils
 {
     /// <summary>
-    ///     Collection of <see cref="Work"/>s distributed with BDHero.
+    ///     Collection of <see href="Work"/>s distributed with BDHero.
     /// </summary>
     [UsedImplicitly]
     public class Works
     {
         /// <summary>
-        ///     Gets the concatenation of <see cref="Derivatives"/>, <see cref="Originals"/>, <see cref="Snippets"/>,
-        ///     <see cref="Packages"/>, <see cref="Libraries"/>, and <see cref="Binaries"/>.
+        ///     Gets the concatenation of <see href="Derivatives"/>, <see href="Originals"/>, <see href="Snippets"/>,
+        ///     <see href="Packages"/>, <see href="Libraries"/>, and <see href="Binaries"/>.
         /// </summary>
         [JsonIgnore]
         public Work[] All
@@ -32,12 +49,11 @@ namespace LicenseUtils
         }
 
         /// <summary>
-        ///     Works derived from <see cref="Originals"/>.
+        ///     Works derived from <see href="Originals"/>.
         /// </summary>
         /// <example>
         ///     BDHero.
         /// </example>
-        [JsonProperty("derivatives")]
         public Work[] Derivatives;
 
         /// <summary>
@@ -46,7 +62,6 @@ namespace LicenseUtils
         /// <example>
         ///     BDInfo.
         /// </example>
-        [JsonProperty("originals")]
         public Work[] Originals;
 
         /// <summary>
@@ -55,7 +70,6 @@ namespace LicenseUtils
         /// <example>
         ///     Plug-ins in C#, Detecting USB Drive Removal in a C# Program, JobObject.cs.
         /// </example>
-        [JsonProperty("snippets")]
         public Work[] Snippets;
 
         /// <summary>
@@ -64,7 +78,6 @@ namespace LicenseUtils
         /// <example>
         ///     Json.NET.
         /// </example>
-        [JsonProperty("packages")]
         public Work[] Packages;
 
         /// <summary>
@@ -73,7 +86,6 @@ namespace LicenseUtils
         /// <example>
         ///     Windows API Code Pack.
         /// </example>
-        [JsonProperty("libraries")]
         public Work[] Libraries;
 
         /// <summary>
@@ -82,7 +94,6 @@ namespace LicenseUtils
         /// <example>
         ///     FFmpeg, MKVToolNix.
         /// </example>
-        [JsonProperty("binaries")]
         public Work[] Binaries;
 
         public override string ToString()

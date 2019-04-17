@@ -17,17 +17,15 @@
 
 using System;
 using System.Net.NetworkInformation;
-using System.Threading;
 using DotNetUtils.Annotations;
-using DotNetUtils.TaskUtils;
 using Microsoft.WindowsAPICodePack.Net;
 using OSUtils.Net;
 
 namespace WindowsOSUtils.Net
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.
-    ///     Faster and more accurate than <see cref="GenericNetworkStatusMonitor"/>.
+    ///     Concrete implementation of the <see href="INetworkStatusMonitor"/> interface that supports Windows Vista and newer.
+    ///     Faster and more accurate than <see href="GenericNetworkStatusMonitor"/>.
     /// </summary>
     [UsedImplicitly]
     public class Windows7NetworkStatusMonitor : INetworkStatusMonitor
@@ -55,8 +53,6 @@ namespace WindowsOSUtils.Net
             }
         }
 
-#pragma warning disable 1591
-
         public bool IsOnline
         {
             get { return NetworkListManager.IsConnectedToInternet; }
@@ -66,18 +62,11 @@ namespace WindowsOSUtils.Net
 
         public void TestConnectionAsync()
         {
-            new TaskBuilder()
-                .OnCurrentThread()
-                .DoWork(DoNothing)
-                .Finally(NotifyObservers)
-                .Build()
-                .Start();
+            NotifyObservers();
         }
 
-#pragma warning restore 1591
-
         /// <summary>
-        ///     Constructs a new <see cref="Windows7NetworkStatusMonitor"/> object.
+        ///     Constructs a new <see href="Windows7NetworkStatusMonitor"/> object.
         /// </summary>
         public Windows7NetworkStatusMonitor()
         {
@@ -89,10 +78,6 @@ namespace WindowsOSUtils.Net
         {
             if (NetworkStatusChanged != null)
                 NetworkStatusChanged(IsOnline);
-        }
-
-        private void DoNothing(IThreadInvoker threadinvoker, CancellationToken cancellationtoken)
-        {
         }
     }
 }

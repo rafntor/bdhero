@@ -16,15 +16,11 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using DotNetUtils.Extensions;
+using UILib.Extensions;
 
 namespace BDHeroGUI.Forms
 {

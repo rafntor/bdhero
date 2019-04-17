@@ -15,20 +15,27 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
+#undef DEBUG_SCAN_ERRORS
+
 using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
 using BDHero.BDROM;
+using BDHero.Plugin.DiscReader.Exceptions;
 using BDHero.Plugin.DiscReader.Transformer;
 using BDInfo;
+using DotNetUtils.Annotations;
+using DotNetUtils.Exceptions;
 
 namespace BDHero.Plugin.DiscReader
 {
+    [UsedImplicitly]
     public class DiscReader : IDiscReaderPlugin
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public IPluginHost Host { get; private set; }
 
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
@@ -41,7 +48,7 @@ namespace BDHero.Plugin.DiscReader
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public void LoadPlugin(IPluginHost host, PluginAssemblyInfo assemblyInfo)
         {
@@ -60,14 +67,12 @@ namespace BDHero.Plugin.DiscReader
 
             Host.ReportProgress(this, 0.0, "Scanning BD-ROM...");
 
-            var bdrom = new BDInfo.BDROM(bdromPath);
-            bdrom.ScanProgress += BDROMOnScanProgress;
-            bdrom.Scan(cancellationToken);
+            var bdrom = ScanBDROM(cancellationToken, bdromPath);
 
             if (cancellationToken.IsCancellationRequested)
                 return null;
 
-            Host.ReportProgress(this, 99.0, "Transforming BDInfo structure into BDHero structure...");
+            Host.ReportProgress(this, 99.0, "Transforming BDInfo => BDHero...", "Transforming BDInfo structure into BDHero structure...");
 
             var disc = DiscTransformer.Transform(bdrom);
 
@@ -76,15 +81,68 @@ namespace BDHero.Plugin.DiscReader
             return disc;
         }
 
+        private BDInfo.BDROM ScanBDROM(CancellationToken cancellationToken, string bdromPath)
+        {
+            try
+            {
+                var bdrom = new BDInfo.BDROM(bdromPath);
+                bdrom.ScanProgress += BDROMOnScanProgress;
+                bdrom.PlaylistFileScanError += BDROMOnPlaylistFileScanError;
+                bdrom.StreamFileScanError += BDROMOnStreamFileScanError;
+                bdrom.StreamClipFileScanError += BDROMOnStreamClipFileScanError;
+                bdrom.Scan(cancellationToken);
+                return bdrom;
+            }
+            catch (Exception e)
+            {
+                if (e is ArgumentException ||
+                    e is UnauthorizedAccessException ||
+                    e is IOException)
+                {
+                    throw new ID10TException(e.Message, e);
+                }
+                throw;
+            }
+        }
+
         private void BDROMOnScanProgress(BDROMScanProgressState bdromState)
         {
-#if false
-            Console.WriteLine("BDROM: {0}: scanning {1} of {2} ({3}%).  Total: {4} of {5} ({6}%).",
-                bdromState.FileType, bdromState.CurFileOfType, bdromState.NumFilesOfType, bdromState.TypeProgress.ToString("0.00"),
-                bdromState.CurFileOverall, bdromState.NumFilesOverall, bdromState.OverallProgress.ToString("0.00"));
-#endif
             Host.ReportProgress(this, bdromState.OverallProgress * .99,
+                                string.Format("{1} ({0})", bdromState.FileType, bdromState.FileName),
                                 string.Format("Scanning {0} file {1}", bdromState.FileType, bdromState.FileName));
+        }
+
+        private bool BDROMOnPlaylistFileScanError(TSPlaylistFile playlistFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning playlist file {0}", playlistFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
+            throw new PlaylistFileScanException(message, exception) { PlaylistFile = playlistFile };
+#endif
+        }
+
+        private bool BDROMOnStreamFileScanError(TSStreamFile streamFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning stream file {0}", streamFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
+            throw new StreamFileScanException(message, exception) { StreamFile = streamFile };
+#endif
+        }
+
+        private bool BDROMOnStreamClipFileScanError(TSStreamClipFile streamClipFile, Exception exception)
+        {
+            var message = string.Format("Error occurred while scanning stream clip file {0}", streamClipFile.Name);
+#if DEBUG_SCAN_ERRORS
+            Logger.Warn(message, exception);
+            return true;
+#else
+            throw new StreamClipFileScanException(message, exception) { StreamClipFile = streamClipFile };
+#endif
         }
     }
 }

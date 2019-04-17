@@ -16,9 +16,6 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using BDHero.BDROM;
 using BDHero.Plugin;
@@ -139,8 +136,8 @@ namespace IsanPlugin
         {
             var match = TitleYearLengthRegex.Match(text);
             isan.Title = match.Groups[1].Value.Trim();
-            isan.Year = Int32.Parse(match.Groups[2].Value.Trim());
-            isan.LengthMin = Int32.Parse(match.Groups[3].Value.Trim());
+            isan.Year = match.Groups[2].Value.Trim().ParseIntInvariant();
+            isan.LengthMin = match.Groups[3].Value.Trim().ParseIntInvariant();
         }
 
         private void SetParent(VIsan vIsan, CQ dom)

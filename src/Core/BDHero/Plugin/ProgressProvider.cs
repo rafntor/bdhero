@@ -16,13 +16,12 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Timers;
+using DotNetUtils.Exceptions;
 using DotNetUtils.TaskUtils;
 
 namespace BDHero.Plugin
@@ -71,14 +70,9 @@ namespace BDHero.Plugin
         }
 
         /// <summary>
-        /// DO NOT MODIFY DIRECTLY!  Used internally by <see cref="PercentComplete"/>.
+        /// DO NOT MODIFY DIRECTLY!  Used internally by <see href="PercentComplete"/>.
         /// </summary>
         private double _percentComplete;
-
-        /// <summary>
-        /// Gets or sets what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
-        /// </summary>
-        public string Status { get; private set; }
 
         #endregion
 
@@ -88,6 +82,16 @@ namespace BDHero.Plugin
         /// Gets the current state of the process.
         /// </summary>
         public ProgressProviderState State { get; protected set; }
+
+        /// <summary>
+        /// Gets a short human-readable description of what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
+        /// </summary>
+        public string ShortStatus { get; private set; }
+
+        /// <summary>
+        /// Gets a detailed human-readable description of what the provider is currently doing.  E.G., "Parsing 00800.MPLS", "Querying TMDb", "Muxing to MKV".
+        /// </summary>
+        public string LongStatus { get; private set; }
 
         /// <summary>
         /// Gest the total amount of time spent actively running (i.e., not paused).
@@ -110,7 +114,7 @@ namespace BDHero.Plugin
         #region Public events
 
         /// <summary>
-        /// Invoked approximately once every second and whenever the <see cref="State"/> or <see cref="PercentComplete"/> changes.
+        /// Invoked approximately once every second and whenever the <see href="State"/> or <see href="PercentComplete"/> changes.
         /// </summary>
         public event ProgressUpdateHandler Updated;
 
@@ -159,14 +163,14 @@ namespace BDHero.Plugin
         private readonly object _lock = new object();
 
         /// <summary>
-        /// Last time the <see cref="_timer"/> interval elapsed.  Used to calculate <see cref="RunTime"/>.
+        /// Last time the <see href="_timer"/> interval elapsed.  Used to calculate <see href="RunTime"/>.
         /// </summary>
         private DateTime _lastTick;
 
         private TimeSpan _lastEstimate;
 
         /// <summary>
-        /// The value of <see cref="_lastTick"/> the last time <see cref="CalculateTimeRemaining"/> was called.
+        /// The value of <see href="_lastTick"/> the last time <see href="CalculateTimeRemaining"/> was called.
         /// </summary>
         private DateTime _lastCalculationTick;
 
@@ -181,7 +185,7 @@ namespace BDHero.Plugin
         private readonly Stopwatch _stopwatch = new Stopwatch();
 
         /// <summary>
-        /// The last time <see cref="Updated"/> event handlers were notified of a progress update.
+        /// The last time <see href="Updated"/> event handlers were notified of a progress update.
         /// </summary>
         private DateTime _lastNotified;
 
@@ -216,10 +220,12 @@ namespace BDHero.Plugin
         [MethodImpl(MethodImplOptions.NoInlining)]
         private void LogMethod(MethodBase method, MethodEntry entryType)
         {
+#if DEBUG_CONCURRENCY
             var @params = method.GetParameters();
             var strMethod = string.Format("{0}({1})", method.Name, string.Join(", ", @params.Select(info => info.ParameterType.Name + " " + info.Name)));
             var name = Plugin != null ? Plugin.Name : "??? UNINITIALIZED ???";
             Logger.DebugFormat("ProgressProvider for \"{0}\" plugin - {1} {2} method", name, entryType, strMethod);
+#endif
         }
 
         [MethodImpl(MethodImplOptions.NoInlining)]
@@ -240,9 +246,10 @@ namespace BDHero.Plugin
 
         #region Update notification
 
-        private void NotifyObservers()
+        private void NotifyObservers(bool force = true)
         {
-            if (!CanUpdate) return;
+            if (!CanUpdate && !force)
+                return;
 
             if (Updated != null)
                 Updated(this);
@@ -276,7 +283,7 @@ namespace BDHero.Plugin
         #region Timer methods
 
         /// <summary>
-        /// Called by <see cref="_timer"/> whenever its interval elapses.
+        /// Called by <see href="_timer"/> whenever its interval elapses.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="elapsedEventArgs"></param>
@@ -285,7 +292,7 @@ namespace BDHero.Plugin
             LogMethodEntry();
 
             CalculateTimeRemaining();
-            NotifyObservers();
+            NotifyObservers(false);
             SetLastTick();
 
             LogMethodExit();
@@ -530,6 +537,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Running;
             Tick();
+            NotifyObservers();
 
             _timer.Start();
             _stopwatch.Start();
@@ -557,6 +565,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Running;
             Tick();
+            NotifyObservers();
 
             _timer.Start();
             _stopwatch.Start();
@@ -587,6 +596,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Paused;
             Tick();
+            NotifyObservers();
 
             if (Paused != null)
                 Paused(this);
@@ -613,6 +623,7 @@ namespace BDHero.Plugin
 
             State = ProgressProviderState.Canceled;
             Tick();
+            NotifyObservers();
 
             if (Canceled != null)
                 Canceled(this);
@@ -637,6 +648,16 @@ namespace BDHero.Plugin
                                   ProgressProviderState.Running, State));
             }
 
+            // Sanity check.
+            // This shouldn't ever happen, but it *might* if the thread timing is just right
+            // (e.g., https://github.com/bdhero/bdhero/issues/21)
+            if (ExceptionUtils.IsCanceled(exception))
+            {
+                Logger.Warn("Ignoring OperationCanceledException and invoking Cancel() method");
+                Cancel();
+                return;
+            }
+
             _timer.Stop();
             _stopwatch.Stop();
             _progressSample.Stop();
@@ -644,6 +665,7 @@ namespace BDHero.Plugin
             State = ProgressProviderState.Error;
             Exception = exception;
             Tick();
+            NotifyObservers();
 
             if (Errored != null)
                 Errored(this);
@@ -664,16 +686,24 @@ namespace BDHero.Plugin
             {
                 throw new InvalidOperationException(
                     string.Format("Unable to switch to {0} state: must be in {1} state, but object is in {2} state",
-                                  ProgressProviderState.Success, ProgressProviderState.Running, State));
+                                  ProgressProviderState.Success,
+                                  ProgressProviderState.Running,
+                                  State));
             }
 
             _timer.Stop();
             _stopwatch.Stop();
             _progressSample.Stop();
 
+            var prevPercentComplete = PercentComplete;
+
             State = ProgressProviderState.Success;
             PercentComplete = 100.0;
             TimeRemaining = TimeSpan.Zero;
+
+            LogPercentCompleteChange(prevPercentComplete, PercentComplete);
+
+            NotifyObservers();
 
             if (Successful != null)
                 Successful(this);
@@ -686,21 +716,38 @@ namespace BDHero.Plugin
             LogMethodExit();
         }
 
+        private void LogPercentCompleteChange(double prevPercentComplete, double newPercentComplete)
+        {
+            if (prevPercentComplete == PercentComplete)
+            {
+                Logger.DebugFormat("PercentComplete is already {0:P}",
+                                   newPercentComplete / 100.0);
+            }
+            else
+            {
+                Logger.DebugFormat("Changing PercentComplete from {0:P} to {1:P}",
+                                   prevPercentComplete / 100.0,
+                                   newPercentComplete / 100.0);
+            }
+        }
+
         #endregion
 
         /// <summary>
-        /// Called by <see cref="IPluginHost"/> whenever an <see cref="IPlugin"/> reports a progress update.
+        /// Called by <see href="IPluginHost"/> whenever an <see href="IPlugin"/> reports a progress update.
         /// </summary>
         /// <param name="percentComplete">0.0 to 100.0</param>
-        /// <param name="status">Description of what the plugin is currently doing</param>
-        public void Update(double percentComplete, string status)
+        /// <param name="shortStatus">Short description of what the plugin is currently doing</param>
+        /// <param name="longStatus">Detailed description of what the plugin is currently doing</param>
+        public void Update(double percentComplete, string shortStatus, string longStatus = null)
         {
             LogMethodEntry();
 
             PercentComplete = percentComplete;
-            Status = status;
+            ShortStatus = shortStatus;
+            LongStatus = longStatus ?? shortStatus;
 
-            NotifyObservers();
+            NotifyObservers(false);
 
             LogMethodExit();
         }
@@ -711,7 +758,8 @@ namespace BDHero.Plugin
             {
                 var hashCode = TimeRemaining.GetHashCode();
                 hashCode = (hashCode*397) ^ (int) State;
-                hashCode = (hashCode*397) ^ (Status != null ? Status.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (LongStatus != null ? LongStatus.GetHashCode() : 0);
+                hashCode = (hashCode*397) ^ (ShortStatus != null ? ShortStatus.GetHashCode() : 0);
                 hashCode = (hashCode*397) ^ PercentComplete.GetHashCode();
                 return hashCode;
             }
@@ -721,8 +769,8 @@ namespace BDHero.Plugin
     public delegate void ProgressUpdateHandler(ProgressProvider progressProvider);
 
     /// <summary>
-    /// Describes the state of a <see cref="ProgressProvider"/>.
-    /// States are mutually exclusive; a <see cref="ProgressProvider"/> can only have one state at a time.
+    /// Describes the state of a <see href="ProgressProvider"/>.
+    /// States are mutually exclusive; a <see href="ProgressProvider"/> can only have one state at a time.
     /// </summary>
     public enum ProgressProviderState
     {

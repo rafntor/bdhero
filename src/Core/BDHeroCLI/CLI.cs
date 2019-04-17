@@ -26,7 +26,9 @@ using BDHero.Plugin;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
+using DotNetUtils.Concurrency;
 using DotNetUtils.Extensions;
+using log4net;
 using Mono.Options;
 using ProcessUtils;
 
@@ -41,7 +43,7 @@ namespace BDHeroCLI
         }
 
         private readonly log4net.ILog _logger;
-        private readonly IDirectoryLocator _directoryLocator;
+        private readonly LogInitializer _logInitializer;
         private readonly PluginLoader _pluginLoader;
         private readonly IController _controller;
 
@@ -49,10 +51,10 @@ namespace BDHeroCLI
         private string _bdromPath;
         private string _mkvPath;
 
-        public CLI(IDirectoryLocator directoryLocator, PluginLoader pluginLoader, IController controller)
+        public CLI(ILog logger, LogInitializer logInitializer, IDirectoryLocator directoryLocator, PluginLoader pluginLoader, IController controller)
         {
-            _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-            _directoryLocator = directoryLocator;
+            _logger = logger;
+            _logInitializer = logInitializer;
             _pluginLoader = pluginLoader;
             _controller = controller;
         }
@@ -76,17 +78,17 @@ namespace BDHeroCLI
 
             var optionSet = new OptionSet
                 {
-                    { "h|?|help", v => ShowHelp() },
-                    { "V|version", s => Environment.Exit(0) },
-                    { "debug", s => loggerRepository.Threshold = log4net.Core.Level.Debug },
-                    { "v|verbose", s => loggerRepository.Threshold = log4net.Core.Level.Info },
-                    { "w|warn", s => loggerRepository.Threshold = log4net.Core.Level.Warn },
-                    { "q|quiet", s => loggerRepository.Threshold = log4net.Core.Level.Error },
-                    { "s|silent", s => loggerRepository.Threshold = log4net.Core.Level.Fatal },
-                    { "i=|input=", s => _bdromPath = s },
+                    { "h|?|help",   v => ShowHelp() },
+                    { "V|version",  s => Environment.Exit(0) },
+                    { "debug",      s => loggerRepository.Threshold = log4net.Core.Level.Debug },
+                    { "v|verbose",  s => loggerRepository.Threshold = log4net.Core.Level.Info },
+                    { "w|warn",     s => loggerRepository.Threshold = log4net.Core.Level.Warn },
+                    { "q|quiet",    s => loggerRepository.Threshold = log4net.Core.Level.Error },
+                    { "s|silent",   s => loggerRepository.Threshold = log4net.Core.Level.Fatal },
+                    { "i=|input=",  s => _bdromPath = s },
                     { "o=|output=", s => _mkvPath = s },
-                    { "y|yes", s => _replaceExistingFiles = true },
-                    { "n|no", s => _replaceExistingFiles = false }
+                    { "y|yes",      s => _replaceExistingFiles = true },
+                    { "n|no",       s => _replaceExistingFiles = false }
                 };
 
             var extraArgs = optionSet.Parse(args);
@@ -99,13 +101,7 @@ namespace BDHeroCLI
 
         private void LogDirectoryPaths()
         {
-            _logger.InfoFormat("IsPortable = {0}", _directoryLocator.IsPortable);
-            _logger.InfoFormat("InstallDir = {0}", _directoryLocator.InstallDir);
-            _logger.InfoFormat("AppConfigDir = {0}", _directoryLocator.AppConfigDir);
-            _logger.InfoFormat("PluginConfigDir = {0}", _directoryLocator.PluginConfigDir);
-            _logger.InfoFormat("RequiredPluginDir = {0}", _directoryLocator.RequiredPluginDir);
-            _logger.InfoFormat("CustomPluginDir = {0}", _directoryLocator.CustomPluginDir);
-            _logger.InfoFormat("LogDir = {0}", _directoryLocator.LogDir);
+            _logInitializer.LogDirectoryPaths();
         }
 
         private void LoadPlugins()
@@ -137,10 +133,8 @@ namespace BDHeroCLI
 
         private void InitController()
         {
-            _controller.ScanStarted += ControllerOnScanStarted;
-            _controller.ScanSucceeded += ControllerOnScanSucceeded;
             _controller.PluginProgressUpdated += ControllerOnPluginProgressUpdated;
-            _controller.SetEventScheduler();
+            _controller.SetUIContextCurrentThread();
         }
 
         private void ExecuteStages()
@@ -166,16 +160,16 @@ namespace BDHeroCLI
         {
             var cancellationToken = new CancellationToken();
             var scanTask = _controller.CreateScanTask(cancellationToken, bdromPath, mkvPath);
-            scanTask.Start();
-            return scanTask.Result;
+            scanTask.Start().Wait();
+            return scanTask.IsCompleted && scanTask.Result;
         }
 
         private bool Convert()
         {
             var cancellationToken = new CancellationToken();
             var convertTask = _controller.CreateConvertTask(cancellationToken);
-            convertTask.Start();
-            return convertTask.Result;
+            convertTask.Start().Wait();
+            return convertTask.IsCompleted && convertTask.Result;
         }
 
         private static void ShowHelp(int exitCode = 0)
@@ -191,40 +185,41 @@ namespace BDHeroCLI
             Console.Error.WriteLine("{0} v{1} - compiled {2}", AssemblyUtils.GetAssemblyName(), AssemblyUtils.GetAssemblyVersion(), AssemblyUtils.GetLinkerTimestamp());
         }
 
-        private static void ControllerOnScanStarted()
-        {
-            Console.WriteLine();
-        }
-
-        private static void ControllerOnScanSucceeded()
-        {
-            Console.WriteLine();
-            Console.WriteLine("~~~~~~~~~~~~~~~~~~~~~~~~");
-        }
+        private static string _lastLine;
 
         private static void ControllerOnPluginProgressUpdated(IPlugin plugin, ProgressProvider progressProvider)
         {
-            var line = string.Format("{0} is {1} - {2} complete - {3} - {4} elapsed, {5} remaining",
-                                     plugin.Name, progressProvider.State, (progressProvider.PercentComplete / 100.0).ToString("P"),
-                                     progressProvider.Status,
-                                     progressProvider.RunTime.ToStringShort(),
-                                     progressProvider.TimeRemaining.ToStringShort());
-            if (progressProvider.State == ProgressProviderState.Running)
-            {
-                Console.WriteLine("\r{0}", line);
-            }
-            else
-            {
-                Console.WriteLine(line);
-            }
+            var line = string.Format("{0} - {1}{2}: {3} ({4} / {5})",
+                                     (progressProvider.PercentComplete / 100.0).ToString("P"),
+                                     plugin.Name,
+                                     progressProvider.State != ProgressProviderState.Running ? string.Format(" ({0})", progressProvider.State) : "",
+                                     progressProvider.ShortStatus,
+                                     progressProvider.RunTime.ToStringMicro(),
+                                     progressProvider.TimeRemaining.ToStringMicro());
+
+            if (line == _lastLine)
+                return;
+
+            // Erase previous characters by padding current line with spaces
+            var paddingCount = Console.WindowWidth - line.Length - 1;
+            if (paddingCount > 0)
+                line += new string(' ', paddingCount);
+            
+            Console.Write("\r{0}", line);
+            
+            // Move cursor back to the end of the new line text
+            if (paddingCount > 0)
+                Console.Write(new string('\b', paddingCount));
+
+            _lastLine = line;
         }
 
         private void PromptToExit()
         {
             Console.WriteLine();
-            Console.WriteLine("*** BDHero CLI Finished - press <ENTER> to exit ***");
+            Console.WriteLine("*** BDHero CLI Finished - press any key to exit ***");
             Console.WriteLine();
-            Console.Read();
+            Console.ReadKey(true);
         }
     }
 }

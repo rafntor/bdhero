@@ -18,16 +18,19 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using NativeAPI;
+using NativeAPI.Win.Kernel;
 using DotNetUtils.Annotations;
 using OSUtils.JobObjects;
 
 namespace WindowsOSUtils.JobObjects
 {
     /// <summary>
-    ///     Concrete implementation of the <see cref="IJobObjectManager"/> interface
+    ///     Concrete implementation of the <see href="IJobObjectManager"/> interface
     ///     that accesses the Windows Job Objects API.
     /// </summary>
-    /// <seealso cref="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
+    /// <seealso href="https://www-auth.cs.wisc.edu/lists/htcondor-users/2009-June/msg00106.shtml" />
+    [UsedImplicitly]
     public class JobObjectManager : IJobObjectManager
     {
         private static readonly log4net.ILog Logger =
@@ -62,6 +65,18 @@ namespace WindowsOSUtils.JobObjects
 
                 var fileName = currentProcess.MainModule.FileName;
                 var arguments = new ArgumentList(args).ToString();
+
+                if (System.Diagnostics.Debugger.IsAttached)
+                {
+                    Logger.Debug("Running in Debugger - ignoring");
+                    return false;
+                }
+
+                if (fileName.EndsWith(".vshost.exe", StringComparison.OrdinalIgnoreCase))
+                {
+                    Logger.Debug("Running in Visual Studio host process - ignoring");
+                    return false;
+                }
 
                 Logger.InfoFormat("Spawning new child process outside of current job: \"{0}\" {1}", fileName, arguments);
 
@@ -112,7 +127,7 @@ namespace WindowsOSUtils.JobObjects
         internal static bool IsProcessInJob(Process process, IntPtr jobObjectHandle)
         {
             var status = false;
-            PInvokeUtils.Try(() => WinAPI.IsProcessInJob(process.Handle, jobObjectHandle, out status));
+            PInvokeUtils.Try(() => JobObjectAPI.IsProcessInJob(process.Handle, jobObjectHandle, out status));
             return status;
         }
 
@@ -131,8 +146,8 @@ namespace WindowsOSUtils.JobObjects
         ///     Job Object that is automatically created when an application runs on a newer
         ///     version of Windows than it was marked as compatible with in its application manifest.
         /// </remarks>
-        /// <seealso cref="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx" />
-        /// <seealso cref="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx" />
+        /// <seealso href="http://blogs.msdn.com/b/cjacks/archive/2009/07/10/how-to-work-around-program-compatibility-assistant-pca-jobobjects-interfering-with-your-jobobjects.aspx" />
+        /// <seealso href="http://blogs.msdn.com/b/alejacma/archive/2012/03/09/why-is-my-process-in-a-job-if-i-didn-t-put-it-there.aspx" />
         [CanBeNull]
         private static Process CreateProcessInSeparateJob(ProcessStartInfo startInfo)
         {
@@ -151,7 +166,7 @@ namespace WindowsOSUtils.JobObjects
             var startupInfo = new STARTUPINFO { cb = Marshal.SizeOf(typeof (STARTUPINFO)) };
             var processInformation = new PROCESS_INFORMATION();
 
-            PInvokeUtils.Try(() => WinAPI.CreateProcess(startInfo.FileName,
+            PInvokeUtils.Try(() => JobObjectAPI.CreateProcess(startInfo.FileName,
                                                         startInfo.Arguments,
                                                         ref securityAttributes,
                                                         ref securityAttributes,

@@ -16,14 +16,15 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using DotNetUtils;
 using DotNetUtils.Annotations;
 using DotNetUtils.Attributes;
 using DotNetUtils.Extensions;
+using NativeAPI.Win.Kernel;
+using WinMemoryAPI = NativeAPI.Win.Kernel.MemoryAPI;
+using MacMemoryAPI = NativeAPI.Mac.Memory.MemoryAPI;
 
 namespace OSUtils.Info
 {
@@ -59,51 +60,30 @@ namespace OSUtils.Info
 
         #region Native interop
 
-        #region Available memory
-
-        private static ulong GetAvailableMemory()
-        {
-            ulong free = 0;
-            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
-            catch { }
-            try { free = GetAvailableMemoryOSX(); if (free > 0) { return free; } }
-            catch { }
-            return free;
-        }
-
-        private static ulong GetAvailableMemoryWin()
-        {
-            using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
-            {
-                return (ulong)counter.NextValue();
-            }
-        }
-
-        private static ulong GetAvailableMemoryOSX()
-        {
-            return GetTotalPhysicalMemoryOSX() - GetMemoryOSX(MemPropOSX.Used);
-        }
-
-        #endregion
-
         #region Total physical memory
 
         /// <summary>
         /// Gets the total amount of installed physical memory on the system using native Win32 interop,
-        /// falling back to a Mono-specific <see cref="PerformanceCounter"/> implementation for *nix OSes.
+        /// falling back to a Mono-specific <see href="PerformanceCounter"/> implementation for *nix OSes.
         /// </summary>
         /// <returns>The total amount of installed physical memory on the system.</returns>
-        /// <see cref="http://stackoverflow.com/a/105109"/>
+        /// <see href="http://stackoverflow.com/a/105109"/>
         private static ulong GetTotalPhysicalMemory()
         {
+            // ReSharper disable EmptyGeneralCatchClause
             ulong total = 0;
             try { total = GetTotalPhysicalMemoryWin(); if (total > 0) { return total; } }
             catch { }
             try { total = GetTotalPhysicalMemoryNix(); if (total > 0) { return total; } }
             catch { }
-            try { total = GetTotalPhysicalMemoryOSX(); if (total > 0) { return total; } }
+            try { total = GetTotalPhysicalMemoryOSX1(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryOSX2(); if (total > 0) { return total; } }
+            catch { }
+            try { total = GetTotalPhysicalMemoryOSX3(); if (total > 0) { return total; } }
             catch { }
             return total;
+            // ReSharper restore EmptyGeneralCatchClause
         }
 
         /// <summary>
@@ -113,7 +93,7 @@ namespace OSUtils.Info
         private static ulong GetTotalPhysicalMemoryWin()
         {
             var memStatus = new MEMORYSTATUSEX();
-            return GlobalMemoryStatusEx(memStatus) ? memStatus.ullTotalPhys : 0;
+            return WinMemoryAPI.GlobalMemoryStatusEx(memStatus) ? memStatus.ullTotalPhys : 0;
         }
 
         /// <summary>
@@ -129,24 +109,97 @@ namespace OSUtils.Info
         /// On Mac OS X, gets the total amount of installed physical memory.
         /// </summary>
         /// <returns>The total amount of installed physical memory on the system.</returns>
-        private static ulong GetTotalPhysicalMemoryOSX()
+        private static ulong GetTotalPhysicalMemoryOSX1()
         {
-            return GetMemoryOSX(MemPropOSX.Total);
+            return MacMemoryAPI.GetPhysicalMemory();
         }
 
-        [return: MarshalAs(UnmanagedType.Bool)]
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        private static extern bool GlobalMemoryStatusEx([In, Out] MEMORYSTATUSEX lpBuffer);
+        /// <summary>
+        /// On Mac OS X, gets the total amount of installed physical memory.
+        /// </summary>
+        /// <returns>The total amount of installed physical memory on the system.</returns>
+        private static ulong GetTotalPhysicalMemoryOSX2()
+        {
+            // TODO
+            // /usr/bin/vm_stat
+            return GetMemoryOSX2(MemPropOSX.Total);
+        }
+
+        /// <summary>
+        /// On Mac OS X, gets the total amount of installed physical memory.
+        /// </summary>
+        /// <returns>The total amount of installed physical memory on the system.</returns>
+        private static ulong GetTotalPhysicalMemoryOSX3()
+        {
+            return GetMemoryOSX3(MemPropOSX.Total);
+        }
+
+        #endregion
+
+        #region Available memory
+
+        private static ulong GetAvailableMemory()
+        {
+            // ReSharper disable EmptyGeneralCatchClause
+            ulong free = 0;
+            try { free = GetAvailableMemoryWin(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX1(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX2(); if (free > 0) { return free; } }
+            catch { }
+            try { free = GetAvailableMemoryOSX3(); if (free > 0) { return free; } }
+            catch { }
+            return free;
+            // ReSharper restore EmptyGeneralCatchClause
+        }
+
+        private static ulong GetAvailableMemoryWin()
+        {
+            using (var counter = new PerformanceCounter("Memory", "Available Bytes"))
+            {
+                return (ulong)counter.NextValue();
+            }
+        }
+
+        private static ulong GetAvailableMemoryOSX1()
+        {
+            return MacMemoryAPI.GetAvailableMemory();
+        }
+
+        private static ulong GetAvailableMemoryOSX2()
+        {
+            return GetMemoryOSX2(MemPropOSX.Free);
+        }
+
+        private static ulong GetAvailableMemoryOSX3()
+        {
+            return GetTotalPhysicalMemory() - GetMemoryOSX3(MemPropOSX.Used);
+        }
 
         #endregion
 
         #region Mac-specific memory
 
-        private static ulong GetMemoryOSX(MemPropOSX prop)
+        /// <seealso href="http://stackoverflow.com/a/8782351/467582"/>
+        private static ulong GetMemoryOSX2(MemPropOSX prop)
+        {
+            var output = GetProcessOutput("/usr/bin/vm_stat");
+//            var pageSize = Regex.Match(output, @"page size of (\d+) bytes");
+            return 0;
+        }
+
+        private static ulong GetMemoryOSX3(MemPropOSX prop)
+        {
+            var output = GetProcessOutput("sysctl", "-a");
+            return SysctlPropertyNameAttribute.GetProperty(prop, output);
+        }
+
+        private static string GetProcessOutput(string fileName, string arguments = "")
         {
             using (var process = new Process())
             {
-                process.StartInfo = new ProcessStartInfo("sysctl", "-a")
+                process.StartInfo = new ProcessStartInfo(fileName, arguments)
                                     {
                                         UseShellExecute = false,
                                         RedirectStandardOutput = true,
@@ -155,10 +208,8 @@ namespace OSUtils.Info
                                         WindowStyle = ProcessWindowStyle.Hidden,
                                     };
                 process.Start();
-                var propName = prop.GetAttributeProperty<DescriptionAttribute, string>(attribute => attribute.Description);
                 var output = process.StandardOutput.ReadToEnd();
-                var match = new Regex(@"hw\." + propName + @"\s+?=\s+?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
-                return match.Success ? UInt64.Parse(match.Groups[propName].Value) : 0;
+                return output;
             }
         }
 
@@ -168,73 +219,37 @@ namespace OSUtils.Info
 
         private enum MemPropOSX
         {
-            [Description("memsize")]
+            [SysctlPropertyName("hw.memsize")]
             Total,
 
-            [Description("usermem")]
+            [SysctlPropertyName("hw.usermem")]
             Used,
 
-            [Description("physmem")]
+            [SysctlPropertyName("hw.physmem")]
             Free
         }
 
-        /// <summary>
-        /// contains information about the current state of both physical and virtual memory, including extended memory
-        /// </summary>
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
-        public class MEMORYSTATUSEX
+        private abstract class NameAttribute : Attribute
         {
-            /// <summary>
-            /// Size of the structure, in bytes. You must set this member before calling GlobalMemoryStatusEx.
-            /// </summary>
-            public uint dwLength;
+            public readonly string Name;
 
-            /// <summary>
-            /// Number between 0 and 100 that specifies the approximate percentage of physical memory that is in use (0 indicates no memory use and 100 indicates full memory use).
-            /// </summary>
-            public uint dwMemoryLoad;
-
-            /// <summary>
-            /// Total size of physical memory, in bytes.
-            /// </summary>
-            public ulong ullTotalPhys;
-
-            /// <summary>
-            /// Size of physical memory available, in bytes.
-            /// </summary>
-            public ulong ullAvailPhys;
-
-            /// <summary>
-            /// Size of the committed memory limit, in bytes. This is physical memory plus the size of the page file, minus a small overhead.
-            /// </summary>
-            public ulong ullTotalPageFile;
-
-            /// <summary>
-            /// Size of available memory to commit, in bytes. The limit is ullTotalPageFile.
-            /// </summary>
-            public ulong ullAvailPageFile;
-
-            /// <summary>
-            /// Total size of the user mode portion of the virtual address space of the calling process, in bytes.
-            /// </summary>
-            public ulong ullTotalVirtual;
-
-            /// <summary>
-            /// Size of unreserved and uncommitted memory in the user mode portion of the virtual address space of the calling process, in bytes.
-            /// </summary>
-            public ulong ullAvailVirtual;
-
-            /// <summary>
-            /// Size of unreserved and uncommitted memory in the extended portion of the virtual address space of the calling process, in bytes.
-            /// </summary>
-            public ulong ullAvailExtendedVirtual;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="HardwareInfo.MEMORYSTATUSEX"/> class.
-            /// </summary>
-            public MEMORYSTATUSEX()
+            protected NameAttribute(string name)
             {
-                dwLength = (uint)Marshal.SizeOf(typeof(MEMORYSTATUSEX));
+                Name = name;
+            }
+        }
+
+        private class SysctlPropertyNameAttribute : NameAttribute
+        {
+            public SysctlPropertyNameAttribute(string name) : base(name)
+            {
+            }
+
+            public static UInt64 GetProperty(MemPropOSX prop, string output)
+            {
+                var propName = Regex.Escape(prop.GetAttributeProperty<SysctlPropertyNameAttribute, string>(attribute => attribute.Name));
+                var match = new Regex(propName + @"\s*?[=:]\s*?(?<" + propName + @">\d+)", RegexOptions.Multiline).Match(output);
+                return match.Success ? match.Groups[propName].Value.ParseUInt64Invariant() : 0;
             }
         }
 

@@ -17,21 +17,20 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Xml;
 using BDHero.BDROM;
-using BDHero.Plugin;
 using BDHero.JobQueue;
+using BDHero.Plugin;
 using DotNetUtils.Annotations;
 using DotNetUtils.Net;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
-using System.Text.RegularExpressions;
-using System.Net;
-using System.IO;
 
 namespace ChapterGrabberPlugin
 {
@@ -40,9 +39,15 @@ namespace ChapterGrabberPlugin
     {
         private static readonly log4net.ILog Logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private const string ApiGet = "http://chapterdb.org/chapters/search?title=";
-        private const string ApiGetEnd = "&chapterCount=0 HTTP/1.1";
-        private static string xmlResponse;
+        private const string Username = "BDHero";
+        private const string ApiKey = "G88IO875M9SKU6DPB82F";
+
+        private const string QueryUrl = "http://chapterdb.org/chapters/search?title=";
+        private const string QueryParams = "&chapterCount=0 HTTP/1.1";
+
+        // TODO: Make these user-configurable
+        private const bool ShouldPrependChapterNumbers = false;
+        private const string ChapterNumberFormat = "{0:D2}.";
 
         public IPluginHost Host { get; private set; }
         public PluginAssemblyInfo AssemblyInfo { get; private set; }
@@ -55,7 +60,7 @@ namespace ChapterGrabberPlugin
 
         public int RunOrder { get { return 2; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public void LoadPlugin(IPluginHost host, PluginAssemblyInfo assemblyInfo)
         {
@@ -74,35 +79,27 @@ namespace ChapterGrabberPlugin
 
             Host.ReportProgress(this, 0.0, "Querying ChapterDb.org...");
 
-            //var playlist = job.Disc.Playlists[job.SelectedPlaylistIndex];
             if (job.SearchQuery != null)
             {
                 var apiResults = GetChapters(job.SearchQuery.Title);
-                /*
-                var apiValues = CompareChapters(apiResults, playlist.Chapters);
-                if (apiValues != null && apiValues.Count > 0)
-                {
-                    ReplaceChapters(apiValues[0], playlist.Chapters);
-                }*/
 
                 if (cancellationToken.IsCancellationRequested)
                     return;
 
-                Host.ReportProgress(this, 90.0, "Comparing search results to available playlists...");
+                Host.ReportProgress(this, 90.0, "Matching results against playlists...", "Comparing search results to available playlists...");
 
                 foreach(var moviePlaylist in job.Disc.Playlists)
                 {
                     var apiValues = CompareChapters(apiResults, moviePlaylist.Chapters);
                     if (apiValues != null && apiValues.Count > 0)
                     {
-                        StoreSearchResults(apiValues, moviePlaylist);
+                        StoreSearchResults(moviePlaylist, apiValues);
 
                         // To Do:  Allow the user to select which chapter list to use when 
                         // defaulted to [0] first chapter list that matches filter criteria
                         ReplaceChapters(apiValues[0], moviePlaylist.Chapters);
 
-                        var Message = "Custom chapters were added to: " + moviePlaylist.FileName;
-                        Logger.Info(Message);
+                        Logger.InfoFormat("Custom chapters were added to {0}", moviePlaylist.FileName);
                     }
                 }    
             }
@@ -113,121 +110,107 @@ namespace ChapterGrabberPlugin
             Host.ReportProgress(this, 100.0, "Finished querying ChapterDb.org");
         }
 
-        private static void StoreSearchResults(IEnumerable<JsonChaps> searchResults, Playlist playlist)
-        {
-            var validResults = searchResults.Where(chaps => IsMatch(chaps, playlist.Chapters)).Where(IsValid).ToArray();
-            playlist.ChapterSearchResults = validResults.Select(searchResult => Transform(searchResult, playlist)).ToList();
-        }
-
-        private static ChapterSearchResult Transform(JsonChaps searchResult, Playlist playlist)
-        {
-            var jsonChapters = searchResult.chapterInfo.chapters.chapter.Take(playlist.ChapterCount).ToArray();
-            return new ChapterSearchResult
-                {
-                    Title =
-                        string.Format("+{0}: {1}", searchResult.chapterInfo.confirmations,
-                                      searchResult.chapterInfo.title),
-                    Chapters = jsonChapters.Select(Transform).ToList()
-                };
-        }
-
-        private static Chapter Transform(JsonChapter jsonChapter, int i)
-        {
-            var title = (jsonChapter.name ?? "").Trim();
-            var isValidChapterName = IsValidChapterName(title);
-            var chapter = new Chapter(i + 1, jsonChapter.time.TotalSeconds) { Title = title, Keep = isValidChapterName };
-            return chapter;
-        }
-
-        static private List<JsonChaps> GetChapters(string movieName)
+        private static List<JsonChaps> GetChapters(string movieName)
         {
             var movieSearchResults = new List<JsonChaps>();
-            var headers = new List<string>();
-                headers.Add("ApiKey: G88IO875M9SKU6DPB82F");
-                headers.Add("UserName: BDHero");
+            var headers = new List<string>
+                          {
+                              string.Format("ApiKey: {0}", ApiKey),
+                              string.Format("UserName: {0}", Username)
+                          };
+
             var doc = new XmlDocument();
             
             try
             {
-                xmlResponse = HttpRequest.Get(ApiGet + movieName + ApiGetEnd, headers);
+                var xmlResponse = HttpRequest.Get(QueryUrl + movieName + QueryParams, headers);
+                doc.LoadXml(xmlResponse);
             }
             catch (WebException ex)
             {
-                if (ex.Response != null)
+                using (var webResponse = ex.Response)
                 {
-                    using (var errorResponse = (HttpWebResponse)ex.Response)
+                    var httpWebResponse = webResponse as HttpWebResponse;
+                    if (httpWebResponse == null)
+                        throw;
+
+                    using (var responseStream = httpWebResponse.GetResponseStream())
+                    using (var reader = new StreamReader(responseStream))
                     {
-                        using (var reader = new StreamReader(errorResponse.GetResponseStream()))
-                        {
-                            var errorBody = reader.ReadToEnd();
-                            var errorRegex = @"(?<=<title.*>)([\s\S]*)(?=</title>)";
-                            var rex = new Regex(errorRegex, RegexOptions.IgnoreCase);
-                            var errorTitle = rex.Match(errorBody).Value.Trim();
-                            throw new Exception("Error: " + errorTitle, ex);
-                        }
+                        var errorBody = reader.ReadToEnd();
+                        var regex = new Regex(@"(?<=<title.*>)([\s\S]*)(?=</title>)", RegexOptions.IgnoreCase);
+                        var errorTitle = regex.Match(errorBody).Value.Trim();
+                        throw new ChapterGrabberException(errorTitle, ex);
                     }
                 }
-                else
-                {
-                    throw new Exception("Error: An error occurred when contacting chapterdb.org", ex);
-                }
-            }
-
-            try
-            {
-                doc.LoadXml(xmlResponse);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error: An error occurred when processing the response from chapterdb.org", ex);
             }
 
             if (doc.DocumentElement != null)
             {
-                foreach (var node in doc.DocumentElement)
+                foreach (var node in doc.DocumentElement.OfType<XmlElement>())
                 {
-                    string jsonText;
+                    var jsonText = JsonConvert.SerializeXmlNode(node, Formatting.Indented);
+                    jsonText = Regex.Replace(jsonText, "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
+                    jsonText = jsonText.Replace("?xml", "xml");
+
                     try
                     {
-                        jsonText = Regex.Replace(JsonConvert.SerializeXmlNode((XmlElement)node, Formatting.Indented),
-                                                "(?<=\")(@)(?!.*\":\\s )", string.Empty, RegexOptions.IgnoreCase);
-                        jsonText = jsonText.Replace("?xml", "xml");
-
                         movieSearchResults.Add(JsonConvert.DeserializeObject<JsonChaps>(jsonText));
                     }
-                    catch (Exception ex)
+                    catch (JsonSerializationException)
                     {
-                        throw new Exception("Error: An error occurred when serializing the response from chapterdb.org", ex);
+                        // Junk data - ignore and continue
                     }
                 }
             }
            
             if (movieSearchResults.Count > 0)
             {               
-                var Message = movieSearchResults.Count + " possible matches were found for " + movieName;
-                Logger.Info(Message);
+                Logger.InfoFormat("{0} possible matche(s) were found for {1}", movieSearchResults.Count, movieName);
             }
             else
             {
-                var Message = "No matches were found for " + movieName;
-                Logger.Info(Message);
+                Logger.InfoFormat("No matches were found for {0}", movieName);
             }
+
             return movieSearchResults;
         }
 
-        static private List<JsonChaps> CompareChapters(List<JsonChaps> apiData, IList<Chapter> discData)
+        #region Validation / comparison
+
+        private static List<JsonChaps> CompareChapters(List<JsonChaps> apiData, IList<Chapter> discData)
         {
             var apiResultsFilteredByChapter = apiData.Where(chaps => IsMatch(chaps, discData)).ToList();
-            
             var apiResultsFilteredByValidName = apiResultsFilteredByChapter.Where(IsValid).ToList();
 
-            if (apiResultsFilteredByValidName.Count > 0)
+            if (apiResultsFilteredByValidName.Any())
             {
-                var Message = apiResultsFilteredByValidName.Count + " result(s) matched the filter criteria for custom chapters";
-                Logger.Info(Message);
+                Logger.InfoFormat("{0} result(s) matched the filter criteria for custom chapters", apiResultsFilteredByValidName.Count);
             }
 
             return apiResultsFilteredByValidName;
+        }
+
+        private static bool IsMatch(JsonChaps jsonChaps, IList<Chapter> chapterDisc)
+        {
+            var chapterCountMatches = jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count ||
+                                      jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count + 1;
+            if (!chapterCountMatches)
+                return false;
+
+            for (var i = 0; i < chapterDisc.Count; i++)
+            {
+                var discChapter = chapterDisc[i];
+                var apiChapter = jsonChaps.chapterInfo.chapters.chapter[i];
+                if (!DoTimecodesMatch(discChapter.StartTime.TotalSeconds, apiChapter.time.TotalSeconds))
+                    return false;
+            }
+            return true;
+        }
+
+        private static bool DoTimecodesMatch(double timeDisc, double timeApi)
+        {
+            return Math.Abs(timeDisc - timeApi) <= 1.0;
         }
 
         private static bool IsValid(JsonChaps jsonChaps)
@@ -255,30 +238,17 @@ namespace ChapterGrabberPlugin
             return true;
         }
 
-        private static bool IsMatch(JsonChaps jsonChaps, IList<Chapter> chapterDisc)
-        {
-            var chapterCountMatches = jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count ||
-                                      jsonChaps.chapterInfo.chapters.chapter.Count == chapterDisc.Count + 1;
-            if (!chapterCountMatches)
-                return false;
+        #endregion
 
-            for (var i = 0; i < chapterDisc.Count; i++)
-            {
-                var discChapter = chapterDisc[i];
-                var apiChapter = jsonChaps.chapterInfo.chapters.chapter[i];
-                if (!DoTimecodesMatch(discChapter.StartTime.TotalSeconds, apiChapter.time.TotalSeconds))
-                    return false;
-            }
-            return true;
+        #region Storage
+
+        private static void StoreSearchResults(Playlist playlist, IEnumerable<JsonChaps> searchResults)
+        {
+            var validResults = searchResults.Where(chaps => IsMatch(chaps, playlist.Chapters)).Where(IsValid).ToArray();
+            playlist.ChapterSearchResults = validResults.Select(searchResult => Transform(searchResult, playlist)).ToList();
         }
 
-        private static bool DoTimecodesMatch(double timeDisc, double timeApi)
-        {
-            var test = Math.Abs(timeDisc - timeApi);
-            return Math.Abs(timeDisc - timeApi) <= 1.0;
-        }
-
-        static private void ReplaceChapters(JsonChaps apiData, IList<Chapter> discData)
+        private static void ReplaceChapters(JsonChaps apiData, IList<Chapter> discData)
         {
             for (var i=0; i<discData.Count; i++)
             {
@@ -287,5 +257,86 @@ namespace ChapterGrabberPlugin
                 chapter.Title = jsonChapter.name;
             }
         }
+
+        #endregion
+
+        #region Transformation
+
+        private static ChapterSearchResult Transform(JsonChaps searchResult, Playlist playlist)
+        {
+            var jsonChapters = searchResult.chapterInfo.chapters.chapter.Take(playlist.ChapterCount).ToArray();
+            var chapters = jsonChapters.Select(Transform).ToList();
+
+            if (ShouldStripLeadingDigits(chapters))
+                StripLeadingDigits(chapters);
+
+            if (ShouldPrependChapterNumbers)
+                PrependChapterNumbers(chapters);
+
+            return new ChapterSearchResult
+            {
+                Title =
+                    string.Format("+{0}: {1}", searchResult.chapterInfo.confirmations,
+                                  searchResult.chapterInfo.title),
+                Chapters = chapters
+            };
+        }
+
+        private static Chapter Transform(JsonChapter jsonChapter, int i)
+        {
+            var title = (jsonChapter.name ?? "").Trim();
+            var isValidChapterName = IsValidChapterName(title);
+            var chapter = new Chapter(i + 1, jsonChapter.time.TotalSeconds) { Title = title, Keep = isValidChapterName };
+            return chapter;
+        }
+
+        #endregion
+
+        #region Number stripping
+
+        private static readonly Regex LeadingDigitsRegex = new Regex(@"^(?<number>\d+)[.:) -]+");
+
+        private static bool ShouldStripLeadingDigits(List<Chapter> chapters)
+        {
+            var numWithLeadingDigits = chapters.Count(ShouldStripLeadingDigits);
+            return (numWithLeadingDigits >= chapters.Count - 2);
+        }
+
+        private static bool ShouldStripLeadingDigits(Chapter chapter)
+        {
+            if (!LeadingDigitsRegex.IsMatch(chapter.Title))
+                return false;
+            
+            int intValue;
+            var strValue = LeadingDigitsRegex.Match(chapter.Title).Groups["number"].Value;
+
+            // This should never happen, but you never know
+            if (!int.TryParse(strValue, out intValue))
+                return false;
+
+            // Leading digits must match the chapter number (+/- 1)
+            return (intValue == chapter.Number || intValue == chapter.Number + 1 || intValue == chapter.Number - 1);
+        }
+
+        private static void StripLeadingDigits(List<Chapter> chapters)
+        {
+            chapters.ForEach(StripLeadingDigits);
+        }
+
+        private static void StripLeadingDigits(Chapter chapter)
+        {
+            chapter.Title = LeadingDigitsRegex.Replace(chapter.Title, "");
+        }
+
+        #endregion
+
+        #region Chapter number prepending
+
+        private static void PrependChapterNumbers(List<Chapter> chapters)
+        {
+            chapters.ForEach(chapter => chapter.Title = string.Format("{0} {1}", string.Format(ChapterNumberFormat, chapter.Number), chapter.Title));
+        }
+
+        #endregion
     }
 }

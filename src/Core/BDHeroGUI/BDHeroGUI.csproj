@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>BDHeroGUI</RootNamespace>
     <AssemblyName>bdhero-gui</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
@@ -26,6 +26,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -35,6 +36,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>BDHeroGUI.Program</StartupObject>
@@ -42,10 +44,12 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Debug\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <OutputPath>bin\Release\</OutputPath>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -54,23 +58,20 @@
     <ApplicationIcon>bdhero_gui.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="log4net, Version=1.2.13.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\log4net.2.0.3\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Core.1.1.0.2\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions">
+    <Reference Include="Microsoft.WindowsAPICodePack.ShellExtensions, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.WindowsAPICodePack-Shell.1.1.0.0\lib\Microsoft.WindowsAPICodePack.ShellExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="Ninject">
-      <HintPath>..\..\packages\Ninject.3.0.1.10\lib\net40\Ninject.dll</HintPath>
+    <Reference Include="Ninject, Version=3.3.4.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Ninject.3.3.4\lib\net45\Ninject.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -78,10 +79,10 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\AudioTrackListView.cs">
@@ -120,6 +121,7 @@
     <Compile Include="Components\MediaPanel.Designer.cs">
       <DependentUpon>MediaPanel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Components\StandardWindowMenuBuilder.cs" />
     <Compile Include="Components\SubtitleTrackListView.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -140,7 +142,21 @@
     <Compile Include="Components\TracksPanel.Designer.cs">
       <DependentUpon>TracksPanel.cs</DependentUpon>
     </Compile>
-    <Compile Include="DIalogs\ExceptionDialog.cs" />
+    <Compile Include="Dialogs\GenericErrorDialog.cs" />
+    <Compile Include="Dialogs\IErrorDialog.cs" />
+    <Compile Include="Dialogs\Windows7ErrorDialog.cs" />
+    <Compile Include="Forms\FormTextEditorTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormTextEditorTest.Designer.cs">
+      <DependentUpon>FormTextEditorTest.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FormErrorReport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FormErrorReport.Designer.cs">
+      <DependentUpon>FormErrorReport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\FormMediaCustom.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -167,6 +183,7 @@
       <DependentUpon>FormDiscInfo.cs</DependentUpon>
     </Compile>
     <Compile Include="Helpers\MediaDragData.cs" />
+    <Compile Include="Helpers\ToolStripControlBuilder.cs" />
     <Compile Include="TrackFilter.cs" />
     <Compile Include="FormMain.cs">
       <SubType>Form</SubType>
@@ -201,6 +218,10 @@
     <Compile Include="PlaylistFilter.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Resources\github-mark-16.png" />
+    <None Include="Resources\cross-small-gray.png" />
     <None Include="Resources\network.png" />
     <None Include="Resources\clipboard-arrow.png" />
     <None Include="Resources\play_blue.png" />
@@ -261,6 +282,12 @@
     <EmbeddedResource Include="Forms\FormDiscInfo.resx">
       <DependentUpon>FormDiscInfo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormTextEditorTest.resx">
+      <DependentUpon>FormTextEditorTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\FormErrorReport.resx">
+      <DependentUpon>FormErrorReport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\FormMediaCustom.resx">
       <DependentUpon>FormMediaCustom.cs</DependentUpon>
     </EmbeddedResource>
@@ -294,7 +321,6 @@
     <None Include="app.manifest">
       <SubType>Designer</SubType>
     </None>
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -310,13 +336,21 @@
       <Project>{B695A3B0-09BD-42CB-975D-496EBF1CDFA8}</Project>
       <Name>LicenseUtils</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\NativeAPI\NativeAPI.csproj">
+      <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
+      <Name>NativeAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\TextEditor\TextEditor.csproj">
+      <Project>{acd66b56-a9cf-4958-8050-07ddd1aa43bf}</Project>
+      <Name>TextEditor</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libraries\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Libraries\WebBrowserUtils\WebBrowserUtils.csproj">
       <Project>{DB13678F-8815-4BEC-8198-2BAC286A3BAF}</Project>
       <Name>WebBrowserUtils</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Libraries\WindowsOSUtils\WindowsOSUtils.csproj">
-      <Project>{A673442D-599D-4332-BCFA-8EC02171EFC0}</Project>
-      <Name>WindowsOSUtils</Name>
     </ProjectReference>
     <ProjectReference Include="..\BDHero\BDHero.csproj">
       <Project>{8DB79B29-2598-40EC-B57B-C8FCE7DA0F19}</Project>
@@ -339,9 +373,10 @@
       <Name>OSUtils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

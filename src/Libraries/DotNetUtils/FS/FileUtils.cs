@@ -25,6 +25,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using DotNetUtils.Annotations;
+using DotNetUtils.Exceptions;
+using DotNetUtils.Extensions;
 
 namespace DotNetUtils.FS
 {
@@ -38,7 +40,7 @@ namespace DotNetUtils.FS
         /// <summary>
         ///     Reads an entire stream into memory and returns it as an array of bytes.
         /// </summary>
-        /// <seealso cref="http://stackoverflow.com/a/6586039/467582" />
+        /// <seealso href="http://stackoverflow.com/a/6586039/467582" />
         public static byte[] ReadStream(Stream input)
         {
             using (var ms = new MemoryStream())
@@ -49,7 +51,7 @@ namespace DotNetUtils.FS
         }
 
         /// <summary>
-        ///     Creates an <see cref="Image" /> object without locking the source file.
+        ///     Creates an <see href="Image" /> object without locking the source file.
         /// </summary>
         /// <param name="path">
         ///     Path to the image file.
@@ -57,10 +59,60 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     An image object.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/1105330/467582" />
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
+        /// <seealso href="http://stackoverflow.com/a/1105330/467582" />
         public static Image ImageFromFile(string path)
         {
+            EnsureValidChars(path);
             return Image.FromStream(new MemoryStream(File.ReadAllBytes(path)));
+        }
+
+        /// <seealso href="http://stackoverflow.com/a/398512/467582"/>
+        public static string Tail(string path, string tokenSeparator, Int64 numberOfTokens, Encoding encoding)
+        {
+            EnsureValidChars(path);
+
+            int sizeOfChar = encoding.GetByteCount("\n");
+            byte[] buffer = encoding.GetBytes(tokenSeparator);
+
+            using (FileStream fs = new FileStream(path, FileMode.Open))
+            {
+                Int64 tokenCount = 0;
+                Int64 endPosition = fs.Length / sizeOfChar;
+
+                for (Int64 position = sizeOfChar; position < endPosition; position += sizeOfChar)
+                {
+                    fs.Seek(-position, SeekOrigin.End);
+                    fs.Read(buffer, 0, buffer.Length);
+
+                    if (encoding.GetString(buffer) == tokenSeparator)
+                    {
+                        tokenCount++;
+                        if (tokenCount == numberOfTokens)
+                        {
+                            byte[] returnBuffer = new byte[fs.Length - fs.Position];
+                            fs.Read(returnBuffer, 0, returnBuffer.Length);
+                            return encoding.GetString(returnBuffer);
+                        }
+                    }
+                }
+
+                // handle case where number of tokens in file is less than numberOfTokens
+                fs.Seek(0, SeekOrigin.Begin);
+                buffer = new byte[fs.Length];
+                fs.Read(buffer, 0, buffer.Length);
+                return encoding.GetString(buffer);
+            }
+        }
+
+        // TODO: Figure out why blank lines are being returned in between every line
+        public static string[] Tail(string path, Int64 numLines, string newLine = "\n")
+        {
+            EnsureValidChars(path);
+            return Tail(path, newLine, numLines, Encoding.UTF8).Split(newLine.ToCharArray());
         }
 
         #endregion
@@ -68,7 +120,7 @@ namespace DotNetUtils.FS
         #region Detect encoding
 
         /// <summary>
-        ///     Detects the encoding of the file using .NET's <see cref="StreamReader"/> class.
+        ///     Detects the encoding of the file using .NET's <see href="StreamReader"/> class.
         /// </summary>
         /// <param name="filePath">
         ///     Relative or absolute path to a text file.
@@ -79,9 +131,14 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     The detected encoding of the text file specified by <paramref name="filePath" />.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/8935635/467582"/>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
+        /// <seealso href="http://stackoverflow.com/a/8935635/467582"/>
         public static Encoding DetectEncodingAuto(string filePath, out string contents)
         {
+            EnsureValidChars(filePath);
             // open the file with the stream-reader:
             using (var reader = new StreamReader(filePath, true))
             {
@@ -114,9 +171,15 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     The detected encoding of the text file specified by <paramref name="filePath" />.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/12853721/467582" />
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
+        /// <seealso href="http://stackoverflow.com/a/12853721/467582" />
         public static Encoding DetectEncodingManual(string filePath, out string contents, int taster = 1000)
         {
+            EnsureValidChars(filePath);
+
             byte[] b = File.ReadAllBytes(filePath);
 
             //////////////// First check the low hanging fruit by checking if a
@@ -213,12 +276,18 @@ namespace DotNetUtils.FS
         /// <param name="path">
         ///     Path to a file or directory.
         /// </param>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static void CreateDirectory(string path)
         {
             // TODO: Does this check make sense?
             // Path will resolve to current working directory
             if (string.IsNullOrEmpty(path))
                 return;
+
+            EnsureValidChars(path);
 
             // More accurate checks first
             if (File.Exists(path) || Directory.Exists(path))
@@ -264,7 +333,7 @@ namespace DotNetUtils.FS
         /// </exception>
         /// <exception cref="ArgumentException">
         ///     <paramref name="filePath"/> is a zero-length string, contains only white space, or contains one or more
-        ///     invalid characters as defined by <see cref="Path.GetInvalidPathChars"/>.
+        ///     invalid characters as defined by <see href="Path.GetInvalidPathChars"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     <paramref name="filePath"/> is null.
@@ -283,6 +352,10 @@ namespace DotNetUtils.FS
         /// <exception cref="NotSupportedException">
         ///     <paramref name="filePath"/> is in an invalid format.
         /// </exception>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="filePath"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static void TouchFile(string filePath)
         {
             var dirPath = new FileInfo(filePath).DirectoryName;
@@ -290,6 +363,7 @@ namespace DotNetUtils.FS
             {
                 throw new DirectoryNotFoundException(string.Format("File \"{0}\" has no parent directory", filePath));
             }
+            EnsureValidChars(filePath);
             if (!Directory.Exists(dirPath))
             {
                 Directory.CreateDirectory(dirPath);
@@ -324,7 +398,7 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     Human-friendly string representation of the file size specified by <paramref name="byteCount"/>.
         /// </returns>
-        /// <seealso cref="http://stackoverflow.com/a/4975942/467582"/>
+        /// <seealso href="http://stackoverflow.com/a/4975942/467582"/>
         public static string HumanFriendlyFileSize(ulong byteCount)
         {
             string[] suf = { "B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB" }; // Longs run out around EB
@@ -367,8 +441,13 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     <c>true</c> if <paramref name="path"/> is a file; otherwise <c>false</c>.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static bool IsFile(string path)
         {
+            EnsureValidChars(path);
             return !IsDirectory(path);
         }
 
@@ -381,8 +460,13 @@ namespace DotNetUtils.FS
         /// <returns>
         ///     <c>true</c> if <paramref name="path"/> is a directory; otherwise <c>false</c>.
         /// </returns>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any invalid characters as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </exception>
         public static bool IsDirectory(string path)
         {
+            EnsureValidChars(path);
             return (File.GetAttributes(path) & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
@@ -409,22 +493,6 @@ namespace DotNetUtils.FS
         public static bool ContainsFileName([NotNull] string path)
         {
             return new Regex(@"[^/\\]\.\w+$").IsMatch(path);
-        }
-
-        /// <summary>
-        ///     Determines if the given <paramref name="fileName"/> is a valid filename under the current operating system.
-        /// </summary>
-        /// <param name="fileName">
-        ///     Filename to validate.
-        /// </param>
-        /// <returns>
-        ///     <c>true</c> if <paramref name="fileName"/> is a valid file name; otherwise <c>false</c>.
-        /// </returns>
-        /// <seealso cref="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
-        public static bool IsValidFilename(string fileName)
-        {
-            var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
-            return !containsABadCharacter.IsMatch(fileName);
         }
 
         /// <summary>
@@ -466,6 +534,51 @@ namespace DotNetUtils.FS
         #endregion
 
         #region Validate / normalize / sanitize
+
+        /// <summary>
+        ///     Determines if the given <paramref name="fileName"/> is a valid filename under the current operating system.
+        /// </summary>
+        /// <param name="fileName">
+        ///     Filename to validate.
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if <paramref name="fileName"/> is a valid file name; otherwise <c>false</c>.
+        /// </returns>
+        /// <seealso href="http://stackoverflow.com/questions/62771/how-check-if-given-string-is-legal-allowed-file-name-under-windows"/>
+        public static bool IsValidFilename(string fileName)
+        {
+            var containsABadCharacter = new Regex("[" + Regex.Escape(new string(Path.GetInvalidFileNameChars())) + "]");
+            return !containsABadCharacter.IsMatch(fileName);
+        }
+
+        /// <summary>
+        ///     Returns any invalid characters found in the given <paramref name="path"/> as determined by
+        ///     <see href="Path.GetInvalidPathChars"/>.
+        /// </summary>
+        /// <param name="path">
+        ///     Path to a file or directory.
+        /// </param>
+        /// <returns>
+        ///     Array of invalid characters in <paramref name="path"/>.
+        /// </returns>
+        public static char[] GetInvalidChars(string path)
+        {
+            return Path.GetInvalidPathChars().Where(path.Contains).ToArray();
+        }
+
+        /// <summary>
+        ///     Throws an exception if the given <paramref name="path"/> contains any illegal characters.
+        /// </summary>
+        /// <param name="path"></param>
+        /// <exception cref="ID10TException">
+        ///     Thrown if <paramref name="path"/> contains any illegal characters as determined by <see href="GetInvalidChars"/>.
+        /// </exception>
+        public static void EnsureValidChars(string path)
+        {
+            var invalidChars = GetInvalidChars(path);
+            if (invalidChars.Any())
+                throw new ID10TException(string.Format("Path contains invalid characters: {0}", invalidChars.Join()));
+        }
 
         /// <summary>
         ///     Sanitizes the given <paramref name="fileName"/> by removing all invalid characters.
@@ -550,7 +663,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void OpenFile([NotNull] string filePath, [CanBeNull] Control control = null)
@@ -558,7 +671,11 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
+#if __MonoCS__
+            OpenUtility(filePath);
+#else
             Process.Start(filePath);
+#endif
         }
 
         /// <summary>
@@ -569,7 +686,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="filePath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void ShowInFolder([NotNull] string filePath, [CanBeNull] Control control = null)
@@ -577,11 +694,13 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new FileInfo(filePath), control))
                 return;
 
+#if __MonoCS__
+            OpenUtility("-R", filePath);
+#else
             // combine the arguments together
             // it doesn't matter if there is a space after ','
-            string argument = "/select, \"" + filePath + "\"";
-
-            Process.Start("explorer.exe", argument);
+            Process.Start("explorer.exe", "/select, \"" + filePath + "\"");
+#endif
         }
 
         /// <summary>
@@ -592,7 +711,7 @@ namespace DotNetUtils.FS
         /// </param>
         /// <param name="control">
         ///     Optional Windows form control.  If specified and the given <paramref name="folderPath" /> does not exist,
-        ///     a <see cref="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
+        ///     a <see href="MessageBox" /> will be displayed as a modal window with <paramref name="control" />'s parent form as
         ///     the owner.
         /// </param>
         public static void OpenFolder([NotNull] string folderPath, [CanBeNull] Control control = null)
@@ -600,7 +719,26 @@ namespace DotNetUtils.FS
             if (!EnsureExists(new DirectoryInfo(folderPath), control))
                 return;
 
+#if __MonoCS__
+            OpenUtility("-R", folderPath);
+#else
             Process.Start(folderPath);
+#endif
+        }
+
+        private static void OpenUtility(string filePath)
+        {
+            OpenUtility("", filePath);
+        }
+
+        private static void OpenUtility(string leadingArgs, string filePath)
+        {
+            // Abort if we're not on Mac OS X
+            if (!File.Exists("/usr/bin/open")) return;
+
+            // http://stackoverflow.com/a/2283716/467582
+            var filePathEscaped = filePath.Replace("'", @"\'");
+            Process.Start(new ProcessStartInfo("open", string.Format("{0} '{1}'", leadingArgs, filePathEscaped)) { UseShellExecute = false });
         }
 
         /// <summary>

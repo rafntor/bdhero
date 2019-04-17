@@ -16,14 +16,10 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using DotNetUtils.Extensions;
-using WindowsOSUtils.JobObjects;
 using OSUtils.JobObjects;
 
 namespace ProcessUtils
@@ -31,7 +27,7 @@ namespace ProcessUtils
     /// <summary>
     /// Represents a child console (CLI) process that runs without any user interaction on the UI thread.
     /// The process's stdout and stderr streams are captured and passed to the
-    /// <see cref="StdOut"/> and <see cref="StdErr"/> event handlers, respectively.
+    /// <see href="StdOut"/> and <see href="StdErr"/> event handlers, respectively.
     /// Allows for pausing (suspending) and resuming the process, as well as receiving a notification
     /// when the process exits along with its exit code.
     /// </summary>
@@ -74,8 +70,20 @@ namespace ProcessUtils
         }
         private ArgumentList _arguments = new ArgumentList();
 
+        public string FullCommand
+        {
+            get
+            {
+                var list = new ArgumentList(ExePath);
+                list.AddAll(Arguments);
+                return list.ToString();
+            }
+        }
+
         private bool _hasStarted;
         private bool _hasExited;
+
+        protected bool? CleanExit;
 
         /// <summary>
         /// Gets the system process ID.
@@ -97,7 +105,7 @@ namespace ProcessUtils
             {
                 if (value != _state)
                 {
-                    Logger.DebugFormat("Process \"{0}\" changing state from {1} to {2}", ExePath, _state, value);
+                    Logger.InfoFormat("Process \"{0}\" changing state from {1} to {2}", ExePath, _state, value);
                     _state = value;
                     PropertyChanged.Notify(() => State);
                 }
@@ -150,7 +158,7 @@ namespace ProcessUtils
         #region Constructor
 
         /// <summary>
-        ///     Constructs a new <see cref="NonInteractiveProcess"/> object that uses the given
+        ///     Constructs a new <see href="NonInteractiveProcess"/> object that uses the given
         ///     <paramref name="jobObjectManager"/> to ensure that child processes are terminated
         ///     if the parent process exits prematurely.
         /// </summary>
@@ -174,22 +182,33 @@ namespace ProcessUtils
         {
             try
             {
-                return StartImpl();
+                StartImpl();
             }
             catch (Exception e)
             {
                 Logger.Error("Error occurred while starting/running NonInteractiveProcess", e);
-                Kill();
                 Exception = e;
-                State = NonInteractiveProcessState.Error;
-                ProcessOnExited();
+                Kill(true);
                 throw;
             }
+            finally
+            {
+                ProcessExitedSync();
+            }
+            return this;
+        }
+
+        protected virtual void OnBeforeStart(Process process)
+        {
+        }
+
+        protected virtual void OnStart(Process process)
+        {
         }
 
         /// <exception cref="InvalidOperationException"></exception>
         /// <exception cref="FileNotFoundException"></exception>
-        private NonInteractiveProcess StartImpl()
+        private void StartImpl()
         {
             if (State != NonInteractiveProcessState.Ready)
                 throw new InvalidOperationException("NonInteractiveProcess.Start() cannot be called more than once.");
@@ -204,7 +223,9 @@ namespace ProcessUtils
                     process.StartInfo.FileName = ExePath;
                     process.StartInfo.Arguments = Arguments.ToString();
                     process.EnableRaisingEvents = true;
-                    process.Exited += ProcessOnExited;
+                    process.Exited += ProcessExitedAsync;
+
+                    OnBeforeStart(process);
 
                     if (BeforeStart != null)
                         BeforeStart(this, EventArgs.Empty);
@@ -212,7 +233,7 @@ namespace ProcessUtils
                     process.OutputDataReceived += (sender, args) => HandleStdOut(args.Data);
                     process.ErrorDataReceived += (sender, args) => HandleStdErr(args.Data);
 
-                    Logger.DebugFormat("\"{0}\" {1}", ExePath, Arguments);
+                    Logger.Info(FullCommand);
 
                     process.Start();
 
@@ -237,21 +258,19 @@ namespace ProcessUtils
                     process.BeginOutputReadLine();
                     process.BeginErrorReadLine();
 
-                    Logger.DebugFormat("Waiting for process \"{0}\" w/ PID = {1} to exit...", ExePath, Id);
+                    Logger.InfoFormat("Waiting for process \"{0}\" w/ PID = {1} to exit...", ExePath, Id);
+
+                    OnStart(process);
 
                     process.WaitForExit();
 
                     _hasExited = true;
 
-                    Logger.DebugFormat("Process \"{0}\" w/ PID = {1} exited", ExePath, Id);
+                    Logger.InfoFormat("Process \"{0}\" w/ PID = {1} exited", ExePath, Id);
 
                     ExitCode = process.ExitCode;
                 }
             }
-
-            ProcessOnExited();
-
-            return this;
         }
 
         private bool ShouldKeepRunning
@@ -268,8 +287,24 @@ namespace ProcessUtils
         /// </summary>
         public void Kill()
         {
-            if (!CanKill) return;
-            Logger.DebugFormat("Killing process \"{0}\" w/ PID = {1}...", ExePath, Id);
+            Kill(false);
+        }
+
+        /// <summary>
+        /// Manually aborts the process immediately.
+        /// </summary>
+        /// <param name="dueToError">
+        /// Indicates that the process is being killed programmatically due to an error rather than by user action.
+        /// </param>
+        public void Kill(bool dueToError)
+        {
+            if (!CanKill)
+                return;
+
+            Logger.InfoFormat("Killing process \"{0}\" w/ PID = {1}{2}...", ExePath, Id, dueToError ? " due to an error being thrown" : "");
+
+            State = dueToError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Killed;
+
             try
             {
                 GetProcess().Kill();
@@ -278,7 +313,6 @@ namespace ProcessUtils
             {
                 Logger.WarnFormat("Unable to kill process \"{0}\": Exception was thrown:\n{1}", ExePath, exception);
             }
-            State = NonInteractiveProcessState.Killed;
         }
 
         private bool IsValidProcess
@@ -344,21 +378,51 @@ namespace ProcessUtils
 
         #region Exit handling
 
-        /// <summary>
-        /// Invoked synchronously by <see cref="Start()"/> after waiting for the process to exit.
-        /// </summary>
-        private void ProcessOnExited()
+        private bool IsUncleanExit
         {
+            get { return CleanExit.HasValue && CleanExit.Value == false; }
+        }
+
+        protected virtual bool IsError
+        {
+            get
+            {
+                if (State == NonInteractiveProcessState.Error)
+                    return true;
+
+                if (ExitCode != 0)
+                    return true;
+
+                if (Exception != null)
+                    return true;
+
+                if (IsUncleanExit)
+                    return true;
+
+                return false;
+            }
+        }
+
+        protected virtual void BeforeProcessExited()
+        {
+        }
+
+        /// <summary>
+        /// Invoked synchronously by <see href="Start()"/> after waiting for the process to exit.
+        /// </summary>
+        private void ProcessExitedSync()
+        {
+            BeforeProcessExited();
+
             _hasExited = true;
 
-            Logger.DebugFormat("Process \"{0}\" exited (synchronous event)", ExePath);
+            LogExit("synchronous");
 
             _stopwatch.Stop();
 
             if (State != NonInteractiveProcessState.Killed)
             {
-                var hasError = (State == NonInteractiveProcessState.Error) || ExitCode != 0 || Exception != null;
-                State = hasError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Completed;
+                State = IsError ? NonInteractiveProcessState.Error : NonInteractiveProcessState.Completed;
             }
 
             if (Exited != null)
@@ -366,16 +430,31 @@ namespace ProcessUtils
         }
 
         /// <summary>
-        /// Invoked asynchronously by the <see cref="Process.Exited"/> event.
+        /// Invoked asynchronously by the <see href="Process.Exited"/> event.
         /// </summary>
-        private void ProcessOnExited(object sender, EventArgs eventArgs)
+        private void ProcessExitedAsync(object sender, EventArgs eventArgs)
         {
+            BeforeProcessExited();
+
             _hasExited = true;
 
-            Logger.DebugFormat("Process \"{0}\" exited (asynchronous event)", ExePath);
+            LogExit("asynchronous");
 
             var process = sender as Process;
             if (process == null) return;
+        }
+
+        private void LogExit(string eventType)
+        {
+            var message = string.Format("Process \"{0}\" exited {1} ({2} event)",
+                                        ExePath,
+                                        CleanExit.HasValue ? (CleanExit.Value ? "cleanly" : "uncleanly") : "",
+                                        eventType);
+
+            if (CleanExit.HasValue && CleanExit.Value == false)
+                Logger.Warn(message);
+            else
+                Logger.Info(message);
         }
 
         #endregion
@@ -386,7 +465,7 @@ namespace ProcessUtils
         {
             if (!CanPause) return;
 
-            Logger.DebugFormat("Pausing process \"{0}\"", ExePath);
+            Logger.InfoFormat("Pausing process \"{0}\"", ExePath);
 
             GetProcess().Suspend();
             _stopwatch.Stop();
@@ -397,7 +476,7 @@ namespace ProcessUtils
         {
             if (!CanResume) return;
 
-            Logger.DebugFormat("Resuming process \"{0}\"", ExePath);
+            Logger.InfoFormat("Resuming process \"{0}\"", ExePath);
 
             GetProcess().Resume();
             _stopwatch.Start();
@@ -453,7 +532,7 @@ namespace ProcessUtils
     }
 
     /// <summary>
-    /// Describes the state of a <see cref="NonInteractiveProcess"/>.
+    /// Describes the state of a <see href="NonInteractiveProcess"/>.
     /// States are mutually exclusive; a NonInteractiveProcess can only have one state at a time.
     /// </summary>
     public enum NonInteractiveProcessState
@@ -474,7 +553,7 @@ namespace ProcessUtils
         Paused,
 
         /// <summary>
-        /// Process was killed manually by calling <see cref="NonInteractiveProcess.Kill()"/>.
+        /// Process was killed manually by calling <see href="NonInteractiveProcess.Kill()"/>.
         /// </summary>
         Killed,
 

@@ -15,10 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BDHero.JobQueue;
 using DotNetUtils.Annotations;
 using I18N;
@@ -95,20 +93,20 @@ namespace BDHero.BDROM
         public class DerivedMetadata
         {
             /// <summary>
-            /// The value of <see cref="AnyDVDDiscInf.VolumeLabel"/> if it is not <c>null</c>,
-            /// otherwise the value of <see cref="RawMetadata.HardwareVolumeLabel"/>.
+            /// The value of <see href="AnyDVDDiscInf.VolumeLabel"/> if it is not <c>null</c>,
+            /// otherwise the value of <see href="RawMetadata.HardwareVolumeLabel"/>.
             /// </summary>
             [NotNull]
             public string VolumeLabel;
 
             /// <summary>
-            /// Same as <see cref="VolumeLabel"/>, but with leading numbers and trailing region markers removed and underscores converted to spaces.
+            /// Same as <see href="VolumeLabel"/>, but with leading numbers and trailing region markers removed and underscores converted to spaces.
             /// </summary>
             [NotNull]
             public string VolumeLabelSanitized;
 
             /// <summary>
-            /// Same as <see cref="RawMetadata.AllBdmtTitles"/>, but with blank/useless titles removed.
+            /// Same as <see href="RawMetadata.AllBdmtTitles"/>, but with blank/useless titles removed.
             /// Should only contain valid, useful titles.
             /// Trailing garbage like " - Blu-ray(C)" is also removed;
             /// </summary>
@@ -116,7 +114,7 @@ namespace BDHero.BDROM
             public IDictionary<Language, string> ValidBdmtTitles = new Dictionary<Language, string>();
 
             /// <summary>
-            /// Same as <see cref="RawMetadata.AllBdmtLanguages"/>, but with languages that have blank/useless titles removed.
+            /// Same as <see href="RawMetadata.AllBdmtLanguages"/>, but with languages that have blank/useless titles removed.
             /// Should only contain languages that have valid, useful titles.
             /// </summary>
             [NotNull]
@@ -126,7 +124,7 @@ namespace BDHero.BDROM
             }
 
             /// <summary>
-            /// Same as <see cref="RawMetadata.DboxTitle"/>, but cleaned to remove useless trailing junk.
+            /// Same as <see href="RawMetadata.DboxTitle"/>, but cleaned to remove useless trailing junk.
             /// </summary>
             [CanBeNull]
             public string DboxTitleSanitized;

@@ -15,11 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using BDHero.BDROM;
 using BDInfo;
 
@@ -39,7 +37,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
         }
 
         /// <summary>
-        /// Guards against a bug in BDInfo where a non-existent stream clip (00121.m2ts) gets created with a <c>null</c> <see cref="TSStreamClip.StreamFile"/>
+        /// Guards against a bug in BDInfo where a non-existent stream clip (00121.m2ts) gets created with a <c>null</c> <see href="TSStreamClip.StreamFile"/>
         /// when scanning CASINO_ROYAL.
         /// </summary>
         private static bool StreamFileExists(TSStreamClip tsStreamClip)

@@ -18,6 +18,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DotNetUtils.Extensions;
 using I18N;
 using Newtonsoft.Json;
 
@@ -29,6 +30,9 @@ namespace BDHero.BDROM
     /// </summary>
     public class Playlist
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         #region Private constants
 
         /// <summary>
@@ -456,6 +460,22 @@ namespace BDHero.BDROM
         public bool IsFeatureLength(TimeSpan maxPlaylistLength)
         {
             return Length >= TimeSpan.FromMilliseconds(FeatureLengthPercentage * maxPlaylistLength.TotalMilliseconds);
+        }
+
+        #endregion
+
+        #region Logging
+
+        public void Log()
+        {
+            var tracks = Tracks.Select(track => track.ToStringLoggable()).ToList();
+
+            Logger.InfoFormat("{0}: {1}, {2} chapters, {3:N0} bytes\n{4}",
+                              FileName,
+                              Length.ToStringMedium(),
+                              ChapterCount,
+                              FileSize,
+                              tracks.IndentTrim());
         }
 
         #endregion

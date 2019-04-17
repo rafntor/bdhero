@@ -1,8 +1,25 @@
-﻿using System.Collections.Generic;
+﻿// Copyright 2014 Andrew C. Dvorak
+//
+// This file is part of BDHero.
+//
+// BDHero is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BDHero is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
+
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DotNetUtils;
 using LicenseUtils.Properties;
-using Newtonsoft.Json;
 
 namespace LicenseUtils
 {
@@ -17,7 +34,7 @@ namespace LicenseUtils
 
         public static Works Import()
         {
-            var licenseMap = JsonConvert.DeserializeObject<Dictionary<string, License>>(GetResource("licenses_json"));
+            var licenseMap = SmartJsonConvert.DeserializeObject<Dictionary<string, License>>(GetResource("licenses_json"));
             var licenses = new List<License>();
 
             foreach (var id in licenseMap.Keys)
@@ -29,7 +46,7 @@ namespace LicenseUtils
                 licenses.Add(license);
             }
 
-            var works = JsonConvert.DeserializeObject<Works>(GetResource("works_json"));
+            var works = SmartJsonConvert.DeserializeObject<Works>(GetResource("works_json"));
             foreach (var work in works.All.Where(work => work.LicenseId != null))
             {
                 work.License = licenseMap[work.LicenseId];

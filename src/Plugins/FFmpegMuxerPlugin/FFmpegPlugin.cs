@@ -18,6 +18,7 @@
 using System;
 using System.Drawing;
 using System.Threading;
+using System.Windows.Forms;
 using BDHero.JobQueue;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
@@ -29,9 +30,6 @@ namespace BDHero.Plugin.FFmpegMuxer
 {
     public class FFmpegPlugin : IMuxerPlugin
     {
-        private readonly IJobObjectManager _jobObjectManager;
-        private readonly ITempFileRegistrar _tempFileRegistrar;
-
         private static readonly log4net.ILog Logger =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -46,7 +44,10 @@ namespace BDHero.Plugin.FFmpegMuxer
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler
+        {
+            get { return ShowPluginInfoForm; }
+        }
 
         public MatroskaFeatures SupportedFeatures
         {
@@ -58,6 +59,9 @@ namespace BDHero.Plugin.FFmpegMuxer
                     ;
             }
         }
+
+        private readonly IJobObjectManager _jobObjectManager;
+        private readonly ITempFileRegistrar _tempFileRegistrar;
 
         private readonly AutoResetEvent _mutex = new AutoResetEvent(false);
 
@@ -94,45 +98,84 @@ namespace BDHero.Plugin.FFmpegMuxer
 
             var ffmpeg = new FFmpeg(job, job.SelectedPlaylist, job.OutputPath, _jobObjectManager, _tempFileRegistrar);
             ffmpeg.ProgressUpdated += state => OnProgressUpdated(ffmpeg, state, cancellationToken);
-            ffmpeg.Exited += FFmpegOnExited;
+            ffmpeg.Exited += OnExited;
             ffmpeg.StartAsync();
             cancellationToken.Register(ffmpeg.Kill, true);
             WaitForThreadToExit();
 
-            if (_exception == null) return;
+            if (_exception == null)
+                return;
 
-            if (_exception is OperationCanceledException)
-                throw new OperationCanceledException("FFmpeg was canceled", _exception);
-            throw new Exception("Error occurred while muxing with FFmpeg", _exception);
+            Log(job, ffmpeg);
+
+            throw new FFmpegException(_exception.Message, _exception);
         }
+
+        private DialogResult ShowPluginInfoForm(Form parent)
+        {
+            using (var form = new PluginInfoForm(_jobObjectManager))
+            {
+                return form.ShowDialog(parent);
+            }
+        }
+
+        #region Logging
+
+        private static void Log(Job job, FFmpeg ffmpeg)
+        {
+            Logger.InfoFormat("FFmpeg was invoked with: {0}", ffmpeg.FullCommand);
+            job.Log();
+            ffmpeg.Log();
+        }
+
+        #endregion
 
         private void OnProgressUpdated(FFmpeg ffmpeg, ProgressState progressState, CancellationToken cancellationToken)
         {
-            var status = string.Format("Muxing to MKV with FFmpeg: {0} - {1} @ {2} fps",
+            var shortStatus = string.Format("Muxing {0} @ {2:F0} fps - {1}",
+                TimeSpan.FromMilliseconds(ffmpeg.CurOutTimeMs).ToStringShort(),
+                FileUtils.HumanFriendlyFileSize(ffmpeg.CurSize),
+                ffmpeg.CurFps);
+
+            var longStatus = string.Format("Muxing to MKV: {0} - {1} @ {2:N1} fps",
                 TimeSpan.FromMilliseconds(ffmpeg.CurOutTimeMs).ToStringMedium(),
                 FileUtils.HumanFriendlyFileSize(ffmpeg.CurSize),
-                ffmpeg.CurFps.ToString("0.0"));
+                ffmpeg.CurFps);
 
-            Host.ReportProgress(this, progressState.PercentComplete, status);
+            Host.ReportProgress(this, progressState.PercentComplete, shortStatus, longStatus);
 
             if (cancellationToken.IsCancellationRequested)
                 ffmpeg.Kill();
         }
 
-        private void FFmpegOnExited(NonInteractiveProcessState state, int exitCode, Exception exception, TimeSpan runTime)
+        private void OnExited(NonInteractiveProcessState state, int exitCode, Exception exception, TimeSpan runTime)
         {
             Logger.InfoFormat("FFmpeg exited with state {0} and code {1}", state, exitCode);
-            if (state != NonInteractiveProcessState.Completed)
+
+            _exception = _exception ?? exception;
+
+            if (_exception == null && state != NonInteractiveProcessState.Completed)
             {
-                if (state == NonInteractiveProcessState.Killed)
+                try
                 {
-                    _exception = exception ?? new OperationCanceledException(string.Format("FFmpeg exited with state: {0}", state));
+                    if (state == NonInteractiveProcessState.Killed)
+                    {
+                        throw new FFmpegException("FFmpeg was canceled", new OperationCanceledException())
+                              {
+                                  IsReportable = false
+                              };
+                    }
+                    throw new FFmpegException(string.Format("FFmpeg exited with state: {0}", state))
+                          {
+                              IsReportable = true
+                          };
                 }
-                else
+                catch (FFmpegException e)
                 {
-                    _exception = exception ?? new Exception(string.Format("FFmpeg exited with state: {0}", state));
+                    _exception = e;
                 }
             }
+
             SignalThreadExited();
         }
 

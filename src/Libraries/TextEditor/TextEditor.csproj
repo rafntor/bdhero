@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{ACD66B56-A9CF-4958-8050-07DDD1AA43BF}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>TextEditor</RootNamespace>
+    <AssemblyName>TextEditor</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Debug\TextEditor.XML</DocumentationFile>
+    <Prefer32Bit>false</Prefer32Bit>
+    <NoWarn>1591</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ICSharpCode.AvalonEdit, Version=5.0.3.0, Culture=neutral, PublicKeyToken=9cc39be672370310, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\AvalonEdit.5.0.4\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.TextEditor, Version=3.2.1.6466, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\ICSharpCode.TextEditor.3.2.1.6466\lib\Net20\ICSharpCode.TextEditor.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Extensions\ControlExtensions.cs" />
+    <Compile Include="FontSizeConverter.cs" />
+    <Compile Include="ITextEditor.cs" />
+    <Compile Include="ITextEditorOptions.cs" />
+    <Compile Include="MultilineHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Selection.cs" />
+    <Compile Include="SyntaxHighlighting\Definitions\FileNameModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FileNameModeXshd.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\Definitions\FileNameModeXshdModel.cs" />
+    <Compile Include="SyntaxHighlighting\Definitions\FilePathModeXshd.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>FilePathModeXshd.tt</DependentUpon>
+    </Compile>
+    <Compile Include="SyntaxHighlighting\Definitions\FilePathModeXshdModel.cs" />
+    <Compile Include="Resources\ResourceLoader.cs" />
+    <Compile Include="SyntaxHighlighting\MySyntaxMode.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\BaseSyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\ISyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\SmartResourceSyntaxModeProvider.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\SyntaxModeProviderAdapter.cs" />
+    <Compile Include="SyntaxHighlighting\Providers\T4SyntaxModeProvider.cs" />
+    <Compile Include="StandardSyntaxType.cs" />
+    <Compile Include="WinForms\CompletionControllerImpl.cs" />
+    <Compile Include="WinForms\CompletionProviderImpl.cs" />
+    <Compile Include="WinForms\SyntaxHighlightingFileTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="WinForms\TextEditorContextMenuStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="WinForms\TextEditorControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TextEditorFactory.cs" />
+    <Compile Include="WPF\CompletionControllerImpl.cs" />
+    <Compile Include="WPF\CompletionProviderImpl.cs" />
+    <Compile Include="WPF\ElementHostImpl.cs" />
+    <Compile Include="WPF\KeyboardHelper.cs" />
+    <Compile Include="WPF\TextEditorOptionsImpl.cs" />
+    <Compile Include="WinForms\TextEditorImpl.cs" />
+    <Compile Include="WinForms\TextEditorOptionsImpl.cs" />
+    <Compile Include="WPF\TextEditorImpl.cs" />
+    <Compile Include="WPF\WpfExtensions.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="SyntaxHighlighting\Definitions\FileNameModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>FileNameModeXshd.cs</LastGenOutput>
+    </None>
+    <None Include="SyntaxHighlighting\Definitions\FilePathModeXshd.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>FilePathModeXshd.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
+      <Project>{B95F9FD4-F2BB-44C8-9A3A-F2210670A51C}</Project>
+      <Name>DotNetUtils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NativeAPI\NativeAPI.csproj">
+      <Project>{2D56D636-1D17-400A-8C0A-0272F1013DFC}</Project>
+      <Name>NativeAPI</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\UILib\UILib.csproj">
+      <Project>{fe47953b-cf34-4328-8416-fb4e2cd2e2ca}</Project>
+      <Name>UILib</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SyntaxHighlighting\Definitions\MarkDown-Mode.xshd" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\property.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\property-blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tag.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\terminal.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

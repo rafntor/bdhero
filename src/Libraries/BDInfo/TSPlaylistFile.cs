@@ -346,10 +346,11 @@ namespace BDInfo
                 int pos = 0;
 
                 _fileType = ReadString(data, 8, ref pos);
-                if (_fileType != "MPLS0100" && _fileType != "MPLS0200")
+                if (_fileType != "MPLS0100" &
+                    _fileType != "MPLS0200")
                 {
-                    throw new Exception(string.Format(
-                        "Playlist {0} has an unknown file type {1}.",
+                    throw new InvalidDataException(string.Format(
+                        "Playlist {0} has an unknown file type {1}.  The disc may be damaged or corrupt.",
                         _fileInfo.Name, _fileType));
                 }
 
@@ -395,9 +396,9 @@ namespace BDInfo
                     }
                     if (streamClipFile == null)
                     {
-                        throw new Exception(string.Format(
+                        throw new FileNotFoundException(string.Format(
                             "Playlist {0} referenced missing file {1}.",
-                            _fileInfo.Name, streamFileName));
+                            _fileInfo.Name, streamFileName), _fileInfo.FullName);
                     }
 
                     pos += 1;
@@ -445,9 +446,9 @@ namespace BDInfo
                             }
                             if (angleFile == null)
                             {
-                                throw new Exception(string.Format(
+                                throw new FileNotFoundException(string.Format(
                                     "Playlist {0} referenced missing angle file {1}.",
-                                    _fileInfo.Name, angleFileName));
+                                    _fileInfo.Name, angleFileName), _fileInfo.FullName);
                             }
 
                             TSStreamClipFile angleClipFile = null;
@@ -459,9 +460,9 @@ namespace BDInfo
                             }
                             if (angleClipFile == null)
                             {
-                                throw new Exception(string.Format(
+                                throw new FileNotFoundException(string.Format(
                                     "Playlist {0} referenced missing angle file {1}.",
-                                    _fileInfo.Name, angleClipFileName));
+                                    _fileInfo.Name, angleClipFileName), _fileInfo.FullName);
                             }
 
                             TSStreamClip angleClip =

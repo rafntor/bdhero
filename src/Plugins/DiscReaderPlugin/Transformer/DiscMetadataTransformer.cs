@@ -19,11 +19,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 using BDHero.BDROM;
 using BDHero.JobQueue;
+using BDHero.Plugin.DiscReader.Exceptions;
 using DotNetUtils.Annotations;
+using DotNetUtils.Extensions;
 using DotNetUtils.FS;
 using I18N;
 using IniParser;
@@ -32,6 +33,9 @@ namespace BDHero.Plugin.DiscReader.Transformer
 {
     public static class DiscMetadataTransformer
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static readonly Regex BdmtFileNameRegex = new Regex(
             "bdmt_([a-z]{3}).xml",
             RegexOptions.IgnoreCase);
@@ -51,30 +55,43 @@ namespace BDHero.Plugin.DiscReader.Transformer
         public static void Transform(Disc disc)
         {
             var raw = new DiscMetadata.RawMetadata
-                {
-                    HardwareVolumeLabel = GetHardwareVolumeLabel(disc),
-                    DiscInf = GetAnyDVDDiscInf(disc),
-                    AllBdmtTitles = GetAllBdmtTitles(disc),
-                    DboxTitle = GetDboxTitle(disc),
-                    V_ISAN = GetVISAN(disc)
-                };
+                        {
+                            HardwareVolumeLabel = TryGet(disc, () => GetHardwareVolumeLabel(disc)),
+                            DiscInf             = TryGet(disc, () => GetAnyDVDDiscInf(disc)),
+                            AllBdmtTitles       = TryGet(disc, () => GetAllBdmtTitles(disc)),
+                            DboxTitle           = TryGet(disc, () => GetDboxTitle(disc)),
+                            V_ISAN              = TryGet(disc, () => GetVISAN(disc)),
+                        };
 
             var derived = new DiscMetadata.DerivedMetadata
-                {
-                    VolumeLabel = GetVolumeLabel(raw),
-                    VolumeLabelSanitized = GetVolumeLabelSanitized(raw),
-                    ValidBdmtTitles = GetValidBdmtTitles(raw.AllBdmtTitles),
-                    DboxTitleSanitized = GetDboxTitleSanitized(raw),
-                    SearchQueries = new List<SearchQuery>() /* populated by DiscTransformer */
-                };
+                            {
+                                VolumeLabel          = TryGet(disc, () => GetVolumeLabel(raw)),
+                                VolumeLabelSanitized = TryGet(disc, () => GetVolumeLabelSanitized(raw)),
+                                ValidBdmtTitles      = TryGet(disc, () => GetValidBdmtTitles(raw.AllBdmtTitles)),
+                                DboxTitleSanitized   = TryGet(disc, () => GetDboxTitleSanitized(raw)),
+                                SearchQueries        = TryGet(disc, () => new List<SearchQuery>()), /* populated by DiscTransformer */
+                            };
 
             var metadata = new DiscMetadata
-                {
-                    Raw = raw,
-                    Derived = derived
-                };
+                            {
+                                Raw = raw,
+                                Derived = derived
+                            };
 
             disc.Metadata = metadata;
+        }
+
+        private static TResult TryGet<TResult>(Disc disc, Func<TResult> func)
+        {
+            try
+            {
+                return func();
+            }
+            catch (Exception ex)
+            {
+                Logger.Error(string.Format("Disc.FileSystem:\n{0}", disc.FileSystem.ToJsonPlainIndented().Indent()));
+                throw new DiscMetadataTransformerException("Error occurred while retrieving metadata from disc.", ex);
+            }
         }
 
         #region Derived methods
@@ -186,7 +203,7 @@ namespace BDHero.Plugin.DiscReader.Transformer
             if (discInf == null)
                 return null;
             var parser = new FileIniDataParser();
-            var data = parser.LoadFile(discInf.FullName);
+            var data = parser.ReadFile(discInf.FullName);
             var discData = data["disc"];
             var anyDVDDiscInf = new AnyDVDDiscInf
                 {

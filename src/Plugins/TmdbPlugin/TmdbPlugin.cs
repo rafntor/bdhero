@@ -24,10 +24,10 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using BDHero.Plugin;
 using BDHero.JobQueue;
+using DotNetUtils;
 using DotNetUtils.Extensions;
 using I18N;
 using WatTmdb.V3;
-using Newtonsoft.Json;
 using log4net;
 
 namespace TmdbPlugin
@@ -59,7 +59,7 @@ namespace TmdbPlugin
 
         public int RunOrder { get { return 1; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public void LoadPlugin(IPluginHost host, PluginAssemblyInfo assemblyInfo)
         {
@@ -81,6 +81,18 @@ namespace TmdbPlugin
             var prefs = LoadPreferences();
 
             if (cancellationToken.IsCancellationRequested)
+                return;
+
+            if (_apiKey == null)
+            {
+                const string message = "No API key found";
+                Logger.Error(message);
+                throw new TmdbException(message);
+            }
+
+            _tmdbApi = new Tmdb(_apiKey, _searchISO_639_1);
+
+            if (Configuration == null)
                 return;
 
             Search(job);
@@ -160,21 +172,26 @@ namespace TmdbPlugin
 
         #region TMDb Configuration
 
-        private TmdbConfiguration GetConfiguration()
+        private TmdbConfiguration Configuration
         {
-            if (_configuration == null)
+            get
             {
+                if (_configuration != null)
+                    return _configuration;
+
                 Logger.Debug("Getting TMDb configuration");
+
                 _configuration = _tmdbApi.GetConfiguration();
+
+                return _configuration;
             }
-            return _configuration;
         }
 
         private void GetBaseImageUrl()
         {
             if (string.IsNullOrEmpty(_rootImageUrl))
             {
-                _rootImageUrl = GetConfiguration().images.base_url + "w185";
+                _rootImageUrl = Configuration.images.base_url + "w185";
             }
 
             if (string.IsNullOrEmpty(_rootImageUrl))
@@ -250,15 +267,6 @@ namespace TmdbPlugin
 
             var searchTitle = query.Title;
             var searchYear = query.Year;
-
-            if (_apiKey == null)
-            {
-                const string message = "ERROR: No API key found";
-                Logger.Error(message);
-                throw new Exception(message);
-            }
-
-            _tmdbApi = new Tmdb(_apiKey, _searchISO_639_1);
 
             // TMDb (previously) choked on dashes - not sure if it still does or not...
             // E.G.: "The Amazing Spider-Man" --> "The Amazing Spider Man"
@@ -364,7 +372,7 @@ namespace TmdbPlugin
                 {
                     if (string.IsNullOrEmpty(_rootImageUrl))
                     {
-                        _rootImageUrl = GetConfiguration().images.base_url + "original";
+                        _rootImageUrl = Configuration.images.base_url + "original";
                     }
                     tmdbMovieImages = _tmdbApi.GetMovieImages(movie.Id, null);
                     var posterLanguages = (tmdbMovieImages.posters.Select(poster => poster.iso_639_1).ToList());
@@ -408,8 +416,8 @@ namespace TmdbPlugin
             var tmdbResponse = _tmdbApi.ResponseContent;
             try
             {
-                var pluginSettings = JsonConvert.DeserializeObject<TmdbApiErrors>(tmdbResponse);
-                Logger.ErrorFormat("Error: api.themoviedb.org returned the following Status Code {0} : {1}",
+                var pluginSettings = SmartJsonConvert.DeserializeObject<TmdbApiErrors>(tmdbResponse);
+                Logger.ErrorFormat("api.themoviedb.org returned status code {0}: \"{1}\"",
                                    pluginSettings.StatusCode,
                                    pluginSettings.StatusMessage);
             }

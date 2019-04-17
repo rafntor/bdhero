@@ -17,8 +17,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using DotNetUtils.Annotations;
 using DotNetUtils.Extensions;
 
@@ -103,7 +101,7 @@ namespace BDHero.JobQueue
         public readonly IList<Episode> Episodes = new List<Episode>();
 
         /// <summary>
-        /// Gets or sets the index of the episode in <see cref="Episodes"/> selected by the user.
+        /// Gets or sets the index of the episode in <see href="Episodes"/> selected by the user.
         /// </summary>
         public int SelectedEpisodeIndex;
 
@@ -136,7 +134,7 @@ namespace BDHero.JobQueue
     }
 
     /// <summary>
-    /// Enumeration of available <see cref="ReleaseMedium"/> sub-classes.
+    /// Enumeration of available <see href="ReleaseMedium"/> sub-classes.
     /// </summary>
     public enum ReleaseMediumType
     {

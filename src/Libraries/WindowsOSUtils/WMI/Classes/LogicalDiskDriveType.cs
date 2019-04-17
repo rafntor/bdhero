@@ -18,7 +18,7 @@
 namespace WindowsOSUtils.WMI.Classes
 {
     /// <summary>
-    /// Type of disk drive represented by a <see cref="LogicalDisk"/>.
+    /// Type of disk drive represented by a <see href="LogicalDisk"/>.
     /// </summary>
     public enum LogicalDiskDriveType : uint
     {

@@ -15,11 +15,9 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using BDHero.BDROM;
 using BDHero.JobQueue;
@@ -43,7 +41,7 @@ namespace IsanPlugin
 
         public int RunOrder { get { return 0; } }
 
-        public EditPluginPreferenceHandler EditPreferences { get; private set; }
+        public PluginPropertiesHandler PropertiesHandler { get; private set; }
 
         public void LoadPlugin(IPluginHost host, PluginAssemblyInfo assemblyInfo)
         {
@@ -65,10 +63,12 @@ namespace IsanPlugin
 
             if (raw.V_ISAN != null && prefs.TryPopulate(raw.V_ISAN))
             {
+                AddSearchQuery(raw, derived);
                 return;
             }
 
             Lookup(token, raw, derived);
+            AddSearchQuery(raw, derived);
 
             if (raw.V_ISAN != null)
             {
@@ -80,16 +80,20 @@ namespace IsanPlugin
         private static void Lookup(ProgressToken token, DiscMetadata.RawMetadata raw, DiscMetadata.DerivedMetadata derived)
         {
             var provider = new IsanMetadataProvider(token);
-
             provider.Populate(raw.V_ISAN);
+        }
 
+        private static void AddSearchQuery(DiscMetadata.RawMetadata raw, DiscMetadata.DerivedMetadata derived)
+        {
             var isan = raw.ISAN;
             if (isan != null && !string.IsNullOrWhiteSpace(isan.Title))
             {
                 // TODO: Get language from isan.org
                 // Don't insert twice
                 if (!derived.SearchQueries.Any(query => query.Title == isan.Title && query.Year == isan.Year))
-                    derived.SearchQueries.Insert(0, new SearchQuery { Title = isan.Title, Year = isan.Year });
+                {
+                    derived.SearchQueries.Insert(0, new SearchQuery {Title = isan.Title, Year = isan.Year});
+                }
             }
         }
     }

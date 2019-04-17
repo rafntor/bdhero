@@ -15,13 +15,6 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using BDHero.BDROM;
 using BDHeroGUI.Forms;
@@ -68,7 +61,12 @@ namespace BDHeroGUI.Components
 
         public void ShowFilterWindow()
         {
-            var result = new FormTrackFilter(_filter).ShowDialog(this);
+            DialogResult result;
+
+            using (var form = new FormTrackFilter(_filter))
+            {
+                result = form.ShowDialog(this);
+            }
 
             if (result == DialogResult.OK)
             {
@@ -87,7 +85,7 @@ namespace BDHeroGUI.Components
 
         private bool ShowTrack(Track track)
         {
-            return _filter.Show(track) || _showAllTracks;
+            return _filter.Show(track) || _showAllTracks || track.Keep;
         }
 
         private void RefreshPlaylist()

@@ -15,22 +15,15 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using DotNetUtils;
-
 namespace BDHero.Utils
 {
     public static class AppConstants
     {
-        public const string ProjectHomepage = @"https://github.com/bdhero/bdhero";
-        public const string SourceCodeUrl = @"https://github.com/bdhero/bdhero";
-        public const string DocumentationUrl = @"https://github.com/bdhero/bdhero/wiki";
-        public const string BugReportUrl = @"https://github.com/bdhero/bdhero/issues/new";
+        public const string ProjectHomepage   = @"http://bdhero.org/";
+        public const string DownloadPageUrl   = @"http://bdhero.org/";
+        public const string SourceCodeUrl     = @"https://github.com/bdhero/bdhero";
+        public const string DocumentationUrl  = @"https://github.com/bdhero/bdhero/wiki";
+        public const string BugReportUrl      = @"https://github.com/bdhero/bdhero/issues/new";
         public const string SuggestFeatureUrl = @"https://github.com/bdhero/bdhero/issues/new";
     }
 }

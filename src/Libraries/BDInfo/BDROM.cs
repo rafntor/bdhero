@@ -21,11 +21,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
+using DotNetUtils.Exceptions;
+using DotNetUtils.Extensions;
 using I18N;
+using NativeAPI.Win.Kernel;
 
 namespace BDInfo
 {
@@ -112,6 +113,8 @@ namespace BDInfo
             {
                 throw new IOException("Unable to locate BD structure.");
             }
+
+            VerifyUnencrypted(DirectoryBDMV.Parent);
 
             DirectoryRoot = 
                 DirectoryBDMV.Parent;
@@ -239,24 +242,33 @@ namespace BDInfo
             }
         }
 
+        private void VerifyUnencrypted(DirectoryInfo root)
+        {
+            if (GetDirectory("AACS",  root, 0) != null ||
+                GetDirectory("BDSVM", root, 0) != null)
+            {
+                throw new ID10TException("Unable to read encrypted disc.");
+            }
+        }
+
         private void ReportScanProgress(string fileType, string fileName, int curStep,
             int curFileOfType, int numFilesOfType, int completedFilesOfType,
             int curFileOverall, int numFilesOverall, int completedFilesOverall)
         {
             if (ScanProgress != null)
                 ScanProgress(new BDROMScanProgressState
-                                        {
-                                            FileType = fileType,
-                                            FileName = fileName,
-                                            CurStep = curStep,
-                                            NumSteps = 3,
-                                            CurFileOfType = curFileOfType,
-                                            NumFilesOfType = numFilesOfType,
-                                            CompletedFilesOfType = completedFilesOfType,
-                                            CurFileOverall = curFileOverall,
-                                            NumFilesOverall = numFilesOverall,
-                                            CompletedFilesOverall = completedFilesOverall
-                                        });
+                             {
+                                 FileType = fileType,
+                                 FileName = fileName,
+                                 CurStep = curStep,
+                                 NumSteps = 3,
+                                 CurFileOfType = curFileOfType,
+                                 NumFilesOfType = numFilesOfType,
+                                 CompletedFilesOfType = completedFilesOfType,
+                                 CurFileOverall = curFileOverall,
+                                 NumFilesOverall = numFilesOverall,
+                                 CompletedFilesOverall = completedFilesOverall
+                             });
         }
 
         public event BDROMScanProgressHandler ScanProgress;
@@ -572,9 +584,9 @@ namespace BDInfo
 
                         foreach (Match titleMatch in titleMatches)
                         {
-                            if (titleMatch.Groups[2].ToString().Equals(discName))
+                            if (titleMatch.Groups[2].Value.Equals(discName))
                             {
-                                MainTitleIndex = int.Parse(titleMatch.Groups[1].ToString()) - 1;
+                                MainTitleIndex = titleMatch.Groups[1].Value.ParseIntInvariant() - 1;
                                 break;
                             }
                         }
@@ -605,37 +617,13 @@ namespace BDInfo
             return discName;
         }
 
-        private string GetVolumeLabel(DirectoryInfo dir)
+        private static string GetVolumeLabel(DirectoryInfo dir)
         {
-            uint serialNumber = 0;
-            uint maxLength = 0;
-            uint volumeFlags = new uint();
-            StringBuilder volumeLabel = new StringBuilder(256);
-            StringBuilder fileSystemName = new StringBuilder(256);
-            string label = "";
-
-            try
-            {
-                long result = GetVolumeInformation(
-                    dir.Name,
-                    volumeLabel,
-                    (uint)volumeLabel.Capacity,
-                    ref serialNumber,
-                    ref maxLength,
-                    ref volumeFlags,
-                    fileSystemName,
-                    (uint)fileSystemName.Capacity);
-
-                label = volumeLabel.ToString();
-            }
-            catch { }
-
-            if (label.Length == 0)
-            {
-                label = dir.Name;
-            }
-
-            return label;
+            var volume = VolumeAPI.GetVolumeInformation(dir);
+            var isRoot = dir.FullName == dir.Root.FullName;
+            if (isRoot && !string.IsNullOrEmpty(volume.Label))
+                return volume.Label;
+            return dir.Name;
         }
 
         public static int CompareStreamFiles(
@@ -672,17 +660,6 @@ namespace BDInfo
                 }
             }
         }
-
-        [DllImport("kernel32.dll")]
-        private static extern long GetVolumeInformation(
-            string PathName, 
-            StringBuilder VolumeNameBuffer, 
-            uint VolumeNameSize,
-            ref uint VolumeSerialNumber,
-            ref uint MaximumComponentLength,
-            ref uint FileSystemFlags, 
-            StringBuilder FileSystemNameBuffer,
-            uint FileSystemNameSize);
     }
 
     public class BDROMScanProgressState

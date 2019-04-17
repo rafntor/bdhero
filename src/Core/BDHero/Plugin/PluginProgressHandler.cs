@@ -15,15 +15,10 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace BDHero.Plugin
 {
     /// <summary>
-    /// Invoked by the <see cref="IPluginHost"/> whenever an <see cref="IPlugin"/>'s state or progress changes.
+    /// Invoked by the <see href="IPluginHost"/> whenever an <see href="IPlugin"/>'s state or progress changes.
     /// </summary>
     /// <param name="plugin">Plugin that is reporting its progress</param>
     /// <param name="progressProvider">Provides plugin status information</param>

@@ -15,10 +15,8 @@
 // You should have received a copy of the GNU General Public License
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using BDHero.BDROM;
 using Newtonsoft.Json;
 
@@ -33,6 +31,9 @@ namespace BDHero.JobQueue
     /// </remarks>
     public class Job
     {
+        private static readonly log4net.ILog Logger =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public readonly Disc Disc;
 
         /// <summary>
@@ -83,7 +84,7 @@ namespace BDHero.JobQueue
         public TVShow SelectedTVShow { get { return TVShows.FirstOrDefault(show => show.IsSelected); } }
 
         /// <summary>
-        /// Gets the selected <see cref="Movie"/> or <see cref="TVShow"/>.
+        /// Gets the selected <see href="Movie"/> or <see href="TVShow"/>.
         /// </summary>
         [JsonIgnore]
         public ReleaseMedium SelectedReleaseMedium
@@ -125,9 +126,66 @@ namespace BDHero.JobQueue
 
         private SearchQuery _searchQuery;
 
+        // TODO: Make this user-configurable
+        [JsonIgnore]
+        public string Title
+        {
+            get
+            {
+                var releaseMedium = SelectedReleaseMedium;
+                if (releaseMedium == null)
+                    return SearchQuery.Title;
+
+                var movie = releaseMedium as Movie;
+                if (movie != null)
+                    return movie.ToString();
+
+                var tvShow = releaseMedium as TVShow;
+                if (tvShow != null)
+                    return string.Format("{0} - {1}, season {2}, episode {3} ({4})",
+                                         tvShow.SelectedEpisode.Title,
+                                         tvShow.Title,
+                                         tvShow.SelectedEpisode.SeasonNumber,
+                                         tvShow.SelectedEpisode.EpisodeNumber,
+                                         tvShow.SelectedEpisode.ReleaseDate.ToString("yyyy'-'MM'-'dd"));
+
+                return releaseMedium.Title;
+            }
+        }
+
         public Job(Disc disc)
         {
             Disc = disc;
+        }
+
+        public void Log()
+        {
+            LogReleaseMedium();
+            LogSelectedPlaylistAndTracks();
+        }
+
+        private void LogReleaseMedium()
+        {
+            var medium = SelectedReleaseMedium;
+            if (medium == null)
+            {
+                Logger.Warn("No release medium (movie or TV show) is selected");
+                return;
+            }
+
+            Logger.InfoFormat("Release medium: {0} {{ Id = {1} }}: {2}", medium.GetType().Name, medium.Id, medium);
+        }
+
+        private void LogSelectedPlaylistAndTracks()
+        {
+            var playlist = SelectedPlaylist;
+            if (playlist == null)
+            {
+                Logger.Warn("No playlist is selected");
+                return;
+            }
+
+            playlist.Log();
         }
     }
 }

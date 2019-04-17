@@ -21,13 +21,12 @@ using BDHero.Prefs;
 using BDHero.Startup;
 using DotNetUtils;
 using DotNetUtils.Annotations;
-using log4net;
 using Ninject;
 
 namespace BDHero.Plugin
 {
     /// <summary>
-    ///     Subclass of <see cref="PluginService"/> used for local testing and development
+    ///     Subclass of <see href="PluginService"/> used for local testing and development
     ///     in Visual Studio / Xamarin Studio.
     /// </summary>
     internal class DevPluginService : PluginService
@@ -35,8 +34,8 @@ namespace BDHero.Plugin
         private bool _loaded;
 
         [UsedImplicitly]
-        public DevPluginService(ILog logger, IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
-            : base(logger, kernel, directoryLocator, preferenceManager, repository)
+        public DevPluginService(IKernel kernel, IDirectoryLocator directoryLocator, IPreferenceManager preferenceManager, IPluginRepository repository)
+            : base(kernel, directoryLocator, preferenceManager, repository)
         {
         }
 

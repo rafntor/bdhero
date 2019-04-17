@@ -1,11 +1,27 @@
-﻿using DotNetUtils;
+﻿// Copyright 2014 Andrew C. Dvorak
+//
+// This file is part of BDHero.
+//
+// BDHero is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// BDHero is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
+
+using DotNetUtils;
 using DotNetUtils.Annotations;
-using Newtonsoft.Json;
 
 namespace LicenseUtils
 {
     /// <summary>
-    ///     Common URLs for a <see cref="Work"/>.
+    ///     Common URLs for a <see href="Work"/>.
     /// </summary>
     [UsedImplicitly]
     public class Urls
@@ -16,7 +32,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.codeproject.com/Articles/6334/Plug-ins-in-C"</c>
         /// </example>
-        [JsonProperty("article")]
         public string Article;
 
         /// <summary>
@@ -25,7 +40,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.nuget.org/packages/Ninject/"</c>
         /// </example>
-        [JsonProperty("package")]
         public string Package;
 
         /// <summary>
@@ -34,7 +48,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"http://www.ninject.org/"</c>
         /// </example>
-        [JsonProperty("project")]
         public string Project;
 
         /// <summary>
@@ -43,7 +56,6 @@ namespace LicenseUtils
         /// <example>
         ///     <c>"https://github.com/ninject/ninject"</c>
         /// </example>
-        [JsonProperty("source")]
         public string Source;
 
         public override string ToString()

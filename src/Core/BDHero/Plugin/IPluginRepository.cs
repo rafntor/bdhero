@@ -20,7 +20,7 @@ using System.Collections.Generic;
 namespace BDHero.Plugin
 {
     /// <summary>
-    ///     Maintains a collection of <see cref="IPlugin"/>s, organized by type.
+    ///     Maintains a collection of <see href="IPlugin"/>s, organized by type.
     /// </summary>
     public interface IPluginRepository : IPluginHost
     {
