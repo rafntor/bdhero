@@ -1,4 +1,10 @@
 
 os: windows
-language: csharp
-solution: src/bdhero.sln
+language: shell
+
+script:
+  - dir
+  - ls -l
+  - nuget restore src/bdhero.sln
+  - dotnet build src/bdhero.sln
+  - ls -l
