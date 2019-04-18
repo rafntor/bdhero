@@ -7,6 +7,10 @@ stages:
 bdhero:
   stage: build
   script:
+    - which powershell
+    - powershell -h
+    - which pwsh
+    - pwsh -v
     - nuget restore src/BDHero.sln
     - msbuild src/BDHero.sln /p:Configuration=Release
     - ls -l ./
