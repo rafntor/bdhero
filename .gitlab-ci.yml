@@ -1,0 +1,21 @@
+
+image: mono
+
+stages:
+  - build
+
+bdhero:
+  stage: build
+  script:
+    - ls -l ./
+    - ls -l ./src
+    - nuget restore src/BDHero.sln
+    - msbuild src/BDHero.sln /p:Configuration=Release
+    - ls -l ./
+    - ls -l ./artifacts
+    - ls -l ./artifacts/Portable
+  artifacts:
+    paths:
+      - ./packages/Portable
+      
+    
