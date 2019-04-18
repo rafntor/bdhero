@@ -1,0 +1,4 @@
+
+os: windows
+language: csharp
+solution: src/bdhero.sln
