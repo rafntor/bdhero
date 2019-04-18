@@ -5,5 +5,5 @@ language: shell
 script:
   - choco install nuget.commandline
   - nuget restore src/bdhero.sln
-  - dotnet build src/bdhero.sln
+  - msbuild src/bdhero.sln
   - ls -l
