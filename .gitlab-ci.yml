@@ -10,7 +10,8 @@ bdhero:
     - which which
     - which pwsh
     - pwsh -v
-    - ln -s pwsh powershell
+    - ln -s pwsh /usr/bin/powershell
+    - chmod +x /usr/bin/powershell
     - which powershell
     - powershell -v
     - nuget restore src/BDHero.sln
