@@ -130,9 +130,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="WPF\WpfKeyboardUtils.cs" />
-    <Compile Include="WPF\WpfWndProcEventHandler.cs" />
-    <Compile Include="WPF\WpfWndProcHook.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DotNetUtils\DotNetUtils.csproj">
