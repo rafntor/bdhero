@@ -1,5 +1,5 @@
 
-image: mono
+image: julkwiec/dotnet-mono-powershell-build
 
 stages:
   - build
@@ -7,7 +7,6 @@ stages:
 bdhero:
   stage: build
   script:
-    - apt-get update -qq && apt-get install -qq powershell
     - nuget restore src/BDHero.sln
     - msbuild src/BDHero.sln /p:Configuration=Release
     - ls -l ./
