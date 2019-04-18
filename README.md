@@ -1,5 +1,7 @@
 # BDHero
 
+[![Build Status](https://travis-ci.com/tore-fuglestad/bdhero.svg?branch=master)](https://travis-ci.com/tore-fuglestad/bdhero)
+
 An intelligent, automatic Blu-ray™ to MKV muxer and analysis tool.
 
 ![BDHero logo](http://i.bdhero.org/logo/v5/bdhero_gui_128x100_trim.png)
