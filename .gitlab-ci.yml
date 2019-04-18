@@ -1,5 +1,5 @@
 
-image: compulim/msbuild
+image: mono
 
 stages:
   - build
@@ -7,8 +7,7 @@ stages:
 bdhero:
   stage: build
   script:
-    - ls -l ./
-    - ls -l ./src
+    - apt-get update -qq && apt-get install -qq powershell
     - nuget restore src/BDHero.sln
     - msbuild src/BDHero.sln /p:Configuration=Release
     - ls -l ./
