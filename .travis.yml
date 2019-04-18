@@ -3,8 +3,7 @@ os: windows
 language: shell
 
 script:
-  - dir
-  - ls -l
+  - choco install nuget.commandline
   - nuget restore src/bdhero.sln
   - dotnet build src/bdhero.sln
   - ls -l
