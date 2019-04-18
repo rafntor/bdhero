@@ -1,5 +1,5 @@
 
-image: mono
+image: compulim/msbuild
 
 stages:
   - build
