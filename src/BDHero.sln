@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.329
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.202
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BDHeroGUI", "Core\BDHeroGUI\BDHeroGUI.csproj", "{0A807DFE-9F38-418E-A811-649B9AD78102}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -152,6 +152,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MkvToolNixUtils", "Librarie
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{40228CC1-B09D-411F-AB90-79A69A043F35}"
 	ProjectSection(SolutionItems) = preProject
+		..\.travis.yml = ..\.travis.yml
 		Build\Scripts\clean.bat = Build\Scripts\clean.bat
 		Build\Scripts\commit.bat = Build\Scripts\commit.bat
 		Build\Scripts\FFMpegDownload.ps1 = Build\Scripts\FFMpegDownload.ps1
