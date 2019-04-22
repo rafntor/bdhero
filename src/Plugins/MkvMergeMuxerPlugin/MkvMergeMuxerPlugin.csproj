@@ -117,16 +117,16 @@
     <None Include="packages.config" />
     <None Include="Resources\mkvmerge.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="mkvmerge.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass $(SolutionDir)Build\Scripts\MkvDownload.ps1
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass $(SolutionDir)Build\Scripts\MkvDownload.ps1
 powershell -ExecutionPolicy Bypass $(ProjectDir)MkvToolExtract.ps1 $(SolutionDir)Build\Tools\
-</PreBuildEvent>
+move /y $(ProjectDir)\mkvmerge.exe $(TargetDir)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

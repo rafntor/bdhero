@@ -5,6 +5,9 @@ language: shell
 script:
   - choco install nuget.commandline
   - nuget restore src/bdhero.sln
-  - wget -P src/Build/Tools https://mkvtoolnix.download/windows/releases/31.0.0/mkvtoolnix-32-bit-31.0.0.7z
   - dotnet build src/bdhero.sln
   - ls -l
+  - ls -l artifacts
+  - ls -l artifacts/portable
+  - ls -l artifacts/portable/plugins/required
+  - ls -l artifacts/portable/plugins/required/ffmpegmuxer
