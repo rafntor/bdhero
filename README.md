@@ -1,6 +1,6 @@
 # BDHero
 
-[![Build Status](https://travis-ci.com/tore-fuglestad/bdhero.svg?branch=master)](https://travis-ci.com/tore-fuglestad/bdhero)
+[![Build Status](https://travis-ci.com/tore-fuglestad/bdhero.svg?branch=master)](https://travis-ci.com/tore-fuglestad/bdhero) [![GPL Licence](https://badges.frapsoft.com/os/gpl/gpl.png?v=103)](https://opensource.org/licenses/GPL-3.0/)
 
 An intelligent, automatic Blu-ray™ to MKV muxer and analysis tool.
 
