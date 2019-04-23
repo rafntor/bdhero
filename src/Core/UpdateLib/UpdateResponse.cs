@@ -16,85 +16,29 @@
 // along with BDHero.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
-using System.Collections.Generic;
-using DotNetUtils.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace UpdateLib
 {
     public class UpdateResponse
     {
-        [JsonConverter(typeof(VersionConverter))]
-        public Version Version { get; set; }
+        [JsonIgnore]
+        public Version Version
+        {
+            get
+            {
+                Version result;
 
-        /// <summary>
-        /// ISO 8601 date format (e.g. <c>2008-04-12T12:53Z</c>).  See <see href="IsoDateTimeConverter"/>.
-        /// </summary>
-        [JsonConverter(typeof(IsoDateTimeConverter))]
-        public DateTime Date { get; set; }
+                if (Version.TryParse(tag_name.TrimStart('v'), out result))
+                    return result;
 
-        public List<string> Mirrors { get; set; }
-
-        public PlatformList Platforms { get; set; }
-
-        public string ReleaseNotes { get; set; }
+                return null;
+            }
+        }
+        public string tag_name { get; set; }
 
         public UpdateResponse()
         {
-            Version = new Version();
-            Date = DateTime.Now;
-            Mirrors = new List<string>();
-            Platforms = new PlatformList();
-            ReleaseNotes = "";
         }
-    }
-
-    public class PlatformList
-    {
-        public Platform Windows { get; set; }
-
-        [JsonIgnore]
-        public Platform Mac { get; set; }
-
-        [JsonIgnore]
-        public Platform Linux { get; set; }
-
-        public PlatformList()
-        {
-            Windows = new Platform();
-            Mac = new Platform();
-            Linux = new Platform();
-        }
-    }
-
-    public class Platform
-    {
-        public PackageList Packages { get; set; }
-
-        public Platform()
-        {
-            Packages = new PackageList();
-        }
-    }
-
-    public class PackageList
-    {
-        [CanBeNull]
-        public Package Setup { get; set; }
-
-        [CanBeNull]
-        public Package Portable { get; set; }
-    }
-
-    public class Package
-    {
-        [JsonProperty(PropertyName = "filename")]
-        public string FileName { get; set; }
-
-        [JsonProperty(PropertyName = "sha1")]
-        public string SHA1 { get; set; }
-
-        public long Size { get; set; }
     }
 }
