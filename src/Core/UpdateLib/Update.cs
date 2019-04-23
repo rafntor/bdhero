@@ -26,18 +26,10 @@ namespace UpdateLib
     public class Update
     {
         public readonly Version Version;
-        public readonly string FileName;
-        public readonly string[] Uris;
-        public readonly string SHA1;
-        public readonly long Size;
 
-        public Update(Version version, string fileName, string[] uris, string sha1, long size)
+        public Update(Version version)
         {
             Version = version;
-            FileName = fileName;
-            Uris = uris;
-            SHA1 = sha1;
-            Size = size;
         }
 
         #region Response conversion
@@ -45,38 +37,9 @@ namespace UpdateLib
         [CanBeNull]
         public static Update FromResponse([NotNull] UpdateResponse response, bool isPortable)
         {
-            var platform = GetPlatform(response);
-            var package = GetPackage(platform, isPortable);
-
-            // No package available for the user's OS
-            if (package == null)
-            {
-                return null;
-            }
-
             var version = response.Version;
-            var filename = package.FileName;
-            var uris = response.Mirrors.Select(mirror => mirror + filename).ToArray();
 
-            return new Update(version, filename, uris, package.SHA1, package.Size);
-        }
-
-        [NotNull]
-        private static Platform GetPlatform([NotNull] UpdateResponse response)
-        {
-            var platforms = response.Platforms;
-            var osType = SystemInfo.Instance.OS.Type;
-            if (OSType.Mac == osType)
-                return platforms.Mac;
-            if (OSType.Linux == osType)
-                return platforms.Linux;
-            return platforms.Windows;
-        }
-
-        [CanBeNull]
-        private static Package GetPackage([NotNull] Platform platform, bool isPortable)
-        {
-            return isPortable ? platform.Packages.Portable : platform.Packages.Setup;
+            return new Update(version);
         }
 
         #endregion

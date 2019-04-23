@@ -15,6 +15,8 @@
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -106,7 +108,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="FFMpegExtract.ps1" />
     <None Include="MkvToolExtract.ps1" />
     <None Include="packages.config" />
     <None Include="Resources\ffmpeg.ico" />
@@ -120,22 +121,24 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup>
-    <Content Include="ffmpeg.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="mkvpropedit.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>powershell -ExecutionPolicy Bypass $(SolutionDir)Build\Scripts\FFMpegDownload.ps1
-powershell -ExecutionPolicy Bypass $(ProjectDir)FFMpegExtract.ps1 $(SolutionDir)Build\Tools\
-
-powershell -ExecutionPolicy Bypass $(SolutionDir)Build\Scripts\MkvDownload.ps1
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <Import Project="..\..\packages\FFmpeg.Win64.Static.4.1.1.1\build\FFmpeg.Win64.Static.targets" Condition="Exists('..\..\packages\FFmpeg.Win64.Static.4.1.1.1\build\FFmpeg.Win64.Static.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\FFmpeg.Win64.Static.4.1.1.1\build\FFmpeg.Win64.Static.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\FFmpeg.Win64.Static.4.1.1.1\build\FFmpeg.Win64.Static.targets'))" />
+  </Target>
+  <PropertyGroup>
+    <PostBuildEvent>powershell -ExecutionPolicy Bypass $(SolutionDir)Build\Scripts\MkvDownload.ps1
 powershell -ExecutionPolicy Bypass $(ProjectDir)MkvToolExtract.ps1 $(SolutionDir)Build\Tools\
-</PreBuildEvent>
+move /y $(ProjectDir)\mkvpropedit.exe $(TargetDir)
+move /y $(TargetDir)\ffmpeg\ffmpeg.exe $(TargetDir)
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

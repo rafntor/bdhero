@@ -1,0 +1,21 @@
+os: windows
+language: shell
+
+script:
+  - choco install nuget.commandline
+  - nuget restore src/bdhero.sln
+  - dotnet build src/bdhero.sln
+  - cd artifacts && 7z a Portable Portable && cd ..
+  - ls -l
+  - ls -l artifacts
+
+deploy:
+  provider: releases
+  api_key:
+    secure: RtDDG08wA6zo4yxrZZwGHxAELvsn1Scq+PdxRHvlz2MUFriUWKbpN6/1d9FKlZE/7CPUyT8PTwLgsJQU8eHv1tlT+QGHc1JtMAEWb4XkibNpQ0VoSUm3u8St7JfWxLfQxHkkmy5rdvPzT1fqz50Vxu8Sn8eUwJnFfpyQk+hNkZGX3r6dD5mMsXWAbBCsfJWmLwGTmFVlPY/TjdsAYwLHP3ZH+oKkAp2OyY1kI0+8loDtCecAp5koMjqaaLp2AwQohcYxYRwA+VRGdHzo5LjsKG184FGcPif9K69NarwMm98LVCG7MxSK2m/jzGgLSf88Oe22MJQiQHBI+qO25iC1oHN9JzWv4iJZ0/V/LgA7eMT/3cmGad84ChNc/s+q325qLhyMSkQX4g6TZmPB6ia3RseaVxCoq6wNN/pncxGa7XTGS12YDaNEjz+leSNzdmo9M1PRtSHQlC3gYNiLppL+uLXGESXHVu5FwaOgc2TQcsAeXS7ySVQy05VEmTJwaGNP59LGF6QrPKcEi8oPeylUbnXEPUSie7KJPWK8BzkiyiS8hQUpl6sqouWIKhnh6dz961AaOn5fOOclZ1Bt305c2/wQUVgJE4qYond2wE0RwKbTprFQuvY7sRN3/R4hD4WluTSK/5ta4Lhd/1WlUEA3A+4UZ5uX/eruLjMWzSIpZjY=
+  file: artifacts/Portable.7z
+  skip_cleanup: true
+  on:
+    branch: master
+    tags: true
+

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Net;
 using System.Threading;
 using DotNetUtils;
@@ -12,8 +12,13 @@ namespace UpdateLib
     /// </summary>
     public class UpdateClient
     {
+#if false
         public const string DefaultUpdateManifestBaseUrl = "http://update.bdhero.org";
         public const string DefaultUpdateManifestFilePath = "/update.json";
+#else
+        public const string DefaultUpdateManifestBaseUrl = "http://api.github.com";
+        public const string DefaultUpdateManifestFilePath = "/repos/rafntor/bdhero/releases/latest";
+#endif
 
         #region Public properties
 
@@ -108,6 +113,7 @@ namespace UpdateLib
         /// </summary>
         public UpdateClient()
         {
+            System.Net.ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             UpdateManifestBaseUrl = DefaultUpdateManifestBaseUrl;
             UpdateManifestFilePath = DefaultUpdateManifestFilePath;
             CurrentVersion = new Version();
